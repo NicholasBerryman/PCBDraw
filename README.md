@@ -53,6 +53,7 @@ Any of these features can be changed at any point without disrupting any circuit
 * Click the **Move** button when you want to move everything you have selected within the workspace
 * Click the **Delete** button when you want to delete everything you have selected
   * There is currently **NO** undo option. **Save your work** before deleting anything that might be important.  
+  
 These options are explored in greater detail in the **Workspace** section below
 
 #### Context Bar: The Export Tab
