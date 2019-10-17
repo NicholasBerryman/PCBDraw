@@ -46,7 +46,7 @@ The board tab is displayed in the previous image
 Any of these features can be changed at any point without disrupting any circuit board features you have already created.
 
 #### Context Bar: The Tools Tab
-![](https://imgur.com/eQ4nNCw.png)
+![](https://imgur.com/eQ4nNCw.png)  
 * Select the **Path** option to draw circuit traces (lines) on the workspace
 * Select the **Hole** option to draw component holes on the workspace
 * Select the **Select** option to select anything you have already drawn in the workspace (when you want to move or delete it).
@@ -59,7 +59,7 @@ These options are explored in greater detail in the **Workspace** section below
 #### Context Bar: The Export Tab
 ![](https://imgur.com/QP835V3.png)  
 
-**This tab sets the options for carving the board and can cause problems if set up wrong, use the default values unless something has gone wrong or you know what you are doing**  
+**This tab sets the options for carving the board and can cause problems if set up wrong. Use the default values unless something has gone wrong or you know what you are doing**  
 * The **Z-Down** option sets the cutting depth for the circuit board. Make this **more negative** if the cut is too shallow, make it **less negative** if the cut is too deep.
 * The **Drill Down** option sets the drilling depth. If you want to only drill pilot holes, set it to some value less then the thickness of your board (as a negative number). If you want to drill the whole way through the board, set it the the thickness of your board (as a negative number).
   * If drilling through the whole board, please ensure you have placed something below it so the Router does not drill into itself
@@ -70,8 +70,8 @@ These options are explored in greater detail in the **Workspace** section below
 Click the **Export** button and choose a location to export the file to when you are ready to carve your board.
 
 ## The Workspace
-![](https://imgur.com/WewlDeR.png)
-This grid here represents the circuit board.
+![](https://imgur.com/WewlDeR.png)  
+The grid here represents the circuit board.
 * The size of the workspace may be changed using the **Height** and **Width** options in the **Board Tab** of the **Context Menu**
 * The size of the grid squares may be changed using the **Square Size** option in the **Board Tab** of the **Context Menu**
 * The black L-Shape in the above image represents the smartclamp of the Carvey. This may be enabled or disabled with the **Using Carvey** option in the **Board Tab** of the **Context Menu**
@@ -81,12 +81,12 @@ This grid here represents the circuit board.
   * Select the **Path** tool from the **Tools Tab** of the **Context Menu**.
   * Click the start point of the line trace on the grid (**Not** click-and-drag).
   * Click the end point of the line trace on the grid (**Not** click-and-drag).
-![](https://imgur.com/4P6oFxU.gif)
+![](https://imgur.com/4P6oFxU.gif)  
   
 * To draw a component hole:
   * Select the **Hole** tool from the **Tools Tab** of the **Context Menu**.
   * Click the point on the grid where you want the hole.
-![](https://imgur.com/HdcJZ9F.gif)
+![](https://imgur.com/HdcJZ9F.gif)  
 
 * To select items you have drawn on the workspace:
   * Select the **Select** tool from the **Tools Tab** of the **Context Menu**.
@@ -94,20 +94,20 @@ This grid here represents the circuit board.
   * Click another point such that the green rectangle surrounds everything you want to select (**Not** click-and-drag).
     * To Select a line, ensure that either the **start point** or the **end point** of the line is within the green rectangle
   * The selected items should turn blue
-![](https://imgur.com/Sg8Q9oJ.gif)
+![](https://imgur.com/Sg8Q9oJ.gif)  
 
 * To move items you have drawn on the workspace:
   * Using the **Select** tool, select the items you want to move.
   * Click the **Move** button from the **Tools Tab** of the **Context Menu**.
   * Click a point in the workspace where you want to move it to (**Not** click-and-drag).
     * The selected items will be treated as if they are in a large rectangle when moving. The top left point of that rectangle will be the point that you click to move them to.
-![](https://imgur.com/P2W5FvA.gif)
+![](https://imgur.com/P2W5FvA.gif)  
 
 * To delete items you have drawn on the workspace:
   * Using the **Select** tool, select the items you want to move.
   * Click the **Delete** button from the **Tools Tab** of the **Context Menu**.
     * There is currently **NO** undo option. **Save your work** before deleting anything that might be important.
-![](https://imgur.com/djjcZAu.gif)
+![](https://imgur.com/djjcZAu.gif)  
 
 **Once you are done with your circuit board remember to save the board and export it for carving**
 
