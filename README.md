@@ -41,7 +41,7 @@ The board tab is displayed in the previous image
 * The board dimensions can be adjusted with the **Board Width** and **Board Height** text boxes. Remember to press the **enter** key on your keyboard in order to update the size once you have entered it.
 * You can zoom in on the board using the **up** arrow next to the **Zoom** text box, and can zoom out using the **down** arrow
 * The size of the grid squares can be adjusted using the **Square Size** text box. Remember to press the **enter** key on your keyboard in order to update the size once you have entered it.  
-  * Circuit board features can only be placed on/between grid points, so if your circuit board has lots of very fine features, try a smaller grid size
+  * Circuit board features can only be placed on grid points, so if your circuit board has lots of very fine features, try a smaller grid size
 * If you are using the Carvey, tick the **Using Carvey** checkbox. This enables the smartclamp in the workspace, preventing you from making a circuit board that the Carvey cannot carve.
 Any of these features can be changed at any point without disrupting any circuit board features you have already created.
 
