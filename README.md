@@ -100,11 +100,13 @@ This grid here represents the circuit board.
   * Click the **Move** button from the **Tools Tab** of the **Context Menu**.
   * Click a point in the workspace where you want to move it to (**Not** click-and-drag).
     * The selected items will be treated as if they are in a large rectangle when moving. The top left point of that rectangle will be the point that you click to move them to.
+![](https://imgur.com/P2W5FvA.gif)
 
 * To delete items you have drawn on the workspace:
   * Using the **Select** tool, select the items you want to move.
   * Click the **Delete** button from the **Tools Tab** of the **Context Menu**.
     * There is currently **NO** undo option. **Save your work** before deleting anything that might be important.
+![](https://imgur.com/djjcZAu.gif)
 
 **Once you are done with your circuit board remember to save the board and export it for carving**
 
