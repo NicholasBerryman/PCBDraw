@@ -4,7 +4,7 @@
 ### Windows
 * Download the windows installer from https://github.com/NicholasBerryman/PCBDraw/blob/master/dist/bundles/PCBDraw-1.0.exe?raw=true  
 * Once it has downloaded, run the installer and follow the instructions it gives.  
-* After the installer has finished, the program should open automatically. You may run it in the future by opening NickBerryman/PCBDraw from the start menu.
+* After the installer has finished, the program should open automatically. You may run it in the future by opening **Nick Berryman/PCBDraw** from the start menu.
 
 ### Mac and Linux
 * Ensure Java is installed (download and install from https://www.java.com/en/download/)
@@ -30,7 +30,7 @@ The File menu has three options:
   * '.GCode' files cannot be opened or edited this way, only '.GCB' files created using the **Save** option above
 
 ### The Context Bar
-![](https://imgur.com/XA54tsW.png)
+![](https://imgur.com/XA54tsW.png)  
 The Context Bar has three tabs:
 * **Board** deals with the view of the workspace and size of the circuit board
 * **Tools** lets you select the tools for drawing the circuit board
@@ -41,7 +41,7 @@ The board tab is displayed in the previous image
 * The board dimensions can be adjusted with the **Board Width** and **Board Height** text boxes. Remember to press the **enter** key on your keyboard in order to update the size once you have entered it.
 * You can zoom in on the board using the **up** arrow next to the **Zoom** text box, and can zoom out using the **down** arrow
 * The size of the grid squares can be adjusted using the **Square Size** text box. Remember to press the **enter** key on your keyboard in order to update the size once you have entered it.  
-  * Circuit board features can only be placed on/between grid points, so if your circuit board has lots of very fine features, try a smalled grid size
+  * Circuit board features can only be placed on/between grid points, so if your circuit board has lots of very fine features, try a smaller grid size
 * If you are using the Carvey, tick the **Using Carvey** checkbox. This enables the smartclamp in the workspace, preventing you from making a circuit board that the Carvey cannot carve.
 Any of these features can be changed at any point without disrupting any circuit board features you have already created.
 
@@ -73,7 +73,7 @@ Click the **Export** button and choose a location to export the file to when you
 This grid here represents the circuit board.
 * The size of the workspace may be changed using the **Height** and **Width** options in the **Board Tab** of the **Context Menu**
 * The size of the grid squares may be changed using the **Square Size** option in the **Board Tab** of the **Context Menu**
-* The black L-Shape in the above image represents the smartclamp of the Carvey. This may be enabled or disavled with the **Using Carvey** option in the **Board Tab** of the **Context Menu**
+* The black L-Shape in the above image represents the smartclamp of the Carvey. This may be enabled or disabled with the **Using Carvey** option in the **Board Tab** of the **Context Menu**
 
 ### The Workspace: Drawing a circuit board
 * To draw a line trace:
