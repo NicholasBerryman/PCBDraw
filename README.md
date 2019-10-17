@@ -108,7 +108,30 @@ This grid here represents the circuit board.
 
 **Once you are done with your circuit board remember to save the board and export it for carving**
 
+## Carving with Easel
+Once you have exported your completed circuit board, you will receive a gcode file that you can use to carve it.
+If you are using the Carvey, this must be done with the Inventables **Easel** website http://easel.inventables.com.
 
+### Carving with Easel: The Process
+* Go to the Inventables **Easel** website http://easel.inventables.com.
+* Sign in with your accound credentials (Create an account if you have not already).
+* Create a **New Project**.
+* Rename the project by clicking the title in the top left of the web page.
+* Select your machine with **Machine->Carvey**
+* Import the circuit board with **File->Import g-code**
+  * Select the gcode file that you exported the completed circuit board to.
+* Ensure the Carvey is turned on and connected
+  * Also check that the blank PCB is properly secured and the correct carving bit is in place
+* Click **Carve** button on the top right and follow the instructions it shows.
+* Wait for the board to be carved.
+
+## FAQ
+ * Can I use keyboard shortcuts like ctrl+C, ctrl+v, ctrl+z, etc. ?
+   * No. Keyboard shortcuts are not currently supported for any action. At this stage there is also no functionality for undo, copy, and paste. These may be added in a future update if I have time between university assignments.
+ * Something went wrong! What do I do?
+   * If you are unsure about anything and need help, please contact me at: Nicholas.Berryman1@gmail.com. Please include **PCBDraw Help** in the subject line.
+ * There's a cool feature that I want to use but it doesn't look like your program supports it?
+   * Currently the program is fairly minimal, having been made in a single weekend. If there are any new features that you feel would be very useful/important then please contact me at: Nicholas.Berryman1@gmail.com. Please include **PCBDraw - Suggestion** in the subject line.
 
 
 
