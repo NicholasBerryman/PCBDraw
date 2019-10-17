@@ -75,7 +75,7 @@ This grid here represents the circuit board.
 * The size of the grid squares may be changed using the **Square Size** option in the **Board Tab** of the **Context Menu**
 * The black L-Shape in the above image represents the smartclamp of the Carvey. This may be enabled or disabled with the **Using Carvey** option in the **Board Tab** of the **Context Menu**
 
-### The Workspace: Drawing a circuit board
+### Workspace: Drawing a circuit board
 * To draw a line trace:
   * Select the **Path** tool from the **Tools Tab** of the **Context Menu**.
   * Click the start point of the line trace on the grid (**Not** click-and-drag).
