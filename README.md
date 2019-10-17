@@ -9,7 +9,7 @@
 ### Mac and Linux
 * Ensure Java is installed (download and install from https://www.java.com/en/download/)
 * Once Java is installed, download PCBDraw from https://github.com/NicholasBerryman/PCBDraw/blob/master/dist/PCBDraw.jar?raw=true
-* Once it has downloaded, move it somewhere you won't lose it (e.g The Desktop) and run it normally
+* Once it has downloaded, move it somewhere you won't lose it (e.g your Desktop) and run it normally
 
 ## User Guide
 ### The User Interface
@@ -34,7 +34,7 @@ The File menu has three options:
 The Context Bar has three tabs:
 * **Board** deals with the view of the workspace and size of the circuit board
 * **Tools** lets you select the tools for drawing the circuit board
-* **Export** lets you create a '.GCODE' file for use by a CNC router (e.g The Carvey) for cutting you circuit board
+* **Export** lets you create a '.GCODE' file for use by a CNC router (e.g Carvey) for cutting you circuit board
 
 #### Context Bar: The Board Tab
 The board tab is displayed in the previous image
