@@ -6,6 +6,7 @@
 package pcbdraw.processing;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Objects;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -23,6 +24,7 @@ public class GCoder {
     private double pathWidth;
     
     private final double inverseResolution = 10;
+    private final double holeRatio = 1.25;
     private int gcodeSmoothFactor; //The number of coordinates per gcode instruction
     //TODO add smoothing as option rather than forced
     private int maxProgress = 1;
@@ -36,11 +38,21 @@ public class GCoder {
         this.feedRate = feedRate;
         this.pathWidth = pathWidth;
         
-        gcodeSmoothFactor = (int)(pathWidth*2);//This seems ok?
+        gcodeSmoothFactor = 2;//(int)(pathWidth*2);//This seems ok?
         if (gcodeSmoothFactor < 1) gcodeSmoothFactor = 1;
     }
     
     public String compile(ArrayList<Line> path, ArrayList<Circle> hole, double unitMult, double boardWidthMM, double boardHeightMM, boolean forCarvey) throws Exception{
+        hole.sort(new Comparator<Circle>() {
+            @Override
+            public int compare(Circle o1, Circle o2) {
+                int xComp = Double.compare(o1.getCenterX(), o2.getCenterX());
+                if (xComp != 0)
+                    return xComp;
+                return Double.compare(o1.getCenterY(), o2.getCenterY());
+            }
+        });
+        
         currentProgress = 0;
         maxProgress = path.size() + hole.size();
         gcode = new StringBuilder();
@@ -90,9 +102,10 @@ public class GCoder {
         gcode.append("M9\n");
         
         Double[][] pathMask = createPathMask(paths, holes, boardWidthMM, boardHeightMM);
-        if (forCarvey){
-            if (!validateCarveyble(pathMask)) throw new Exception("Something is too close to the Carvey's SmartClamp!");
-        }
+        if (forCarvey) if (!validateCarveyble(pathMask)) throw new Exception("Something is too close to the Carvey's SmartClamp!");
+        
+        separateHoleOverlap(pathMask, holes);
+        
         //printPathMask(pathMask);
         int[][] intMask = edgeFilter(pathMask);
         //printIntMask(intMask);
@@ -123,7 +136,38 @@ public class GCoder {
         return true;
     }
     
-    public Double[][] createPathMask(ArrayList<Line> pathsAdjusted, ArrayList<Circle> holesAdjusted, double boardWidthMM, double boardHeightMM){
+    private void separateHoleOverlap(Double[][] pathMask, ArrayList<Circle> holesAdjusted){
+        for (int i = 0; i < holesAdjusted.size(); i++){
+            ArrayList<Circle> overlaps = new ArrayList<>();
+            Circle c = holesAdjusted.get(i);
+            for (int j = i+1; j < holesAdjusted.size(); j++){
+                Circle c2 = holesAdjusted.get(j);
+                double dist = Math.sqrt(Math.pow(c.getCenterX()-c2.getCenterX(),2)+Math.pow(c.getCenterY()-c2.getCenterY(),2));
+                
+                if (dist <= 2*(holeRatio*pathWidth)){
+                    overlaps.add(c2);
+                }
+            }
+            
+            int straightCount = 0;
+            for (Circle c2 : overlaps){
+                if (c.getCenterX() != c2.getCenterX() && c.getCenterY() != c2.getCenterY())
+                    continue;
+                for (int x = (int)((c.getCenterX()-holeRatio*pathWidth)*inverseResolution); x <= (int)((c.getCenterX()+holeRatio*pathWidth)*inverseResolution); x++){
+                    for (int y = (int)((c.getCenterY()-holeRatio*pathWidth)*inverseResolution); y <= (int)((c.getCenterY()+holeRatio*pathWidth)*inverseResolution); y++){
+                        double pointDist1 = Math.sqrt(Math.pow(c.getCenterX()*inverseResolution-x,2)+Math.pow(c.getCenterY()*inverseResolution-y,2));
+                        double pointDist2 = Math.sqrt(Math.pow(x-c2.getCenterX()*inverseResolution,2)+Math.pow(y-c2.getCenterY()*inverseResolution,2));
+
+                        if ((int)pointDist1 == (int)pointDist2) pathMask[x][y] = null;
+                    }
+                }
+            }
+        }
+        
+        
+    }
+    
+    private Double[][] createPathMask(ArrayList<Line> pathsAdjusted, ArrayList<Circle> holesAdjusted, double boardWidthMM, double boardHeightMM){
         Double[][] pathMask = new Double[(int)(boardWidthMM*inverseResolution)][(int)(boardHeightMM*inverseResolution)];
         currentProgress = 0;
         maxProgress = pathMask.length * pathMask[0].length;
@@ -201,7 +245,7 @@ public class GCoder {
     
     private boolean pointInCircle(double xp, double yp, Circle c){
         double distToCircle = Math.sqrt(Math.pow(c.getCenterX()-xp,2)+Math.pow(c.getCenterY()-yp,2));
-        return distToCircle <= 1.3*pathWidth; 
+        return distToCircle <= holeRatio*pathWidth; 
     }
     
     private void printPathMask(Double[][] pathMask){
@@ -359,7 +403,7 @@ public class GCoder {
     
     /**
      * G0 - Fast X?Y?Z?
-     * G1 - Slow X?Y?Z?F?
+     * G1 - Slow X?Y?Z?F?S?
      * 
     **/
     private void contourPathGCode(int[][] edgeMask, Double[][] pathMask, StringBuilder gcode){
@@ -414,7 +458,7 @@ public class GCoder {
                 }
                 else if (lastSlope == null || !Objects.equals(lastSlope, pathMask[currX][currY])){
                     if (lastSlope != null)
-                        if (lastSlope == Double.MIN_VALUE)
+                        if (lastSlope == Double.MIN_VALUE && lastCircX != 0 && lastCircY != 0)
                             gcode.append("X").append(Double.toString(lastCircX/inverseResolution)).append("Y").append(Double.toString(lastCircY/inverseResolution)).append("\n");
                     gcode.append("X").append(Double.toString(currX/inverseResolution)).append("Y").append(Double.toString(reversedY/inverseResolution)).append("\n");
                     lastSlope = pathMask[currX][currY];

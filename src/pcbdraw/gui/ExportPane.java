@@ -38,6 +38,7 @@ public class ExportPane extends Tab{
         zDown.getChildren().add(zDownLab);
         zDownSpin.setPrefWidth(80);
         zDownSpin.setEditable(true);
+        zDownSpin.focusedProperty().addListener((observable, oldValue, newValue) -> { zDownSpin.increment(0);});
         zDown.getChildren().add(zDownSpin);
         
         HBox drillDown = new HBox();
@@ -46,6 +47,7 @@ public class ExportPane extends Tab{
         drillDown.getChildren().add(drillDownLab);
         drillDownSpin.setPrefWidth(80);
         drillDownSpin.setEditable(true);
+        drillDownSpin.focusedProperty().addListener((observable, oldValue, newValue) -> { drillDownSpin.increment(0);});
         drillDown.getChildren().add(drillDownSpin);
         
         HBox zUp = new HBox();
@@ -54,6 +56,7 @@ public class ExportPane extends Tab{
         zUp.getChildren().add(zUpLab);
         zUpSpin.setPrefWidth(60);
         zUpSpin.setEditable(true);
+        zUpSpin.focusedProperty().addListener((observable, oldValue, newValue) -> { zUpSpin.increment(0);});
         zUp.getChildren().add(zUpSpin);
         
         HBox feed = new HBox();
@@ -62,6 +65,7 @@ public class ExportPane extends Tab{
         feed.getChildren().add(feedLab);
         feedSpin.setPrefWidth(80);
         feedSpin.setEditable(true);
+        feedSpin.focusedProperty().addListener((observable, oldValue, newValue) -> { feedSpin.increment(0);});
         feed.getChildren().add(feedSpin);
         
         HBox pWidth = new HBox();
@@ -70,6 +74,7 @@ public class ExportPane extends Tab{
         pWidth.getChildren().add(pWidthLab);
         pWidthSpin.setPrefWidth(60);
         pWidthSpin.setEditable(true);
+        pWidthSpin.focusedProperty().addListener((observable, oldValue, newValue) -> { pWidthSpin.increment(0);});
         pWidth.getChildren().add(pWidthSpin);
         
         export = new Button("Export");

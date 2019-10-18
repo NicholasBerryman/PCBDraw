@@ -37,6 +37,7 @@ public class BoardPane extends Tab{
         width.getChildren().add(new Label("Board Width (mm): "));
         widthSpin.setPrefWidth(60);
         widthSpin.setEditable(true);
+        widthSpin.focusedProperty().addListener((observable, oldValue, newValue) -> { widthSpin.increment(0);});
         width.getChildren().add(widthSpin);
         
         HBox height = new HBox();
@@ -44,6 +45,7 @@ public class BoardPane extends Tab{
         height.getChildren().add(new Label("Board Height (mm): "));
         heightSpin.setPrefWidth(60);
         heightSpin.setEditable(true);
+        heightSpin.focusedProperty().addListener((observable, oldValue, newValue) -> { heightSpin.increment(0);});
         height.getChildren().add(heightSpin);
         
         
@@ -52,6 +54,7 @@ public class BoardPane extends Tab{
         zoom.getChildren().add(new Label("Zoom: "));
         zoomSpin.setPrefWidth(60);
         zoomSpin.setEditable(true);
+        zoomSpin.focusedProperty().addListener((observable, oldValue, newValue) -> { zoomSpin.increment(0);});
         zoom.getChildren().add(zoomSpin);
         
         HBox squareSize = new HBox();
@@ -59,6 +62,7 @@ public class BoardPane extends Tab{
         squareSize.getChildren().add(new Label("Square Size (mm): "));
         sqSizeSpin.setPrefWidth(60);
         sqSizeSpin.setEditable(true);
+        sqSizeSpin.focusedProperty().addListener((observable, oldValue, newValue) -> { sqSizeSpin.increment(0);});
         squareSize.getChildren().add(sqSizeSpin);
         
         HBox carvey = new HBox();

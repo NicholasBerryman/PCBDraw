@@ -45,7 +45,7 @@ public class PCBDraw extends Application {
     private SplitPane bottom;
     
     private final int defaultZoom = 5;
-    private final int defaultSqSize = 5;
+    private final int defaultSqSize = 4;
     private final int defaultWidth = 100;
     private final int defaultHeight = 100;
     private Stage primaryStage;
