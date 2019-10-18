@@ -4,7 +4,7 @@
 ### Windows
 * Download the windows installer from https://github.com/NicholasBerryman/PCBDraw/blob/master/dist/bundles/PCBDraw-1.0.exe?raw=true  
 * Once it has downloaded, run the installer and follow the instructions it gives.  
-* After the installer has finished, the program should open automatically. You may run it in the future by opening **Nick Berryman/PCBDraw** from the start menu.
+* After the installer has finished, the program should open automatically. You may run it in the future by opening **Nick Berryman->PCBDraw** from the start menu.
 
 ### Mac and Linux
 * Ensure Java is installed (download and install from https://www.java.com/en/download/)
@@ -126,7 +126,7 @@ If you are using the Carvey, this must be done with the Inventables **Easel** we
 * Create a **New Project**.
 * Rename the project by clicking the title in the top left of the web page.
 * Select your machine with **Machine->Carvey**
-* Import the circuit board with **File->Import g-code**
+* Import the circuit board with **File->Import g-code->browse**
   * Select the gcode file that you exported the completed circuit board to.
 * Ensure the Carvey is turned on and connected
   * Also check that the blank PCB is properly secured and the correct carving bit is in place
