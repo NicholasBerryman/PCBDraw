@@ -29,7 +29,7 @@ The File menu has three options:
 * **Open** allows you to open a circuit board that you have previously saved. The circuit board must have been created in PCBDraw. No other PCB file formats are accepted.
   * '.GCode' files cannot be opened or edited this way, only '.GCB' files created using the **Save** option above
 
-### The Context Bar
+### The Context Bar  
 ![](https://imgur.com/XA54tsW.png)  
 The Context Bar has three tabs:
 * **Board** deals with the view of the workspace and size of the circuit board
@@ -45,7 +45,7 @@ The board tab is displayed in the previous image
 * If you are using the Carvey, tick the **Using Carvey** checkbox. This enables the smartclamp in the workspace, preventing you from making a circuit board that the Carvey cannot carve.
 Any of these features can be changed at any point without disrupting any circuit board features you have already created.
 
-#### Context Bar: The Tools Tab
+#### Context Bar: The Tools Tab  
 ![](https://imgur.com/eQ4nNCw.png)  
 * Select the **Path** option to draw circuit traces (lines) on the workspace
 * Select the **Hole** option to draw component holes on the workspace
@@ -56,7 +56,7 @@ Any of these features can be changed at any point without disrupting any circuit
   
 These options are explored in greater detail in the **Workspace** section below
 
-#### Context Bar: The Export Tab
+#### Context Bar: The Export Tab  
 ![](https://imgur.com/QP835V3.png)  
 
 **This tab sets the options for carving the board and can cause problems if set up wrong. Use the default values unless something has gone wrong or you know what you are doing**  
@@ -85,7 +85,7 @@ The grid here represents the circuit board.
   
 * To draw a component hole:
   * Select the **Hole** tool from the **Tools Tab** of the **Context Menu**.
-  * Click the point on the grid where you want the hole.
+  * Click the point on the grid where you want the hole.  
 ![](https://imgur.com/HdcJZ9F.gif)  
 
 * To select items you have drawn on the workspace:
@@ -93,20 +93,20 @@ The grid here represents the circuit board.
   * Click the a point near the items you want to select (**Not** click-and-drag).
   * Click another point such that the green rectangle surrounds everything you want to select (**Not** click-and-drag).
     * To Select a line, ensure that either the **start point** or the **end point** of the line is within the green rectangle
-  * The selected items should turn blue
+  * The selected items should turn blue  
 ![](https://imgur.com/Sg8Q9oJ.gif)  
 
 * To move items you have drawn on the workspace:
   * Using the **Select** tool, select the items you want to move.
   * Click the **Move** button from the **Tools Tab** of the **Context Menu**.
   * Click a point in the workspace where you want to move it to (**Not** click-and-drag).
-    * The selected items will be treated as if they are in a large rectangle when moving. The top left point of that rectangle will be the point that you click to move them to.
+    * The selected items will be treated as if they are in a large rectangle when moving. The top left point of that rectangle will be the point that you click to move them to.  
 ![](https://imgur.com/P2W5FvA.gif)  
 
 * To delete items you have drawn on the workspace:
   * Using the **Select** tool, select the items you want to move.
   * Click the **Delete** button from the **Tools Tab** of the **Context Menu**.
-    * There is currently **NO** undo option. **Save your work** before deleting anything that might be important.
+    * There is currently **NO** undo option. **Save your work** before deleting anything that might be important.  
 ![](https://imgur.com/djjcZAu.gif)  
 
 **Once you are done with your circuit board remember to save the board and export it for carving**
