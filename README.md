@@ -30,7 +30,7 @@ Table of contents
 
 ## User Guide
 ### The User Interface
-When the program launches, the following screen should appear:  
+When the program launches, after updating, the following screen should appear:  
 ![](https://imgur.com/cHY2ZcA.png)
 On this screen are three important sections:
   * The File menu (top left)
