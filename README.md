@@ -157,7 +157,7 @@ If you are using the Carvey, this must be done with the Inventables **Easel** we
  * Can I use keyboard shortcuts like ctrl+c, ctrl+v, ctrl+z, etc. ?
    * No. Keyboard shortcuts are not currently supported for any action. At this stage there is also no functionality for undo, copy, and paste at all, let alone with keyboard shortcuts. These may be added in a future update if I have time between university assignments.
  * Something went wrong! What do I do?
-   * If you are unsure about anything and need help, please contact me at: Nicholas.Berryman1@gmail.com. Please include **PCBDraw Help** in the subject line.
+   * If you are unsure about anything and need help, please contact me at: Nicholas.Berryman1@gmail.com. Please include **PCBDraw - Help** in the subject line.
  * There's a cool feature that I want to use but it doesn't look like your program supports it?
    * Currently the program is fairly minimal, having been made in a single weekend. If there are any new features that you feel would be very useful/important then please contact me at: Nicholas.Berryman1@gmail.com. Please include **PCBDraw - Suggestion** in the subject line. I'll do my best, but can't make any guarantees about whether any specific feature will be added or how long it will take.
 
