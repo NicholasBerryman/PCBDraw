@@ -43,14 +43,10 @@ public class GCoder {
     }
     
     public String compile(ArrayList<Line> path, ArrayList<Circle> hole, double unitMult, double boardWidthMM, double boardHeightMM, boolean forCarvey) throws Exception{
-        hole.sort(new Comparator<Circle>() {
-            @Override
-            public int compare(Circle o1, Circle o2) {
-                int xComp = Double.compare(o1.getCenterX(), o2.getCenterX());
-                if (xComp != 0)
-                    return xComp;
-                return Double.compare(o1.getCenterY(), o2.getCenterY());
-            }
+        hole.sort((Circle o1, Circle o2) -> {
+            int xComp = Double.compare(o1.getCenterX(), o2.getCenterX());
+            if (xComp != 0) return xComp;
+            return Double.compare(o1.getCenterY(), o2.getCenterY());
         });
         
         currentProgress = 0;
@@ -101,16 +97,21 @@ public class GCoder {
         gcode.append("G21\n");
         gcode.append("M9\n");
         
+        System.out.println("Generating path mask...");
         Double[][] pathMask = createPathMask(paths, holes, boardWidthMM, boardHeightMM);
         if (forCarvey) if (!validateCarveyble(pathMask)) throw new Exception("Something is too close to the Carvey's SmartClamp!");
         
+        System.out.println("Separating holes...");
         separateHoleOverlap(pathMask, holes);
         
         //printPathMask(pathMask);
+        System.out.println("Generating edge mask...");
         int[][] intMask = edgeFilter(pathMask);
         //printIntMask(intMask);
+        System.out.println("Walking Contours...");
         contourPathGCode(intMask, pathMask, gcode);
         //printIntMask(intMask);
+        System.out.println("Drilling Holes...");
         holeGCode(gcode, holes, boardHeightMM);
         
         gcode.append("G0Z15\n");
@@ -149,7 +150,6 @@ public class GCoder {
                 }
             }
             
-            int straightCount = 0;
             for (Circle c2 : overlaps){
                 if (c.getCenterX() != c2.getCenterX() && c.getCenterY() != c2.getCenterY())
                     continue;
@@ -177,18 +177,22 @@ public class GCoder {
                 boolean hasPath = false;
                 double slope = 0;
                 for (Line l : pathsAdjusted){
-                    hasPath |= pointOnLine(x/inverseResolution,y/inverseResolution,l) > 0;
-                    if (pointOnLine(x/inverseResolution,y/inverseResolution,l) == 1){
+                    int onLine = pointOnLine(x/inverseResolution,y/inverseResolution,l);
+                    hasPath |= onLine > 0;
+                    if (onLine == 1){
                         if (l.getEndX() != l.getStartX())
                             slope = (l.getEndY()-l.getStartY())/(l.getEndX()-l.getStartX());
                         else slope = Double.POSITIVE_INFINITY;
                     }
-                    else if (pointOnLine(x/inverseResolution,y/inverseResolution,l) == 2)slope = Double.MIN_VALUE;
+                    else if (onLine == 2)slope = Double.MIN_VALUE;
+                    if (hasPath) break;
                 }
                 for (Circle c : holesAdjusted){
-                    hasPath |= pointInCircle(x/inverseResolution,y/inverseResolution,c);
-                    if (pointInCircle(x/inverseResolution,y/inverseResolution,c))
+                    boolean inCircle = pointInCircle(x/inverseResolution,y/inverseResolution,c);
+                    hasPath |= inCircle;
+                    if (inCircle)
                         slope = Double.MIN_VALUE;
+                    if (hasPath) break;
                 }
                 if (hasPath) pathMask[x][y] = slope;
                 else pathMask[x][y] = null;
