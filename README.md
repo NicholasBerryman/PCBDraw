@@ -1,6 +1,22 @@
 # PCBDraw
 
+Table of contents
+=================
+
+<!--ts-->
+   * [Installation](#Installation)
+   * [User Guide](#User-Guide)
+      * [The User Interface](#The-User-Interface)
+      * [The File Menu](#The-File-Menu)
+      * [The Context Bar](#The-Context-Bar)
+      * [The Workspace & Drawing a PCB](#The -orkspace)
+   * [Carving With Easel](#Carving-With-Easel)
+   * [FAQ](#FAQ)
+<!--te-->
+
+
 ## Installation
+
 ### Windows
 * Download the windows installer from https://github.com/NicholasBerryman/PCBDraw/blob/master/dist/bundles/PCBDraw-1.0.exe?raw=true  
 * Once it has downloaded, run the installer and follow the instructions it gives.  
