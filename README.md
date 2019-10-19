@@ -9,7 +9,7 @@ Table of contents
       * [The User Interface](#The-User-Interface)
       * [The File Menu](#The-File-Menu)
       * [The Context Bar](#The-Context-Bar)
-      * [The Workspace & Drawing a PCB](#The -orkspace)
+      * [The Workspace & Drawing a PCB](#The-Workspace)
    * [Carving With Easel](#Carving-With-Easel)
    * [FAQ](#FAQ)
 <!--te-->
