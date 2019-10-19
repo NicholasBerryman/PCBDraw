@@ -11,6 +11,7 @@ Table of contents
       * [The Context Bar](#The-Context-Bar)
       * [The Workspace & Drawing a PCB](#The-Workspace)
    * [Carving With Easel](#Carving-With-Easel)
+   * [Examples](#Examples)
    * [FAQ](#FAQ)
 <!--te-->
 
