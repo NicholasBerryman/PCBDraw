@@ -66,7 +66,7 @@ These options are explored in greater detail in the **Workspace** section below
 * The **Z-Up** option sets the height of the drill as it moves between cuts. Ensure this is high enough that it won't hit anything. The default value is almost always best.
 * The **Feedrate** option sets the speed of cutting. This option should **NOT** be changed unless you are using a CNC Router other than the Carvey, or are very familiar with CNC Machining. Leave at the default value otherwise.
 * The **Path Width** determines how wide the traces on the board should be. **Reduce** this value if traces join up where they shouldn't, **increase** this value if the circuit should carry large currents.
-  * If the path width is set too high, then Paths and Holes that are **too close** to each-other may **overlap and cause shorts**. If this is happening then either **reduce** this value, or move the overlapping features further apart.
+  * If the **Path Width** is set **too high**, then **Paths** and **Holes** that are **too close** to each-other may **overlap and cause shorts**. If this is happening then either **reduce** this value, or move the overlapping features further apart.
   
 Click the **Export** button and choose a location to export the file to when you are ready to carve your board.
 
@@ -82,15 +82,15 @@ The grid here represents the circuit board.
   * Select the **Path** tool from the **Tools Tab** of the **Context Menu**.
   * Click the start point of the line trace on the grid (**Not** click-and-drag).
   * Click the end point of the line trace on the grid (**Not** click-and-drag).
-    * When **Exporting** if the **Path Width** is too high then **Paths** that should be separate may overlap if they are close enough too each other. If this is happening  to you, either reduce your **Path Width** or move the **Paths** away from each other.
+    * When **Exporting**, if the **Path Width** is too high and they are close enough to each other, then **Paths** that should be separate may overlap . If this is happening  to you, either reduce your **Path Width** or move the **Paths** away from each other.
 
 ![](https://imgur.com/4P6oFxU.gif)  
   
 * To draw a component hole:
   * Select the **Hole** tool from the **Tools Tab** of the **Context Menu**.
   * Click the point on the grid where you want the hole.  
-    * When **Exporting** if the **Path Width** is too high then **Holes** that should be separate may overlap if they are close enough too each other. If this is happening  to you, either reduce your **Path Width** or move the **Paths** away from each other.
-    * **Holes** placed side-by-side or on top of each other should automatically be isolated if this occurs, though they may still overlap both other **Holes** placed diagonally from them and paths.
+    * When **Exporting** if the **Path Width**  is too high and they are close enough to each other then **Holes** that should be separate may overlap. If this is happening  to you, either reduce your **Path Width** or move the **Paths** away from each other.
+    * **Holes** placed side-by-side or on top of each other should automatically be isolated if this occurs, though they may still overlap both other **Holes** placed diagonally from them and **Paths**.
 
 ![](https://imgur.com/HdcJZ9F.gif)  
 
