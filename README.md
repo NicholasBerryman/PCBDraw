@@ -101,6 +101,7 @@ The grid here represents the circuit board.
     * When **Exporting**, if the **Path Width** is too high and they are close enough to each other, then **Paths** that should be separate may overlap . If this is happening  to you, either reduce your **Path Width** or move the **Paths** away from each other.
 
 ![](https://imgur.com/4P6oFxU.gif)  
+![](https://imgur.com/R2crk6t.gif)
   
 * To draw a component hole:
   * Select the **Hole** tool from the **Tools Tab** of the **Context Menu**.
@@ -109,6 +110,7 @@ The grid here represents the circuit board.
     * **Holes** placed side-by-side or on top of each other should automatically be isolated if this occurs, though they may still overlap both other **Holes** placed diagonally from them and **Paths**.
 
 ![](https://imgur.com/HdcJZ9F.gif)  
+![](https://imgur.com/jcFFVsC.gif)  
 
 * To select items you have drawn on the workspace:
   * Select the **Select** tool from the **Tools Tab** of the **Context Menu**.
@@ -118,6 +120,7 @@ The grid here represents the circuit board.
   * The selected items should turn blue  
 
 ![](https://imgur.com/Sg8Q9oJ.gif)  
+![](https://imgur.com/7pLLTDk.gif)  
 
 * To move items you have drawn on the workspace:
   * Using the **Select** tool, select the items you want to move.
@@ -126,6 +129,7 @@ The grid here represents the circuit board.
     * The selected items will be treated as if they are in a large rectangle when moving. The top left point of that rectangle will be the point that you click to move them to.  
 
 ![](https://imgur.com/P2W5FvA.gif)  
+![](https://imgur.com/4rU56bd.gif)  
 
 * To delete items you have drawn on the workspace:
   * Using the **Select** tool, select the items you want to move.
@@ -133,6 +137,7 @@ The grid here represents the circuit board.
     * There is currently **NO** undo option. **Save your work** before deleting anything that might be important.  
 
 ![](https://imgur.com/djjcZAu.gif)  
+![](https://imgur.com/0hnMySR.gif)  
 
 **Once you are done with your circuit board remember to save the board and export it for carving**
 
