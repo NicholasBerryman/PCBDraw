@@ -1,10 +1,26 @@
 # PCBDraw
 
+Table of contents
+=================
+
+<!--ts-->
+   * [Installation](#Installation)
+   * [User Guide](#User-Guide)
+      * [The User Interface](#The-User-Interface)
+      * [The File Menu](#The-File-Menu)
+      * [The Context Bar](#The-Context-Bar)
+      * [The Workspace & Drawing a PCB](#The-Workspace)
+   * [Carving With Easel](#Carving-With-Easel)
+   * [FAQ](#FAQ)
+<!--te-->
+
+
 ## Installation
+
 ### Windows
 * Download the windows installer from https://github.com/NicholasBerryman/PCBDraw/blob/master/dist/bundles/PCBDraw-1.0.exe?raw=true  
 * Once it has downloaded, run the installer and follow the instructions it gives.  
-* After the installer has finished, the program should open automatically. You may run it in the future by opening **Nick Berryman/PCBDraw** from the start menu.
+* After the installer has finished, the program should open automatically. You may run it in the future by opening **Nick Berryman->PCBDraw** from the start menu.
 
 ### Mac and Linux
 * Ensure Java is installed (download and install from https://www.java.com/en/download/)
@@ -66,6 +82,7 @@ These options are explored in greater detail in the **Workspace** section below
 * The **Z-Up** option sets the height of the drill as it moves between cuts. Ensure this is high enough that it won't hit anything. The default value is almost always best.
 * The **Feedrate** option sets the speed of cutting. This option should **NOT** be changed unless you are using a CNC Router other than the Carvey, or are very familiar with CNC Machining. Leave at the default value otherwise.
 * The **Path Width** determines how wide the traces on the board should be. **Reduce** this value if traces join up where they shouldn't, **increase** this value if the circuit should carry large currents.
+  * If the **Path Width** is set **too high**, then **Paths** and **Holes** that are **too close** to each-other may **overlap and cause shorts**. If this is happening then either **reduce** this value, or move the overlapping features further apart.
   
 Click the **Export** button and choose a location to export the file to when you are ready to carve your board.
 
@@ -81,12 +98,15 @@ The grid here represents the circuit board.
   * Select the **Path** tool from the **Tools Tab** of the **Context Menu**.
   * Click the start point of the line trace on the grid (**Not** click-and-drag).
   * Click the end point of the line trace on the grid (**Not** click-and-drag).
+    * When **Exporting**, if the **Path Width** is too high and they are close enough to each other, then **Paths** that should be separate may overlap . If this is happening  to you, either reduce your **Path Width** or move the **Paths** away from each other.
 
 ![](https://imgur.com/4P6oFxU.gif)  
   
 * To draw a component hole:
   * Select the **Hole** tool from the **Tools Tab** of the **Context Menu**.
   * Click the point on the grid where you want the hole.  
+    * When **Exporting** if the **Path Width**  is too high and they are close enough to each other then **Holes** that should be separate may overlap. If this is happening  to you, either reduce your **Path Width** or move the **Paths** away from each other.
+    * **Holes** placed side-by-side or on top of each other should automatically be isolated if this occurs, though they may still overlap both other **Holes** placed diagonally from them and **Paths**.
 
 ![](https://imgur.com/HdcJZ9F.gif)  
 
@@ -126,7 +146,7 @@ If you are using the Carvey, this must be done with the Inventables **Easel** we
 * Create a **New Project**.
 * Rename the project by clicking the title in the top left of the web page.
 * Select your machine with **Machine->Carvey**
-* Import the circuit board with **File->Import g-code**
+* Import the circuit board with **File->Import g-code->browse**
   * Select the gcode file that you exported the completed circuit board to.
 * Ensure the Carvey is turned on and connected
   * Also check that the blank PCB is properly secured and the correct carving bit is in place
