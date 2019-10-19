@@ -150,7 +150,7 @@ If you are using the Carvey, this must be done with the Inventables **Easel** we
   * Select the gcode file that you exported the completed circuit board to.
 * Ensure the Carvey is turned on and connected
   * Also check that the blank PCB is properly secured and the correct carving bit is in place
-* Click **Carve** button on the top right and follow the instructions it shows.
+* Click the **Carve** button on the top right and follow the instructions it shows.
 * Wait for the board to be carved.
 
 ## FAQ
