@@ -8,7 +8,8 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="PCBDrawLauncher.jar" size="7334" download="eager" />
+    <jar href="PCBDrawLauncher.jar" size="1324" download="eager" />
+    <jar href="lib\UpdateLauncher.jar" size="6502" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="PCBDrawLauncher" >
     <param name="requiredFXVersion" value="8.0+"/>
