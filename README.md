@@ -11,6 +11,7 @@ Table of contents
       * [The Context Bar](#The-Context-Bar)
       * [The Workspace & Drawing a PCB](#The-Workspace)
    * [Carving With Easel](#Carving-With-Easel)
+   * [Examples](#Examples)
    * [FAQ](#FAQ)
 <!--te-->
 
@@ -152,6 +153,15 @@ If you are using the Carvey, this must be done with the Inventables **Easel** we
   * Also check that the blank PCB is properly secured and the correct carving bit is in place
 * Click the **Carve** button on the top right and follow the instructions it shows.
 * Wait for the board to be carved.
+
+## Examples
+This page will be updated with examples and templates as I make them.
+Each example has both '.gcb' file and a '.gcode' file. You can the .gcb file in **PCBDraw** to view and edit it, and you can open the .gcode file in **Easel** (See above), to test it with your Carvey (Or other CNC Router).
+Make sure to download each link using **Right Click->Save link as**.
+Here is the current list:
+* Mini ROV Circuit for Subs-In-Schools
+  * .gcb file:    https://github.com/NicholasBerryman/PCBDraw/raw/master/Examples/MiniSubCircuitExample.gcb
+  * .gcode file:  https://raw.githubusercontent.com/NicholasBerryman/PCBDraw/master/Examples/MiniSubCircuitExample.gcode
 
 ## FAQ
  * Can I use keyboard shortcuts like ctrl+c, ctrl+v, ctrl+z, etc. ?
