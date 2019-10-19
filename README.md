@@ -153,6 +153,15 @@ If you are using the Carvey, this must be done with the Inventables **Easel** we
 * Click the **Carve** button on the top right and follow the instructions it shows.
 * Wait for the board to be carved.
 
+## Examples
+This page will be updated with examples and templates as I make them.
+Each example has both '.gcb' file and a '.gcode' file. You can the .gcb file in **PCBDraw** to view and edit it, and you can open the .gcode file in **Easel** (See above), to test it with your Carvey (Or other CNC Router).
+Make sure to download each link using **Right Click->Save link as**.
+Here is the current list:
+* Mini ROV Circuit for Subs-In-Schools
+  * .gcb file:    https://github.com/NicholasBerryman/PCBDraw/raw/master/Examples/MiniSubCircuitExample.gcb
+  * .gcode file:  https://raw.githubusercontent.com/NicholasBerryman/PCBDraw/master/Examples/MiniSubCircuitExample.gcode
+
 ## FAQ
  * Can I use keyboard shortcuts like ctrl+c, ctrl+v, ctrl+z, etc. ?
    * No. Keyboard shortcuts are not currently supported for any action. At this stage there is also no functionality for undo, copy, and paste at all, let alone with keyboard shortcuts. These may be added in a future update if I have time between university assignments.
