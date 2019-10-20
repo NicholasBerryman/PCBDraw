@@ -20,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
+import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import pcbdraw.data.GCBFile;
@@ -115,6 +116,7 @@ public class PCBDraw extends Application {
             }
         });
         
+        primaryStage.getIcons().add(new Image(PCBDraw.class.getResourceAsStream("/icon_free.png")));
         primaryStage.setTitle("PCBDraw");
         primaryStage.setScene(scene);
         primaryStage.show();
