@@ -18,12 +18,13 @@ Table of contents
 
 ## Installation
 
+## Windows
 * Download the windows installer from https://github.com/NicholasBerryman/PCBDraw/raw/master/Launcher/bundles/PCBDrawLauncher-1.0.exe  
 * Once it has downloaded, run the installer and follow the instructions it gives.  
 * After the installer has finished, the program should open automatically. You may run it in the future by opening **Nick Berryman->PCBDrawLauncher** from the start menu.
 
 
-### Mac and Linux	### Mac and Linux
+### Mac and Linux
 * Ensure Java is installed (download and install from https://www.java.com/en/download/)	* Ensure Java is installed (download and install from https://www.java.com/en/download/)
 * Once Java is installed, download PCBDraw from https://github.com/NicholasBerryman/PCBDraw/raw/master/Launcher/PCBDrawLauncher.jar
 * Once it has downloaded, move it somewhere you won't lose it (e.g your Desktop) and run it normally
