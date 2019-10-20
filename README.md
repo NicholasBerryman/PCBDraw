@@ -25,7 +25,7 @@ Table of contents
 
 
 ### Mac and Linux
-* Ensure Java is installed (download and install from https://www.java.com/en/download/)	* Ensure Java is installed (download and install from https://www.java.com/en/download/)
+* Ensure Java is installed (download and install from https://www.java.com/en/download/)	
 * Once Java is installed, download PCBDraw from https://github.com/NicholasBerryman/PCBDraw/raw/master/Launcher/PCBDrawLauncher.jar
 * Once it has downloaded, move it somewhere you won't lose it (e.g your Desktop) and run it normally
 
