@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pcbdraw.gui;
+package pcbdraw.gui.context;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -19,14 +19,14 @@ import javafx.scene.layout.VBox;
  *
  * @author Nick Berryman
  */
-public class BoardPane extends Tab{
+public class BoardTab extends Tab{
     private Spinner<Integer> widthSpin = new Spinner<>(10, 1000, 100);
     private Spinner<Integer> heightSpin = new Spinner<>(10, 1000, 100);
     private Spinner<Integer> zoomSpin = new Spinner<>(1, 100, 10);
     private Spinner<Integer> sqSizeSpin = new Spinner<>(1, 100, 5);
     private CheckBox forCarvey = new CheckBox();
     
-    public BoardPane(){
+    public BoardTab(){
         this.setClosable(false);
         this.setText("Board");
         VBox root = new VBox();

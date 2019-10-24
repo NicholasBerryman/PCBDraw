@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pcbdraw.gui;
+package pcbdraw.gui.context;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,7 +17,7 @@ import javafx.scene.layout.VBox;
  *
  * @author Nick Berryman
  */
-public class ToolsPane extends Tab{
+public class ToolsTab extends Tab{
     RadioButton path;
     RadioButton hole;
     RadioButton select;
@@ -25,7 +25,7 @@ public class ToolsPane extends Tab{
     Button delete;
     Button move;
     
-    public ToolsPane(){
+    public ToolsTab(){
         this.setClosable(false);
         this.setText("Tools");
         

@@ -3,10 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pcbdraw.processing;
+package pcbdraw.CNC;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Objects;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -15,7 +14,7 @@ import javafx.scene.shape.Line;
  *
  * @author Nick Berryman
  */
-public class GCoder {
+public class GCodeGenerator {
     private  StringBuilder gcode = new StringBuilder();
     private double zDown;
     private double drillDown;
@@ -31,7 +30,7 @@ public class GCoder {
     private int currentProgress = 0;
     private ProgressListener progListen;
     
-    public GCoder(double zDown, double drillDown, double zUp, double feedRate, double pathWidth) {
+    public GCodeGenerator(double zDown, double drillDown, double zUp, double feedRate, double pathWidth) {
         this.zDown = zDown;
         this.drillDown = drillDown;
         this.zUp = zUp;

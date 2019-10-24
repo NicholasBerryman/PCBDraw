@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pcbdraw.gui;
+package pcbdraw.gui.context;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,7 +18,7 @@ import javafx.scene.layout.VBox;
  *
  * @author Nick Berryman
  */
-public class ExportPane extends Tab{
+public class ExportTab extends Tab{
     private final Spinner<Double> zDownSpin = new Spinner<>(-10, 1, -0.2, 0.1);
     private final Spinner<Double> drillDownSpin = new Spinner<>(-10, 1, -0.8, 0.1);
     private final Spinner<Integer> zUpSpin = new Spinner<>(1, 100, 10);
@@ -26,7 +26,7 @@ public class ExportPane extends Tab{
     private final Spinner<Double> pWidthSpin = new Spinner<>(0.1, 25, 2, 0.1);
     private Button export;
     
-    public ExportPane(){
+    public ExportTab(){
         this.setClosable(false);
         this.setText("Export");
         VBox root = new VBox();

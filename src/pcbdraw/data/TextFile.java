@@ -50,7 +50,6 @@ public class TextFile {
     /**
      * Saves a family tree to the file, overwriting any others
      * @throws IOException When there is an error writing to the file
-     * @throws ClassNotFoundException When there is an error with the class
      */
     public void save(String toWrite) throws IOException{
         out.save(toWrite);
