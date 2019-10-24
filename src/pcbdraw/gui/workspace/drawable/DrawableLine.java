@@ -9,6 +9,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import pcbdraw.circuit.Coordinate;
+import pcbdraw.gui.workspace.guigrid.GUIGrid;
 
 /**
  *
@@ -17,19 +18,23 @@ import pcbdraw.circuit.Coordinate;
 public class DrawableLine extends Drawable{
     private Line line = null;
 
-    public DrawableLine(Runnable onFinish) {
-        super(onFinish);
+    public DrawableLine(Runnable onFinish, GUIGrid grid) {
+        super(onFinish, grid);
     }
     
+    //Provide as GUI Units
     @Override
     public void startDrawing(Coordinate start) {
+        start = this.getGrid().GUIRoundGridSquare(start);
         line = new Line(start.x, start.y, start.x, start.y);
         line.setStroke(Color.RED);
         line.setStrokeWidth(2);
     }
 
+    //Provide as GUI Units
     @Override
     public void updateDrawing(Coordinate update) {
+        update = this.getGrid().GUIRoundGridSquare(update);
         line.setEndX(update.x);
         line.setEndY(update.y);
     }
@@ -48,5 +53,4 @@ public class DrawableLine extends Drawable{
     public Line getLine(){
         return line;
     }
-
 }

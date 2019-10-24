@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pcbdraw.gui.workspace;
+package pcbdraw.gui.workspace.guigrid;
 
 import java.util.Collections;
 import javafx.scene.layout.Pane;
@@ -36,8 +36,8 @@ public class GUIGrid {
         this.workspace = workspace;
         this.carvey = carvey;
         
-        drawingLine = new DrawableLine(this::finishDrawingLine);
-        selectingRect = new DrawableRect(this::finishSelecting);
+        drawingLine = new DrawableLine(this::finishDrawingLine, this);
+        selectingRect = new DrawableRect(this::finishSelecting, this);
     }
     
     public void setZoom(double zoom){this.zoom = zoom;}
@@ -45,12 +45,23 @@ public class GUIGrid {
     public void setCarvey(boolean carvey){this.carvey = carvey;}
     
     public DrawableLine getDrawingLine(){return this.drawingLine;}
+    public DrawableRect getSelectingRect(){return this.selectingRect;}
     
     public double mmToGUI(double mmValue){return zoom*mmValue;}
     public double GUIToMM(double GUIValue){return GUIValue/zoom;}
-    public Coordinate mmToGUI(Coordinate coord){return new Coordinate(mmToGUI(coord.x), mmToGUI(this.workspace.getSize().y) - mmToGUI(coord.y));}
-    public Coordinate GUIToMM(Coordinate coord){return new Coordinate(GUIToMM(coord.x), GUIToMM(this.workspace.getSize().y) - GUIToMM(coord.y));}
+    public Coordinate mmToGUI(Coordinate coord){
+        return new Coordinate(mmToGUI(coord.x), mmToGUI(this.workspace.getSize().y) - mmToGUI(coord.y));
+    }
+    public Coordinate GUIToMM(Coordinate coord){return new Coordinate(GUIToMM(coord.x), this.workspace.getSize().y - GUIToMM(coord.y));}
+    //public Coordinate GUIToMM(Coordinate coord){return new Coordinate(GUIToMM(coord.x), GUIToMM(coord.y));}
     public Coordinate mmRoundGridSquare(Coordinate coord){return new Coordinate(Math.round(coord.x/squareSizeMM)*squareSizeMM, Math.round(coord.y/squareSizeMM)*squareSizeMM);}
+    public Coordinate GUIRoundGridSquare(Coordinate coord){return mmToGUI(mmRoundGridSquare(GUIToMM(coord)));}
+    
+    public void redraw(Pane pane){
+        pane.getChildren().clear();
+        this.drawGrid(pane);
+        this.drawTraces(pane);
+    }
     
     public void drawGrid(Pane pane){
         double stroke = 0.5;

@@ -82,7 +82,7 @@ public class PathTrace extends CircuitTrace{
         private Coordinate endPoint;
 
         public Line(Coordinate startPoint, Coordinate endPoint){
-            if (startPoint.x < endPoint.x){
+            if (startPoint.x <= endPoint.x){
                 this.startPoint = startPoint;
                 this.endPoint = endPoint;
             }
@@ -90,6 +90,7 @@ public class PathTrace extends CircuitTrace{
                 this.startPoint = endPoint;
                 this.endPoint = startPoint;
             }
+            //TODO maybe throw error on line is a point
         }
         
         public double getGradient(){

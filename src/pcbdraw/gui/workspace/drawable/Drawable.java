@@ -7,15 +7,23 @@ package pcbdraw.gui.workspace.drawable;
 
 import javafx.scene.layout.Pane;
 import pcbdraw.circuit.Coordinate;
+import pcbdraw.gui.workspace.guigrid.GUIGrid;
 
 /**
  *
  * @author Nick Berryman
  */
 public abstract class Drawable {
-    private Runnable finishTask;
-    public Drawable(Runnable onFinish){
+    private final Runnable finishTask;
+    private final GUIGrid grid;
+    
+    public Drawable(Runnable onFinish, GUIGrid grid){
         this.finishTask = onFinish;
+        this.grid = grid;
+    }
+    
+    public GUIGrid getGrid(){
+        return grid;
     }
     
     public abstract void startDrawing(Coordinate start);

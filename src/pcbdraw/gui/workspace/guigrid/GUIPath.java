@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pcbdraw.gui.workspace;
+package pcbdraw.gui.workspace.guigrid;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
