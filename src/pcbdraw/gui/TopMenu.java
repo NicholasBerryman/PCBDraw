@@ -5,21 +5,24 @@
  */
 package pcbdraw.gui;
 
-import javafx.scene.Scene;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import pcbdraw.gui.workspace.WorkPane;
+import pcbdraw.data.GCBFile;
+import pcbdraw.gui.workspace.guigrid.GUIGrid;
 
 /**
  *
  * @author Nick Berryman
  */
 public class TopMenu extends MenuBar{
-    private final WorkPane workspace;
+    private final MainPane mainPane;
     private final MenuItem save;
     private final MenuItem open;
     private final MenuItem newFile;
@@ -27,60 +30,72 @@ public class TopMenu extends MenuBar{
     private final MenuItem undo;
     private final MenuItem redo;
     
-    public TopMenu(Scene s, WorkPane p){
-        this.workspace = p;
+    public TopMenu(MainPane p){
+        this.mainPane = p;
         Menu fileMenu = new Menu("File");
         this.getMenus().add(fileMenu);
         
-        newFile = new MenuItem("New");
+        newFile = new MenuItem("New ");
         fileMenu.getItems().add(newFile);
-        save = new MenuItem("Save  (Ctrl+S)");
+        newFile.setOnAction((e) -> {newFile();});
+        save = new MenuItem("Save");
         fileMenu.getItems().add(save);
-        open = new MenuItem("Open  (Ctrl+O)");
+        save.setOnAction((e) -> {save();});
+        open = new MenuItem("Open");
         fileMenu.getItems().add(open);
+        open.setOnAction((e) -> {open();});
         
         
         Menu editMenu = new Menu("Edit");
         this.getMenus().add(editMenu);
         
-        undo = new MenuItem("Undo  (Ctrl+Z)");
+        undo = new MenuItem("Undo");
         editMenu.getItems().add(undo);
         undo.setOnAction((e) -> {undo();});
-        redo = new MenuItem("Redo  (Ctrl+Y)");
+        redo = new MenuItem("Redo");
         editMenu.getItems().add(redo);
         redo.setOnAction((e) -> {redo();});
         
-        new Shortcuts().initialise(s);
+        new Shortcuts().initialise();
     }
     
-    public void save(){}
-    public void open(){}
-    public void newFile(){}
+    public void save(){
+        try {
+            GCBFile saving = GCBFile.askUserToSaveAs();
+            if (saving != null) saving.save(mainPane.getWorkPane().getWorkspaceGrid());
+        } catch (IOException ex) {
+            Logger.getLogger(TopMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void open(){
+        try {
+            GCBFile loading = GCBFile.askUserToOpen();
+            if (loading != null)mainPane.setWorkspace(loading.read());
+        } catch (IOException ex) {
+            Logger.getLogger(TopMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void newFile(){mainPane.setWorkspace(new GUIGrid());}
     
-    public void undo(){workspace.undo();}
-    public void redo(){workspace.redo();}
+    public void undo(){mainPane.getWorkPane().undo();}
+    public void redo(){mainPane.getWorkPane().redo();}
     
     private class Shortcuts {
-        public void initialise(Scene s){
-            KeyCombination undo = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
-            s.getAccelerators().put(undo, (Runnable) () -> {
-                undo();
-            });
+        public void initialise(){
+            KeyCombination undoKey = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
+            undo.acceleratorProperty().set(undoKey);
 
-            KeyCombination redo = new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN);
-            s.getAccelerators().put(redo, (Runnable) () -> {
-                redo();
-            });
+            KeyCombination redoKey = new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN);
+            redo.acceleratorProperty().set(redoKey);
 
-            KeyCombination save = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
-            s.getAccelerators().put(save, (Runnable) () -> {
-                save();
-            });
+            KeyCombination saveKey = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
+            save.acceleratorProperty().set(saveKey);
             
-            KeyCombination open = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
-            s.getAccelerators().put(open, (Runnable) () -> {
-                open();
-            });
+            KeyCombination openKey = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
+            open.acceleratorProperty().set(openKey);
+            
+            KeyCombination newFileKey = new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN);
+            newFile.acceleratorProperty().set(newFileKey);
         }
     }
 }

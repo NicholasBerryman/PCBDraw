@@ -14,8 +14,6 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import pcbdraw.circuit.Coordinate;
-import pcbdraw.circuit.MilliGrid;
 import pcbdraw.gui.workspace.eventhandlers.WorkspaceEventHandler;
 
 /**
@@ -24,11 +22,11 @@ import pcbdraw.gui.workspace.eventhandlers.WorkspaceEventHandler;
  */
 public class WorkPane extends ScrollPane{
     private final Pane pane = new Pane();
-    private final GUIGrid workspace;
-    private final WorkspaceEventHandler workspaceHandler;
+    private GUIGrid workspace;
+    private WorkspaceEventHandler workspaceHandler;
 
-    public WorkPane(Coordinate sizeMM, double zoom, double squareSizeMM, boolean carvey) {
-        this.workspace = new GUIGrid(zoom, squareSizeMM, carvey, new MilliGrid(sizeMM));
+    public WorkPane() {
+        this.workspace = new GUIGrid();
         workspaceHandler = new WorkspaceEventHandler(workspace, pane);
         
         this.setContent(pane);
@@ -36,6 +34,7 @@ public class WorkPane extends ScrollPane{
     
         this.pane.addEventHandler(MouseEvent.MOUSE_CLICKED, workspaceHandler.clickHandler);
         this.pane.addEventHandler(MouseEvent.MOUSE_MOVED, workspaceHandler.moveHandler);
+        this.workspace.redraw(pane);
     }
     
     public enum WorkspaceAction{
@@ -49,6 +48,17 @@ public class WorkPane extends ScrollPane{
 
     public void setAction(WorkspaceAction action){
         this.workspaceHandler.setAction(action);
+    }
+    
+    public void setWorkspace(GUIGrid workspace){
+        this.pane.removeEventHandler(MouseEvent.MOUSE_CLICKED, workspaceHandler.clickHandler);
+        this.pane.removeEventHandler(MouseEvent.MOUSE_MOVED, workspaceHandler.moveHandler);
+        this.pane.getChildren().clear();
+        this.workspace = workspace;
+        this.workspaceHandler = new WorkspaceEventHandler(workspace, pane);
+        this.workspace.redraw(pane);
+        this.pane.addEventHandler(MouseEvent.MOUSE_CLICKED, workspaceHandler.clickHandler);
+        this.pane.addEventHandler(MouseEvent.MOUSE_MOVED, workspaceHandler.moveHandler);
     }
     
     public void update(){

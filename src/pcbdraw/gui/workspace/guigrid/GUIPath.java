@@ -61,9 +61,14 @@ public class GUIPath extends GUITrace{
 
     @Override
     public void cancelMove() {
-        this.line.setStartX(this.trace.getStartPoint().x);
-        this.line.setStartY(this.trace.getStartPoint().y);
-        this.line.setEndX(this.trace.getEndPoint().x);
-        this.line.setEndY(this.trace.getEndPoint().y);
+        this.line.setStartX(grid.mmToGUI(this.trace.getStartPoint()).x);
+        this.line.setStartY(grid.mmToGUI(this.trace.getStartPoint()).y);
+        this.line.setEndX(grid.mmToGUI(this.trace.getEndPoint()).x);
+        this.line.setEndY(grid.mmToGUI(this.trace.getEndPoint()).y);
+    }
+
+    @Override
+    public Coordinate getBoundPos() {
+        return new Coordinate(Math.min(this.line.getStartX(), this.line.getEndX()), Math.min(this.line.getStartY(), this.line.getEndY()));
     }
 }

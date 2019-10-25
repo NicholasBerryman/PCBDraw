@@ -47,10 +47,7 @@ public abstract class GUITrace {
         return this.trace;
     }
     
-    public Coordinate getBoundPos(){
-        return new Coordinate(traceShape.boundsInLocalProperty().getValue().getMinX(), traceShape.boundsInLocalProperty().getValue().getMinY());
-    }
-    
+    public abstract Coordinate getBoundPos();
     public abstract void moveApparent(Coordinate dist);
     public abstract void commitMove();
     public abstract void cancelMove();

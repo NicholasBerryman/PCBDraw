@@ -5,11 +5,14 @@
  */
 package pcbdraw.data;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
+import javafx.stage.FileChooser;
+import pcbdraw.circuit.Coordinate;
+import pcbdraw.circuit.HoleTrace;
+import pcbdraw.circuit.MilliGrid;
+import pcbdraw.circuit.PathTrace;
+import pcbdraw.gui.workspace.guigrid.GUIGrid;
 
 /**
  *
@@ -17,91 +20,85 @@ import javafx.scene.shape.Line;
  */
 public class GCBFile {
     private TextFile file;
-    private int boardWidth;
-    private int boardHeight;
-    private boolean forCarvey;
 
+    public static GCBFile askUserToOpen() throws IOException{
+        FileChooser gcbChoose = new FileChooser();
+        FileChooser.ExtensionFilter gcbFilter = new FileChooser.ExtensionFilter("PCB files (*.gcb)", "*.gcb");
+        gcbChoose.getExtensionFilters().add(gcbFilter);
+        
+        File toRead = gcbChoose.showOpenDialog(null);
+        if (toRead == null) return null;
+        return new GCBFile(toRead.getPath());
+    }
+    
+    public static GCBFile askUserToSaveAs() throws IOException{
+        FileChooser gcbChoose = new FileChooser();
+        FileChooser.ExtensionFilter gcbFilter = new FileChooser.ExtensionFilter("PCB files (*.gcb)", "*.gcb");
+        gcbChoose.getExtensionFilters().add(gcbFilter);
+        
+        File toSave = gcbChoose.showSaveDialog(null);
+        if (toSave == null) return null;
+        return new GCBFile(toSave.getPath());
+    }
+    
     public GCBFile(String fileName) throws IOException {
         file = new TextFile(fileName);
     }
     
-    public void save(ArrayList<Line> paths, ArrayList<Circle> holes, int boardWidth, int boardHeight, int unitMult, boolean forCarvey) throws IOException{
+    
+    public void save(GUIGrid pcb) throws IOException{
         StringBuilder str = new StringBuilder();
-        str.append(boardWidth).append('\n');
-        str.append(boardHeight).append('\n');
-        str.append(forCarvey).append('\n');
-        str.append("Lines:").append('\n');
-        for (Line l : paths){
-            str.append(l.getStartX()/unitMult);
+        str.append(pcb.getWorkspace().getSize().x).append('\n');
+        str.append(pcb.getWorkspace().getSize().y).append('\n');
+        str.append(pcb.getZoom()).append('\n');
+        str.append(pcb.getSquareSizeMM()).append('\n');
+        str.append(pcb.getCarvey()).append('\n');
+        str.append("Paths:").append('\n');
+        for (PathTrace p : pcb.getWorkspace().getPathTraces()){
+            System.out.println(p.getStartPoint().x);
+            str.append(p.getStartPoint().x);
             str.append(",");
-            str.append(l.getStartY()/unitMult);
+            str.append(p.getStartPoint().y);
             str.append(",");
-            str.append(l.getEndX()/unitMult);
+            str.append(p.getEndPoint().x);
             str.append(",");
-            str.append(l.getEndY()/unitMult).append('\n');
+            str.append(p.getEndPoint().y).append('\n');
         }
-        str.append("Circles:").append('\n');
-        for (Circle c : holes){
-            str.append(c.getCenterX()/unitMult);
+        str.append("Holes:").append('\n');
+        for (HoleTrace h : pcb.getWorkspace().getHoleTraces()){
+            str.append(h.getMajorCoord().x);
             str.append(",");
-            str.append(c.getCenterY()/unitMult).append('\n');
+            str.append(h.getMajorCoord().y).append('\n');
         }
         file.save(str.toString());
     }
     
-    public void read(ArrayList<Line> paths, ArrayList<Circle> holes, int unitMult) throws IOException{
+    public GUIGrid read() throws IOException{
         file.openToRead();
         boolean doingHoles = false;
-        String line;
-        boardWidth = Integer.parseInt(file.read());
-        boardHeight = Integer.parseInt(file.read());
-        forCarvey = Boolean.parseBoolean(file.read());
+        MilliGrid pcb = new MilliGrid(new Coordinate(Double.parseDouble(file.read()), Double.parseDouble(file.read())));
+        GUIGrid gcb = new GUIGrid(Double.parseDouble(file.read()), Double.parseDouble(file.read()), Boolean.parseBoolean(file.read()), pcb);
         file.read();
+        
+        String line;
         while ((line = file.read()) != null){
             line = line.trim();
-            if (line.equals("Circles:")) doingHoles = true;
+            if (line.equals("Holes:")) doingHoles = true;
             else{
                 if (doingHoles){
-                    Circle circ = new Circle();
-                        circ.setCenterX(Double.parseDouble(line.split(",")[0])*unitMult);
-                        circ.setCenterY(Double.parseDouble(line.split(",")[1])*unitMult);
-                        circ.setStroke(Color.RED);
-                        circ.setStrokeWidth(2);
-                        circ.setFill(Color.WHITE);
-                        holes.add(circ);
+                    gcb.addHole(new Coordinate(Double.parseDouble(line.split(",")[0]), Double.parseDouble(line.split(",")[1])), true);
                 }
                 else{
-                    Line currentLine = new Line();
-                    currentLine.setStrokeWidth(2);
-                    currentLine.setStroke(Color.RED);
-                    currentLine.setStartX(Double.parseDouble(line.split(",")[0])*unitMult);
-                    currentLine.setStartY(Double.parseDouble(line.split(",")[1])*unitMult);
-                    currentLine.setEndX(Double.parseDouble(line.split(",")[2])*unitMult);
-                    currentLine.setEndY(Double.parseDouble(line.split(",")[3])*unitMult);
-                    paths.add(currentLine);
+                    gcb.addPath(
+                        new Coordinate(Double.parseDouble(line.split(",")[0]), Double.parseDouble(line.split(",")[1])), 
+                        new Coordinate(Double.parseDouble(line.split(",")[2]), Double.parseDouble(line.split(",")[3])),
+                        false
+                    );
                 }
             }
         }
         file.closeToRead();
-    }
-
-    public void readProperties() throws IOException{
-        file.openToRead();
-        boardWidth = Integer.parseInt(file.read());
-        boardHeight = Integer.parseInt(file.read());
-        forCarvey = Boolean.parseBoolean(file.read());
-        file.closeToRead();
-    }
-    
-    public int getBoardWidth() {
-        return boardWidth;
-    }
-
-    public int getBoardHeight() {
-        return boardHeight;
-    }
-    
-    public boolean getForCarvey() {
-        return forCarvey;
+        gcb.clearUndo();
+        return gcb;
     }
 }

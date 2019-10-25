@@ -19,7 +19,7 @@ public class GUIHole extends GUITrace{
     private final Circle circle;
     private final GUIGrid grid;
     
-    public GUIHole(HoleTrace trace, double radius, GUIGrid grid){
+    public GUIHole(HoleTrace trace, GUIGrid grid){
         this.trace = trace;
         Coordinate centre = grid.mmToGUI(trace.getMajorCoord());
         circle = new Circle();
@@ -28,7 +28,7 @@ public class GUIHole extends GUITrace{
         circle.setStroke(Color.RED);
         circle.setFill(Color.WHITE);
         circle.setStrokeWidth(2);
-        circle.setRadius(radius);
+        circle.setRadius(grid.mmToGUI(grid.getSquareSizeMM())/4.0);
         this.grid = grid;
         
         super.init(circle, trace);
@@ -53,6 +53,13 @@ public class GUIHole extends GUITrace{
 
     @Override
     public void cancelMove() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.circle.setCenterX(grid.mmToGUI(this.trace.getMajorCoord()).x);
+        this.circle.setCenterY(grid.mmToGUI(this.trace.getMajorCoord()).y);
+        circle.setRadius(grid.mmToGUI(grid.getSquareSizeMM())/4.0);
+    }
+
+    @Override
+    public Coordinate getBoundPos() {
+        return new Coordinate(this.circle.getCenterX(), this.circle.getCenterY());
     }
 }

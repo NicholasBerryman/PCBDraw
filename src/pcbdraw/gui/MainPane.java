@@ -8,9 +8,9 @@ package pcbdraw.gui;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
-import pcbdraw.circuit.Coordinate;
 import pcbdraw.gui.context.ContextPane;
 import pcbdraw.gui.workspace.WorkPane;
+import pcbdraw.gui.workspace.guigrid.GUIGrid;
 
 /**
  *
@@ -19,14 +19,18 @@ import pcbdraw.gui.workspace.WorkPane;
 public class MainPane extends SplitPane{
     private WorkPane workspace;
     private ContextPane context;
+    private SplitPane mainPart;
     private Scene scene;
     
-    public void initialise(Scene scene){
-        SplitPane mainPart = new SplitPane();
-        workspace = new WorkPane(new Coordinate(100,100),5,4,true);
+    public void initialise(){
+        mainPart = new SplitPane();
+        mainPart.setDividerPosition(0, 0);
+        workspace = new WorkPane();
         context = new ContextPane(workspace.getWorkspaceGrid(),workspace.workspaceHandler(),workspace.getWorkPane());
+        context.setMinWidth(190);
+        context.setMaxWidth(250);
         
-        this.getItems().add(new TopMenu(scene, workspace));
+        this.getItems().add(new TopMenu(this));
         this.getItems().add(mainPart);
         this.setOrientation(Orientation.VERTICAL);
         mainPart.getItems().add(context);
@@ -34,6 +38,18 @@ public class MainPane extends SplitPane{
         workspace.update();
     }
     
-    private void undo(){workspace.undo();}
-    private void redo(){workspace.redo();}
+    public WorkPane getWorkPane(){
+        return this.workspace;
+    }
+    public void setWorkspace(GUIGrid workspace){
+        mainPart.getItems().remove(context);
+        mainPart.getItems().remove(this.workspace);
+        
+        this.workspace.setWorkspace(workspace);
+        this.context = new ContextPane(this.workspace.getWorkspaceGrid(),this.workspace.workspaceHandler(),this.workspace.getWorkPane());
+        this.context.setMinWidth(190);
+        this.context.setMaxWidth(250);
+        mainPart.getItems().add(context);
+        mainPart.getItems().add(this.workspace);
+    }
 }

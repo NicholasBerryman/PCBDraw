@@ -35,4 +35,9 @@ public class UndoController {
             undoStack.push(action);
         }
     }
+    
+    public void clear(){
+        undoStack.clear();
+        redoStack.clear();
+    }
 }

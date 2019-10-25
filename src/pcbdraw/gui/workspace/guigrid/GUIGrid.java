@@ -27,7 +27,7 @@ public class GUIGrid {
     private double zoom;
     private double squareSizeMM;
     private boolean carvey;
-    private final MilliGrid workspace;
+    private MilliGrid workspace;
     private final DrawableLine drawingLine;
     private final DrawableRect selectingRect;
     private final UndoController undoController = new UndoController();
@@ -37,24 +37,32 @@ public class GUIGrid {
     public GUIGrid(double zoom, double squareSizeMM, boolean carvey, MilliGrid workspace){
         this.zoom = zoom;
         this.squareSizeMM = squareSizeMM;
-        this.workspace = workspace;
         this.carvey = carvey;
+        this.workspace = workspace;
         
         drawingLine = new DrawableLine(this::finishDrawingLine, this);
         selectingRect = new DrawableRect(this::finishSelecting, this);
     }
     
+    public GUIGrid(){
+        this(5,4,true,new MilliGrid(new Coordinate(100,100)));
+    }
+    
     public void deselect(){this.traces.deselectAll();}
+    public void clearUndo(){this.undoController.clear();}
     
     public void setSize(Coordinate size) {this.workspace.resize(size);}; //In mm
-    public void setZoom(double zoom){this.zoom = zoom;}
     public void setSquareSizeMM(double squareSizeMM){this.squareSizeMM = squareSizeMM;}
     public void setCarvey(boolean carvey){this.carvey = carvey;}
+    public void setZoom(double zoom){
+        this.zoom = zoom;
+        for (GUITrace t : traces.getTraces()) t.cancelMove();
+    }
     
     public double getZoom(){return this.zoom;}
     public double getSquareSizeMM(){return this.squareSizeMM;}
     public boolean getCarvey(){return this.carvey;}
-    public Coordinate getSize() { return workspace.getSize();} //In mm
+    public MilliGrid getWorkspace(){return this.workspace;}
     public DrawableLine getDrawingLine(){return this.drawingLine;}
     public DrawableRect getSelectingRect(){return this.selectingRect;}
     
@@ -114,7 +122,7 @@ public class GUIGrid {
     //Provide in GUI Units
     public void createHole(Coordinate centre){
         centre = GUIToMM(centre);
-        this.addHole(centre);
+        this.addHole(centre, true);
     }
     
     public void deleteSelected(){
@@ -143,31 +151,31 @@ public class GUIGrid {
     }
     
     //Provide in mm
-    private void addHole(Coordinate centre){
-        centre = mmRoundGridSquare(centre);
+    public void addHole(Coordinate centre, boolean roundToGrid){
+        if (roundToGrid) centre = mmRoundGridSquare(centre);
         HoleTrace hole = new HoleTrace(centre);
         if (workspace.addTrace(hole) != null){
-            GUITrace h = new GUIHole(hole, mmToGUI(squareSizeMM)/4.0, this);
+            GUITrace h = new GUIHole(hole, this);
             this.traces.getTraces().add(h);
             undoController.add(new ReversibleAction(){
-                public void redo(){traces.getTraces().add(h);}
-                public void undo(){traces.getTraces().remove(h);}
+                public void redo(){workspace.addTrace(hole); traces.getTraces().add(h);}
+                public void undo(){workspace.getTraces().remove(hole); traces.getTraces().remove(h);}
             });
         }
         //TODO Check range/carvey
     }
     
     //Provide in mm
-    private void addPath(Coordinate start, Coordinate end){
-        start = mmRoundGridSquare(start);
-        end = mmRoundGridSquare(end);
+    public void addPath(Coordinate start, Coordinate end, boolean roundToGrid){
+        if (roundToGrid)start = mmRoundGridSquare(start);
+        if (roundToGrid)end = mmRoundGridSquare(end);
         PathTrace path = new PathTrace(start, end);
         if (workspace.addTrace(path) != null){
             GUIPath p = new GUIPath(path, this);
             this.traces.getTraces().add(p);
             undoController.add(new ReversibleAction(){
-                public void redo(){traces.getTraces().add(p);}
-                public void undo(){traces.getTraces().remove(p);}
+                public void redo(){workspace.addTrace(path); traces.getTraces().add(p);}
+                public void undo(){workspace.getTraces().remove(path); traces.getTraces().remove(p);}
             });
         }
         //TODO Check range/carvey
@@ -181,7 +189,7 @@ public class GUIGrid {
         start = GUIToMM(start);
         Coordinate end = new Coordinate(this.drawingLine.getLine().getEndX(), this.drawingLine.getLine().getEndY());
         end = GUIToMM(end);
-        this.addPath(start, end);
+        this.addPath(start, end, true);
         this.drawingLine.reset();
     }
     
