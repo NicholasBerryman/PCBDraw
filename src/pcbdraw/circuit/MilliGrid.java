@@ -47,11 +47,12 @@ public class MilliGrid {
         return toReturn;
     }
     
-    public void addTrace(CircuitTrace trace){
+    public CircuitTrace addTrace(CircuitTrace trace){
         for (CircuitTrace t : this.getHoleTraces())
-            if (trace.equals(t)) return;
+            if (trace.equals(t)) return null;
         for (CircuitTrace t : this.getHoleTraces())
             trace.simplifyUsing(t);
         this.traces.add(trace);
+        return trace;
     }
 }

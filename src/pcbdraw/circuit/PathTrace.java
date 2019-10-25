@@ -16,6 +16,14 @@ public class PathTrace extends CircuitTrace{
         this.pathLine = new Line(startPoint, endPoint);
     }
     
+    public void setStart(Coordinate start){
+        this.pathLine.startPoint = start;
+    }
+    
+    public void setEnd(Coordinate end){
+        this.pathLine.endPoint = end;
+    }
+    
     public double getGradient(){
         return this.pathLine.getGradient();
     }

@@ -25,7 +25,7 @@ import pcbdraw.gui.workspace.eventhandlers.WorkspaceEventHandler;
 public class WorkPane extends ScrollPane{
     private final Pane pane = new Pane();
     private final GUIGrid workspace;
-    private WorkspaceEventHandler workspaceHandler;
+    private final WorkspaceEventHandler workspaceHandler;
 
     public WorkPane(Coordinate sizeMM, double zoom, double squareSizeMM, boolean carvey) {
         this.workspace = new GUIGrid(zoom, squareSizeMM, carvey, new MilliGrid(sizeMM));
@@ -42,7 +42,8 @@ public class WorkPane extends ScrollPane{
         DrawLine,
         DrawHole,
         Select,
-        Move;
+        Move,
+        None;
         public final static WorkspaceAction Default = DrawLine;
     }
 
@@ -54,4 +55,25 @@ public class WorkPane extends ScrollPane{
         workspace.redraw(pane);
     }
     
+    public Pane getWorkPane(){
+        return pane;
+    }
+    
+    public GUIGrid getWorkspaceGrid(){
+        return workspace;
+    }
+    
+    public WorkspaceEventHandler workspaceHandler(){
+        return workspaceHandler;
+    }
+    
+    public void undo(){
+        this.workspace.undo();
+        this.workspace.redraw(this.pane);
+    }
+    
+    public void redo(){
+        this.workspace.redo();
+        this.workspace.redraw(this.pane);
+    }
 }

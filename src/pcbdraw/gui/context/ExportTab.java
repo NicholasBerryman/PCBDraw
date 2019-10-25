@@ -24,9 +24,11 @@ public class ExportTab extends Tab{
     private final Spinner<Integer> zUpSpin = new Spinner<>(1, 100, 10);
     private final Spinner<Integer> feedSpin = new Spinner<>(1, 100000, 800);
     private final Spinner<Double> pWidthSpin = new Spinner<>(0.1, 25, 2, 0.1);
-    private Button export;
+    private final Button export;
     
+    //TODO connect to gcoder
     public ExportTab(){
+        super();
         this.setClosable(false);
         this.setText("Export");
         VBox root = new VBox();

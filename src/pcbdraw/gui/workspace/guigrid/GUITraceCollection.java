@@ -13,12 +13,11 @@ import pcbdraw.circuit.Coordinate;
  * @author Nick Berryman
  */
 public class GUITraceCollection {
-    private ArrayList<GUITrace> traces = new ArrayList<>();
+    private final ArrayList<GUITrace> traces = new ArrayList<>();
     
     public ArrayList<GUITrace> getTraces(){
         return traces;
     }
-    
     
     //Take in as GUI Units
     public void selectAllInRegion(Coordinate start, Coordinate size){
@@ -36,13 +35,22 @@ public class GUITraceCollection {
             }
             else if (t instanceof GUIHole){
                 GUIHole h = (GUIHole)t;
-                if ( h.getCentre().x >= start.x && h.getCentre().x <= end.y
+                if ( h.getCentre().x >= start.x && h.getCentre().x <= end.x
                      && h.getCentre().y >= start.y && h.getCentre().y <= end.y)
-                t.select();
+                {
+                    t.select();
+                }
             }
         }
         
         //TODO update for better selection of lines, maybe
+    }
+    
+    public ArrayList<GUITrace> deleteSelected(){
+        ArrayList<GUITrace> newTraces = new ArrayList<>();
+        for (GUITrace t : traces) if (t.isSelected()) newTraces.add(t);
+        traces.removeAll(newTraces);
+        return newTraces;
     }
     
     public void deselectAll(){
@@ -56,5 +64,40 @@ public class GUITraceCollection {
             if (t.isSelected()) temp.add(t);
         }
         return temp;
+    }
+    
+    public Coordinate moveSelected(Coordinate newPos){
+        Coordinate currTopLeft = new Coordinate(Double.MAX_VALUE, Double.MAX_VALUE);
+        for (GUITrace t : traces){
+            if (t.getBoundPos().x < currTopLeft.x) 
+                currTopLeft = new Coordinate(t.getBoundPos().x, currTopLeft.y);
+            if (t.getBoundPos().y < currTopLeft.y) 
+                currTopLeft = new Coordinate(currTopLeft.x, t.getBoundPos().y);
+        }
+        Coordinate dist = newPos.subtract(currTopLeft);
+        for (GUITrace t : traces){
+            t.moveApparent(dist);
+        }
+        return currTopLeft;
+    }
+    
+    public Coordinate commitSelected(){
+        Coordinate currTopLeft = new Coordinate(Double.MAX_VALUE, Double.MAX_VALUE);
+        for (GUITrace t : traces){
+            if (t.getBoundPos().x < currTopLeft.x) 
+                currTopLeft = new Coordinate(t.getBoundPos().x, currTopLeft.y);
+            if (t.getBoundPos().y < currTopLeft.y) 
+                currTopLeft = new Coordinate(currTopLeft.x, t.getBoundPos().y);
+        }
+        for (GUITrace t : this.getSelected()){
+            t.commitMove();
+        }
+        return currTopLeft;
+    }
+    
+    public void cancelMove(){
+        for (GUITrace t : traces){
+            t.cancelMove();
+        }
     }
 }

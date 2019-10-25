@@ -40,10 +40,23 @@ public class WorkspaceEventHandler{
         this.action = newAction;
     }
     
+    public void show(Pane pane){
+        this.workspace.redraw(pane);
+    }
+    
+    public void deselect(){
+        workspace.deselect();
+    }
+    
     public void cancelAction(){
         workspace.getDrawingLine().reset();
         workspace.getSelectingRect().reset();
         this.drawingState = DrawingState.NotDrawing;
+    }
+    
+    public void performDelete(Pane pane){
+        workspace.deleteSelected();
+        workspace.redraw(pane);
     }
     
     private class ClickHandler implements EventHandler<MouseEvent>{
@@ -90,7 +103,9 @@ public class WorkspaceEventHandler{
                     }
                     break;
                 case Move:
-                    //TODO
+                    workspace.commitSelected();
+                    workspace.deselect();
+                    action = WorkspaceAction.None;
                     break;
             }
         }
@@ -121,7 +136,8 @@ public class WorkspaceEventHandler{
                     }
                     break;
                 case Move:
-                    //TODO
+                    workspace.moveSelected(mouseCoord);
+                    workspace.redraw(pane);
                     break;
             }
         }

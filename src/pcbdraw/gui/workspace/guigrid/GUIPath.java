@@ -17,7 +17,7 @@ import pcbdraw.circuit.PathTrace;
 public class GUIPath extends GUITrace{
     private final PathTrace trace;
     private final Line line;
-    private GUIGrid grid;
+    private final GUIGrid grid;
     public GUIPath(PathTrace trace, GUIGrid grid){
         this.trace = trace;
         Coordinate start = grid.mmToGUI(trace.getStartPoint());
@@ -36,5 +36,34 @@ public class GUIPath extends GUITrace{
     
     public Coordinate getEnd(){
         return grid.mmToGUI(trace.getEndPoint());
+    }
+
+    @Override
+    public void moveApparent(Coordinate dist) {
+        Coordinate newStart = new Coordinate(line.getStartX(), line.getStartY()).add(dist);
+        Coordinate newEnd = new Coordinate(line.getEndX(), line.getEndY()).add(dist);
+        line.setStartX(newStart.x);
+        line.setStartY(newStart.y);
+        line.setEndX(newEnd.x);
+        line.setEndY(newEnd.y);
+    }
+
+    @Override
+    public void commitMove() {
+        Coordinate traceStart = this.trace.getStartPoint();
+        Coordinate dist = traceStart.subtract(grid.GUIToMM(new Coordinate(line.getStartX(), line.getStartY())));
+        Coordinate newStart = grid.GUIToMM(new Coordinate(line.getStartX(), line.getStartY()));
+        Coordinate newEnd = newStart.add(dist);
+        
+        this.trace.setStart(newStart);
+        this.trace.setEnd(newEnd);
+    }
+
+    @Override
+    public void cancelMove() {
+        this.line.setStartX(this.trace.getStartPoint().x);
+        this.line.setStartY(this.trace.getStartPoint().y);
+        this.line.setEndX(this.trace.getEndPoint().x);
+        this.line.setEndY(this.trace.getEndPoint().y);
     }
 }

@@ -5,10 +5,21 @@
  */
 package pcbdraw.gui.context;
 
+import javafx.scene.control.TabPane;
+import javafx.scene.layout.Pane;
+import pcbdraw.gui.workspace.eventhandlers.WorkspaceEventHandler;
+import pcbdraw.gui.workspace.guigrid.GUIGrid;
+
 /**
  *
  * @author Nick Berryman
  */
-public class ContextPane {
-    
+public class ContextPane extends TabPane{
+    //TODO add gcoder
+    public ContextPane(GUIGrid workspace, WorkspaceEventHandler workspaceActioner, Pane workPane){
+        super();
+        this.getTabs().add(new BoardTab(workspace, workPane));
+        this.getTabs().add(new ToolsTab(workspaceActioner, workPane));
+        this.getTabs().add(new ExportTab());
+    }
 }

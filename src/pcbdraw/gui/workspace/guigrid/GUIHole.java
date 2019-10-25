@@ -17,7 +17,7 @@ import pcbdraw.circuit.HoleTrace;
 public class GUIHole extends GUITrace{
     private final HoleTrace trace;
     private final Circle circle;
-    private GUIGrid grid;
+    private final GUIGrid grid;
     
     public GUIHole(HoleTrace trace, double radius, GUIGrid grid){
         this.trace = trace;
@@ -36,5 +36,23 @@ public class GUIHole extends GUITrace{
     
     public Coordinate getCentre(){
         return grid.mmToGUI(trace.getMajorCoord());
+    }
+
+    @Override
+    public void moveApparent(Coordinate dist) {
+        Coordinate newPos = new Coordinate(circle.getCenterX(), circle.getCenterY()).add(dist);
+        circle.setCenterX(newPos.x);
+        circle.setCenterY(newPos.y);
+    }
+
+    @Override
+    public void commitMove() {
+        Coordinate newPos = grid.GUIToMM(new Coordinate(circle.getCenterX(),circle.getCenterY()));
+        this.trace.setCentrePoint(newPos);
+    }
+
+    @Override
+    public void cancelMove() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

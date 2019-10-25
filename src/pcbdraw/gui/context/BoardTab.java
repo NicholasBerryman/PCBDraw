@@ -5,28 +5,35 @@
  */
 package pcbdraw.gui.context;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
+import javafx.scene.control.SpinnerValueFactory.DoubleSpinnerValueFactory;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import pcbdraw.circuit.Coordinate;
+import pcbdraw.gui.workspace.guigrid.GUIGrid;
 
 /**
  *
  * @author Nick Berryman
  */
 public class BoardTab extends Tab{
-    private Spinner<Integer> widthSpin = new Spinner<>(10, 1000, 100);
-    private Spinner<Integer> heightSpin = new Spinner<>(10, 1000, 100);
-    private Spinner<Integer> zoomSpin = new Spinner<>(1, 100, 10);
-    private Spinner<Integer> sqSizeSpin = new Spinner<>(1, 100, 5);
-    private CheckBox forCarvey = new CheckBox();
+    private final Spinner<Double> widthSpin = new Spinner<>(10.0, 1000.0, 100.0);
+    private final Spinner<Double> heightSpin = new Spinner<>(10.0, 1000.0, 100.0);
+    private final Spinner<Double> zoomSpin = new Spinner<>(1.0, 100.0, 10.0, 0.5);
+    private final Spinner<Double> sqSizeSpin = new Spinner<>(1.0, 100.0, 5.0, 0.5);
+    private final CheckBox forCarvey = new CheckBox();
     
-    public BoardTab(){
+    private final GUIGrid workspace;
+    private final Pane workpane;
+    
+    public BoardTab(GUIGrid workspace, Pane pane){
+        super();
+        this.workspace = workspace;
+        this.workpane = pane;
         this.setClosable(false);
         this.setText("Board");
         VBox root = new VBox();
@@ -38,6 +45,12 @@ public class BoardTab extends Tab{
         widthSpin.setPrefWidth(60);
         widthSpin.setEditable(true);
         widthSpin.focusedProperty().addListener((observable, oldValue, newValue) -> { widthSpin.increment(0);});
+        widthSpin.getEditor().textProperty().addListener((obs, oldvalue, newValue) -> {
+            if (!newValue.equals(""))
+                workspace.setSize(new Coordinate(Double.parseDouble(newValue), workspace.getSize().y));
+            workspace.redraw(pane);
+        });
+        widthSpin.getValueFactory().setValue(workspace.getSize().x);
         width.getChildren().add(widthSpin);
         
         HBox height = new HBox();
@@ -46,6 +59,12 @@ public class BoardTab extends Tab{
         heightSpin.setPrefWidth(60);
         heightSpin.setEditable(true);
         heightSpin.focusedProperty().addListener((observable, oldValue, newValue) -> { heightSpin.increment(0);});
+        heightSpin.getEditor().textProperty().addListener((obs, oldvalue, newValue) -> {
+            if (!newValue.equals(""))
+                workspace.setSize(new Coordinate(workspace.getSize().x, Double.parseDouble(newValue)));
+            workspace.redraw(pane);
+        });
+        heightSpin.getValueFactory().setValue(workspace.getSize().y);
         height.getChildren().add(heightSpin);
         
         
@@ -55,6 +74,12 @@ public class BoardTab extends Tab{
         zoomSpin.setPrefWidth(60);
         zoomSpin.setEditable(true);
         zoomSpin.focusedProperty().addListener((observable, oldValue, newValue) -> { zoomSpin.increment(0);});
+        zoomSpin.getEditor().textProperty().addListener((obs, oldvalue, newValue) -> {
+            if (!newValue.equals(""))
+                workspace.setZoom(Double.parseDouble(newValue));
+            workspace.redraw(pane);
+        });
+        zoomSpin.getValueFactory().setValue(workspace.getZoom());
         zoom.getChildren().add(zoomSpin);
         
         HBox squareSize = new HBox();
@@ -63,70 +88,34 @@ public class BoardTab extends Tab{
         sqSizeSpin.setPrefWidth(60);
         sqSizeSpin.setEditable(true);
         sqSizeSpin.focusedProperty().addListener((observable, oldValue, newValue) -> { sqSizeSpin.increment(0);});
+        sqSizeSpin.getEditor().textProperty().addListener((obs, oldvalue, newValue) -> {
+            if (!newValue.equals(""))
+                workspace.setSquareSizeMM(Double.parseDouble(newValue));
+            workspace.redraw(pane);
+        });
+        sqSizeSpin.getValueFactory().setValue(workspace.getSquareSizeMM());
         squareSize.getChildren().add(sqSizeSpin);
         
         HBox carvey = new HBox();
         root.getChildren().add(carvey);
         carvey.getChildren().add(new Label("Using Carvey: "));
         carvey.getChildren().add(forCarvey);
-        
-        forCarvey.selectedProperty().addListener(new ChangeListener(){
-            @Override
-            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                updateMaxSizes((Boolean) newValue);
-            }
+        forCarvey.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            workspace.setCarvey(newValue);
+            updateMaxSizes(newValue);
+            workspace.redraw(pane);
         });
-    }
-    
-    public void addZoomListener(ChangeListener listen){
-      zoomSpin.valueProperty().addListener(listen);
-    }
-    
-    public void addSqSizeListener(ChangeListener listen){
-      sqSizeSpin.valueProperty().addListener(listen);
-    }
-    
-    public void setZoom(int zoom){
-        zoomSpin.getValueFactory().setValue(zoom);
-    }
-    
-    public void setSqSize(int sqSize){
-        sqSizeSpin.getValueFactory().setValue(sqSize);
-    }
-    
-    public void setWidth(int width){
-        widthSpin.getValueFactory().setValue(width);
-    }
-    
-    public void setHeight(int height){
-        heightSpin.getValueFactory().setValue(height);
-    }
-    
-    public void setForCarvey(boolean forCarvey){
-        this.forCarvey.setSelected(forCarvey);
-        updateMaxSizes(forCarvey);
+        forCarvey.setSelected(workspace.getCarvey());
     }
     
     private void updateMaxSizes(boolean forCarvey){
         if (forCarvey){
-            ((IntegerSpinnerValueFactory)widthSpin.getValueFactory()).setMax(300);
-            ((IntegerSpinnerValueFactory)heightSpin.getValueFactory()).setMax(200);
+            ((DoubleSpinnerValueFactory)widthSpin.getValueFactory()).setMax(300);
+            ((DoubleSpinnerValueFactory)heightSpin.getValueFactory()).setMax(200);
         }
         else{
-            ((IntegerSpinnerValueFactory)widthSpin.getValueFactory()).setMax(1000);
-            ((IntegerSpinnerValueFactory)heightSpin.getValueFactory()).setMax(1000);
+            ((DoubleSpinnerValueFactory)widthSpin.getValueFactory()).setMax(1000);
+            ((DoubleSpinnerValueFactory)heightSpin.getValueFactory()).setMax(1000);
         }
-    }
-    
-    public void addWidthListener(ChangeListener listen){
-        widthSpin.valueProperty().addListener(listen);
-    }
-    
-    public void addHeightListener(ChangeListener listen){
-        heightSpin.valueProperty().addListener(listen);
-    }
-    
-    public void addCarveyListener(ChangeListener listen){
-        forCarvey.selectedProperty().addListener(listen);
     }
 }

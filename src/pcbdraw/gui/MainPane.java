@@ -6,8 +6,10 @@
 package pcbdraw.gui;
 
 import javafx.geometry.Orientation;
+import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
 import pcbdraw.circuit.Coordinate;
+import pcbdraw.gui.context.ContextPane;
 import pcbdraw.gui.workspace.WorkPane;
 
 /**
@@ -15,11 +17,23 @@ import pcbdraw.gui.workspace.WorkPane;
  * @author Nick Berryman
  */
 public class MainPane extends SplitPane{
-    public void initialise(){
-        this.setOrientation(Orientation.VERTICAL);
+    private WorkPane workspace;
+    private ContextPane context;
+    private Scene scene;
+    
+    public void initialise(Scene scene){
+        SplitPane mainPart = new SplitPane();
+        workspace = new WorkPane(new Coordinate(100,100),5,4,true);
+        context = new ContextPane(workspace.getWorkspaceGrid(),workspace.workspaceHandler(),workspace.getWorkPane());
         
-        WorkPane workspace = new WorkPane(new Coordinate(100,100),5,4,false);
-        this.getItems().add(workspace);
+        this.getItems().add(new TopMenu(scene, workspace));
+        this.getItems().add(mainPart);
+        this.setOrientation(Orientation.VERTICAL);
+        mainPart.getItems().add(context);
+        mainPart.getItems().add(workspace);
         workspace.update();
     }
+    
+    private void undo(){workspace.undo();}
+    private void redo(){workspace.redo();}
 }

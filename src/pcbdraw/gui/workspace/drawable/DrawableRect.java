@@ -27,24 +27,31 @@ public class DrawableRect extends Drawable{
     public void startDrawing(Coordinate start) {
         start = this.getGrid().GUIRoundGridSquare(start);
         anchor = start;
-        rect = new Rectangle(anchor.x, anchor.y, anchor.x, anchor.y);
+        rect = new Rectangle(anchor.x, anchor.y, 0, 0);
         rect.setStroke(Color.LIME);
+        rect.setStrokeWidth(3);
+        rect.setFill(Color.TRANSPARENT);
     }
 
     @Override
     public void updateDrawing(Coordinate update) {
         update = this.getGrid().GUIRoundGridSquare(update);
-        Coordinate size = anchor.subtract(update);
+        Coordinate size = update.subtract(anchor);//anchor.subtract(update);
         Coordinate topLeft = new Coordinate(anchor.x, anchor.y);
         
-        if (size.x < 0){
+        if (size.x < 0 && size.y < 0){
+            topLeft = anchor.add(size);
+            size = new Coordinate(-size.x, -size.y);
+        }
+        else if (size.x < 0){
             topLeft = anchor.add(new Coordinate(size.x, 0));
             size = new Coordinate(-size.x, size.y);
         }
-        if (size.y < 0){
+        else if (size.y < 0){
             topLeft = anchor.add(new Coordinate(0, size.y));
             size = new Coordinate(size.x, -size.y);
         }
+        
         
         rect.setX(topLeft.x);
         rect.setY(topLeft.y);
