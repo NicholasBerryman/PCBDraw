@@ -7,6 +7,8 @@ package pcbdraw.gui;
 
 import javafx.geometry.Orientation;
 import javafx.scene.control.SplitPane;
+import javafx.stage.Stage;
+import pcbdraw.data.GCBFile;
 import pcbdraw.gui.context.ContextPane;
 import pcbdraw.gui.workspace.WorkPane;
 import pcbdraw.gui.workspace.guigrid.GUIGrid;
@@ -19,8 +21,11 @@ public class MainPane extends SplitPane{
     private WorkPane workspace;
     private ContextPane context;
     private SplitPane mainPart;
+    private GCBFile gcb;
+    private Stage window;
     
-    public void initialise(){
+    public void initialise(Stage window){
+        this.window = window;
         mainPart = new SplitPane();
         mainPart.setDividerPosition(0, 0);
         workspace = new WorkPane();
@@ -39,6 +44,7 @@ public class MainPane extends SplitPane{
     public WorkPane getWorkPane(){
         return this.workspace;
     }
+    
     public void setWorkspace(GUIGrid workspace){
         mainPart.getItems().remove(context);
         mainPart.getItems().remove(this.workspace);
@@ -49,5 +55,17 @@ public class MainPane extends SplitPane{
         this.context.setMaxWidth(250);
         mainPart.getItems().add(context);
         mainPart.getItems().add(this.workspace);
+    }
+    
+    public void setGCBFile(GCBFile gcb){
+        this.gcb = gcb;
+        if (this.gcb != null)
+            window.setTitle("PCBDraw - "+gcb.getName());
+        else
+            window.setTitle("PCBDraw");
+    }
+    
+    public GCBFile getGCBFile(){
+        return this.gcb;
     }
 }

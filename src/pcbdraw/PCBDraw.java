@@ -28,7 +28,7 @@ public class PCBDraw extends Application {
     public void initialise(){
         MainPane root = new MainPane();
         Scene scene = new Scene(root, 640, 480);
-        root.initialise();
+        root.initialise(primaryStage);
         primaryStage.getIcons().add(new Image(PCBDraw.class.getResourceAsStream("/icon_free.png")));
         primaryStage.setTitle("PCBDraw");
         primaryStage.setScene(scene);

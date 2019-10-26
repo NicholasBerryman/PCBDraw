@@ -25,6 +25,7 @@ import pcbdraw.gui.workspace.guigrid.GUIGrid;
 public class TopMenu extends MenuBar{
     private final MainPane mainPane;
     private final MenuItem save;
+    private final MenuItem saveAs;
     private final MenuItem open;
     private final MenuItem newFile;
     
@@ -42,9 +43,12 @@ public class TopMenu extends MenuBar{
         newFile = new MenuItem("New ");
         fileMenu.getItems().add(newFile);
         newFile.setOnAction((e) -> {newFile();});
+        saveAs = new MenuItem("Save As");
         save = new MenuItem("Save");
         fileMenu.getItems().add(save);
         save.setOnAction((e) -> {save();});
+        fileMenu.getItems().add(saveAs);
+        saveAs.setOnAction((e) -> {saveAs();});
         open = new MenuItem("Open");
         fileMenu.getItems().add(open);
         open.setOnAction((e) -> {open();});
@@ -72,23 +76,44 @@ public class TopMenu extends MenuBar{
         new Shortcuts().initialise();
     }
     
-    public void save(){
+    public void saveAs(){
         try {
             GCBFile saving = GCBFile.askUserToSaveAs();
-            if (saving != null) saving.save(mainPane.getWorkPane().getWorkspaceGrid().getWorkspace());
+            if (saving != null) {
+                saving.save(mainPane.getWorkPane().getWorkspaceGrid().getWorkspace());
+                mainPane.setGCBFile(saving);
+            }
         } catch (IOException ex) {
             Logger.getLogger(TopMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void save(){
+        if (mainPane.getGCBFile() != null){
+            try {
+                mainPane.getGCBFile().save(mainPane.getWorkPane().getWorkspaceGrid().getWorkspace());
+            } catch (IOException ex) {
+                Logger.getLogger(TopMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        else saveAs();
+    }
+    
     public void open(){
         try {
             GCBFile loading = GCBFile.askUserToOpen();
-            if (loading != null)mainPane.setWorkspace(new GUIGrid(loading.read()));
+            if (loading != null){
+                mainPane.setWorkspace(new GUIGrid(loading.read()));
+                mainPane.setGCBFile(loading);
+            }
         } catch (IOException ex) {
             Logger.getLogger(TopMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public void newFile(){mainPane.setWorkspace(new GUIGrid(new MilliGrid()));}
+    public void newFile(){
+        mainPane.setWorkspace(new GUIGrid(new MilliGrid()));
+        mainPane.setGCBFile(null);
+    }
     
     private class Shortcuts {
         public void initialise(){
@@ -97,9 +122,12 @@ public class TopMenu extends MenuBar{
 
             KeyCombination redoKey = new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN);
             redo.acceleratorProperty().set(redoKey);
-
+            
             KeyCombination saveKey = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
             save.acceleratorProperty().set(saveKey);
+
+            KeyCombination saveAsKey = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN, KeyCombination.ALT_DOWN);
+            saveAs.acceleratorProperty().set(saveAsKey);
             
             KeyCombination openKey = new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN);
             open.acceleratorProperty().set(openKey);

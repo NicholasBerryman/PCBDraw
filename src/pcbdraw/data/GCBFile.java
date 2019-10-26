@@ -20,6 +20,7 @@ import pcbdraw.circuit.traces.PathTrace;
  */
 public class GCBFile {
     private TextFile file;
+    private String fileName;
 
     public static GCBFile askUserToOpen() throws IOException{
         FileChooser gcbChoose = new FileChooser();
@@ -42,9 +43,13 @@ public class GCBFile {
     }
     
     public GCBFile(String fileName) throws IOException {
+        this.fileName = fileName;
         file = new TextFile(fileName);
     }
     
+    public String getName(){
+        return new File(fileName).getName();
+    }
     
     public void save(MilliGrid pcb) throws IOException{
         StringBuilder str = new StringBuilder();
