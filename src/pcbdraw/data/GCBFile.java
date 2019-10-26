@@ -51,7 +51,7 @@ public class GCBFile {
         return new File(fileName).getName();
     }
     
-    public void save(MilliGrid pcb) throws IOException{
+    public String predictText(MilliGrid pcb){
         StringBuilder str = new StringBuilder();
         str.append(pcb.getPCB().getSize().x).append('\n');
         str.append(pcb.getPCB().getSize().y).append('\n');
@@ -60,7 +60,6 @@ public class GCBFile {
         str.append(pcb.getPCB().isCarvey()).append('\n');
         str.append("Paths:").append('\n');
         for (PathTrace p : pcb.getPCB().getPathTraces()){
-            System.out.println(p.getStartPoint().x);
             str.append(p.getStartPoint().x);
             str.append(",");
             str.append(p.getStartPoint().y);
@@ -75,7 +74,22 @@ public class GCBFile {
             str.append(",");
             str.append(h.getMajorCoord().y).append('\n');
         }
-        file.save(str.toString());
+        return str.toString();
+    }
+    
+    public String getText() throws IOException{
+        file.openToRead();
+        String line;
+        StringBuilder text = new StringBuilder();
+        while ((line = file.read()) != null){
+            text.append(line).append('\n');
+        }
+        file.closeToRead();
+        return text.toString();
+    }
+    
+    public void save(MilliGrid pcb) throws IOException{
+        file.save(this.predictText(pcb));
     }
     
     public MilliGrid read() throws IOException{

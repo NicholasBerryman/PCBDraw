@@ -76,27 +76,31 @@ public class TopMenu extends MenuBar{
         new Shortcuts().initialise();
     }
     
-    public void saveAs(){
+    public boolean saveAs(){
         try {
             GCBFile saving = GCBFile.askUserToSaveAs();
             if (saving != null) {
                 saving.save(mainPane.getWorkPane().getWorkspaceGrid().getWorkspace());
                 mainPane.setGCBFile(saving);
+                return true;
             }
+            return false;
         } catch (IOException ex) {
             Logger.getLogger(TopMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return true;
     }
     
-    public void save(){
+    public boolean save(){
         if (mainPane.getGCBFile() != null){
             try {
                 mainPane.getGCBFile().save(mainPane.getWorkPane().getWorkspaceGrid().getWorkspace());
             } catch (IOException ex) {
                 Logger.getLogger(TopMenu.class.getName()).log(Level.SEVERE, null, ex);
             }
+            return true;
         }
-        else saveAs();
+        else return saveAs();
     }
     
     public void open(){
