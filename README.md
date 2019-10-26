@@ -69,8 +69,7 @@ Any of these features can be changed at any point without disrupting any circuit
 * Select the **Hole** option to draw component holes on the workspace
 * Select the **Select** option to select anything you have already drawn in the workspace (when you want to move or delete it).
 * Click the **Move** button when you want to move everything you have selected within the workspace
-* Click the **Delete** button when you want to delete everything you have selected
-  * There is currently **NO** undo option. **Save your work** before deleting anything that might be important.  
+* Click the **Delete** button when you want to delete everything you have selected 
   
 These options are explored in greater detail in the **Workspace** section below
 
@@ -132,7 +131,7 @@ The grid here represents the circuit board.
 * To delete items you have drawn on the workspace:
   * Using the **Select** tool, select the items you want to move.
   * Click the **Delete** button from the **Tools Tab** of the **Context Menu**.
-    * There is currently **NO** undo option. **Save your work** before deleting anything that might be important.  
+    * If you make a mistake and delete the wrong thing, make sure to **Undo** by pressing **Crtl+Z** or selecting it from the menu with **Edit->Undo**
 
 ![](https://imgur.com/0hnMySR.gif)  
 
