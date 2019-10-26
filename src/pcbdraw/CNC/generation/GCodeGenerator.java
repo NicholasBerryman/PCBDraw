@@ -36,7 +36,7 @@ public class GCodeGenerator extends Progressible{
     
     public void compileAndSave() throws IOException, UncarveybleException{
         cnc.reset();
-        Double[][] pathMask = this.createPathMask();
+        Double[][] pathMask = this.createPathMaskMinimal();
         if (this.pcb.isCarvey()) if(!checkCarveyble(pathMask)) throw new UncarveybleException();
         this.separateHoleOverlap(pathMask);
             //this.printPathMask(pathMask);
@@ -46,6 +46,75 @@ public class GCodeGenerator extends Progressible{
         this.holeGCode();
         cnc.finish();
         cnc.save();
+    }
+    
+    private Double[][] createPathMaskMinimal(){
+        this.setMaxProgress(100);
+        this.setProgress(0);
+        Double[][] pathMask = new Double[(int)(pcb.getSize().x*inverseResolution)][(int)(pcb.getSize().y*inverseResolution)];
+        this.setProgress(0);
+        this.setMaxProgress(pathMask.length);
+        
+        Coordinate bottomLeft = new Coordinate(Double.MAX_VALUE, Double.MAX_VALUE);
+        Coordinate topRight   = new Coordinate(Double.MIN_VALUE, Double.MIN_VALUE);
+        
+        for (PathTrace p : pcb.getPathTraces()){
+            if (p.getBottomLeftBound().x < bottomLeft.x) bottomLeft = new Coordinate(p.getBottomLeftBound().x, bottomLeft.y);
+            if (p.getBottomLeftBound().y < bottomLeft.y) bottomLeft = new Coordinate(bottomLeft.x, p.getBottomLeftBound().y);
+            if (p.getTopRightBound().x >  topRight.x) topRight = new Coordinate(p.getTopRightBound().x, topRight.y);
+            if (p.getTopRightBound().y >  topRight.y) topRight = new Coordinate(topRight.x, p.getBottomLeftBound().y);
+        }
+        for (HoleTrace h : pcb.getHoleTraces()){
+            if (h.getMajorCoord().x < bottomLeft.x) bottomLeft = new Coordinate(h.getMajorCoord().x, bottomLeft.y);
+            if (h.getMajorCoord().y < bottomLeft.y) bottomLeft = new Coordinate(bottomLeft.x, h.getMajorCoord().y);
+            if (h.getMajorCoord().x >  topRight.x) topRight = new Coordinate(h.getMajorCoord().x, topRight.y);
+            if (h.getMajorCoord().y >  topRight.y) topRight = new Coordinate(topRight.x, h.getMajorCoord().y);
+        }
+        
+        int startX = (int) (inverseResolution*(bottomLeft.x-(pathWidthMM*holeRatio*1.1)));
+        int startY = (int) (inverseResolution*(bottomLeft.y-(pathWidthMM*holeRatio*1.1)));
+        int endX   = (int) (inverseResolution*(topRight.x+(pathWidthMM*holeRatio*1.1)));
+        int endY   = (int) (inverseResolution*(topRight.y+(pathWidthMM*holeRatio*1.1)));
+        
+        System.out.print(startX);
+        System.out.print(" ");
+        System.out.print(startY);
+        System.out.print(" ");
+        System.out.print(endX);
+        System.out.print(" ");
+        System.out.print(endY);
+        System.out.println(" ");
+        
+        if (startX < 0) startX = 0;
+        if (startY < 0) startY = 0;
+        if (endX > pathMask.length) endX = pathMask.length;
+        if (endY > pathMask[0].length) endY = pathMask[0].length;
+        for (int x = startX; x <= endX; x++){
+            for (int y = startY; y <= endY; y++){
+                Coordinate point = new Coordinate(x/inverseResolution,y/inverseResolution);
+                boolean hasPath = false;
+                double slope = 0;
+                
+                for (PathTrace p : pcb.getPathTraces()){
+                    boolean onLine = p.withinRange(point, pathWidthMM);
+                    boolean atEnd  = p.inRangeOfEnd(point, pathWidthMM);
+                    hasPath |= onLine;
+                    if (onLine && !atEnd)     slope = p.getGradient();
+                    else if (onLine && atEnd) slope = Double.MIN_VALUE;
+                    if (hasPath) break;
+                }
+                for (HoleTrace h : pcb.getHoleTraces()){
+                    boolean inCircle = h.withinRange(point, pathWidthMM*holeRatio);
+                    hasPath |= inCircle;
+                    if (inCircle) slope = Double.MIN_VALUE;
+                    if (hasPath) break;
+                }
+                if (hasPath) pathMask[x][y] = slope;
+                else pathMask[x][y] = null;
+            }
+            this.incrementProgress();
+        }
+        return pathMask;
     }
     
     private Double[][] createPathMask(){

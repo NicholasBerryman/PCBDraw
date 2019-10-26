@@ -93,6 +93,7 @@ public class MainPane extends SplitPane{
         this.context.setMaxWidth(250);
         mainPart.getItems().add(context);
         mainPart.getItems().add(this.workspace);
+        mainPart.setDividerPosition(0,0);
     }
     
     public void setGCBFile(GCBFile gcb){

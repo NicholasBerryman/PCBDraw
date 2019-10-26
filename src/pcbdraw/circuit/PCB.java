@@ -36,24 +36,21 @@ public class PCB {
         return this.traces;
     }
     
+    
+    private final ArrayList<PathTrace> pathTraces = new ArrayList<>();
     public ArrayList<PathTrace> getPathTraces(){
-        ArrayList<PathTrace> toReturn = new ArrayList<>();
-        for (CircuitTrace t : traces){
-            if (t instanceof PathTrace) toReturn.add((PathTrace)t);
-        }
-        return toReturn;
+        return pathTraces;
     }
     
+    private final ArrayList<HoleTrace> holeTraces = new ArrayList<>();
     public ArrayList<HoleTrace> getHoleTraces(){
-        ArrayList<HoleTrace> toReturn = new ArrayList<>();
-        for (CircuitTrace t : traces){
-            if (t instanceof HoleTrace) toReturn.add((HoleTrace)t);
-        }
-        return toReturn;
+        return holeTraces;
     }
     
     public CircuitTrace addTrace(CircuitTrace trace){
         this.traces.add(trace);
+        if (trace instanceof PathTrace) this.pathTraces.add((PathTrace) trace);
+        if (trace instanceof HoleTrace) this.holeTraces.add((HoleTrace) trace);
         return trace;
     }
     
