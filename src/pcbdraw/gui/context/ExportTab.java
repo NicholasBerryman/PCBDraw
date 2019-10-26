@@ -120,7 +120,7 @@ public class ExportTab extends Tab{
                                 gcoder.compileAndSave();
                             } catch (IOException ex) {
                                 Platform.runLater(() -> {
-                                    new Alert(Alert.AlertType.INFORMATION, "Cannot save to this file!").showAndWait();
+                                    new Alert(Alert.AlertType.INFORMATION, "Error accessing this file!").showAndWait();
                                     exportProgressWindow.setErrorMessage();
                                 });
                                 try {
@@ -130,7 +130,7 @@ public class ExportTab extends Tab{
                                 }
                             } catch (IndexOutOfBoundsException e2){
                                 Platform.runLater(() -> {
-                                    new Alert(Alert.AlertType.INFORMATION, "Cannot export!\nSomething is too close to the edge of the board!").showAndWait();
+                                    new Alert(Alert.AlertType.INFORMATION, "Error exporting!\nSomething is too close to the edge of the board!").showAndWait();
                                     exportProgressWindow.setErrorMessage();
                                 });
                                 try {
@@ -140,7 +140,7 @@ public class ExportTab extends Tab{
                                 }
                             } catch (UncarveybleException e3){
                                 Platform.runLater(() -> {
-                                    new Alert(Alert.AlertType.INFORMATION, "Cannot export!\nSomething is too close to Carvey's Smartclamp!").showAndWait();
+                                    new Alert(Alert.AlertType.INFORMATION, "Error exporting!\nSomething is too close to Carvey's Smartclamp!").showAndWait();
                                     exportProgressWindow.setErrorMessage();
                                 });
                                 try {
