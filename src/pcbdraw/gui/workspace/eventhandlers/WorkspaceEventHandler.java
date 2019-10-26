@@ -207,8 +207,14 @@ public class WorkspaceEventHandler{
     }
     
     private void verifyPCB(){
-        if (this.workspace.getWorkspace().getPCB().isCarvey() && !this.workspace.getWorkspace().getPCB().verify()){
-            new Alert(Alert.AlertType.INFORMATION, "Error!\nToo close to the Carvey's Smartclamp").showAndWait();
+        if (!this.workspace.getWorkspace().getPCB().verifyCarveyble()){
+            new Alert(Alert.AlertType.INFORMATION, "Error!\nCannot place traces inside the Carvey's Smartclamp!").showAndWait();
+            this.undo();
+            this.undoController.clearRedos();
+            return;
+        }
+        if (!this.workspace.getWorkspace().getPCB().verifyLocations()){
+            new Alert(Alert.AlertType.INFORMATION, "Error!\nCannot place traces outside of board!").showAndWait();
             this.undo();
             this.undoController.clearRedos();
         }

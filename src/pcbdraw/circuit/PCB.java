@@ -65,17 +65,30 @@ public class PCB {
         this.carvey = carvey;
     }
     
-    public boolean verify(){
+    public boolean verifyCarveyble(){
         for (CircuitTrace t : this.getTraces()){
-            if (!verify(t)) return false;
+            if (!verifyCarveyble(t)) return false;
         }
         return true;
     }
     
-    private boolean verify(CircuitTrace t){
+    public boolean verifyLocations(){
+        for (CircuitTrace t : this.getTraces()){
+            if (!verifyLocation(t)) return false;
+        }
+        return true;
+    }
+    
+    private boolean verifyCarveyble(CircuitTrace t){
         if (!carvey) return true;
         boolean notOk = t.inArea(new Coordinate(0,0), new Coordinate(0.75*25.4, 3.25*25.4));
         notOk        |= t.inArea(new Coordinate(0,0), new Coordinate(3.25*25.4, 0.75*25.4));
         return !notOk;
+    }
+    
+    private boolean verifyLocation(CircuitTrace t){
+        if (!carvey) return true;
+        boolean ok = t.inArea(new Coordinate(0,0), this.size);
+        return ok;
     }
 }
