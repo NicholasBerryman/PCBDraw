@@ -125,7 +125,7 @@ public class WorkspaceEventHandler{
                 public void redo(){workspace.getWorkspace().getPCB().getTraces().addAll(toPaste.getTraces());}
                 public void undo(){workspace.getWorkspace().getPCB().getTraces().removeAll(toPaste.getTraces());}
             });
-            //toPaste.moveTo(toPaste.getAnchor().subtract(new Coordinate(1,0)));
+            toPaste.moveTo(toPaste.getAnchor().subtract(new Coordinate(1,0)));
             justPasted = true;
             this.setAction(WorkspaceAction.Move);
         }
@@ -208,7 +208,7 @@ public class WorkspaceEventHandler{
     
     private void verifyPCB(){
         if (this.workspace.getWorkspace().getPCB().isCarvey() && !this.workspace.getWorkspace().getPCB().verify()){
-            new Alert(Alert.AlertType.INFORMATION, "Error!\nToo close to the smartclamp").showAndWait();
+            new Alert(Alert.AlertType.INFORMATION, "Error!\nToo close to the Carvey's Smartclamp").showAndWait();
             this.undo();
             this.undoController.clearRedos();
         }
