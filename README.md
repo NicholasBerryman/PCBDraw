@@ -157,7 +157,7 @@ If you are using the Carvey, this must be done with the Inventables **Easel** we
 
 ## Examples
 This page will be updated with examples and templates as I make them.
-Each example has both '.gcb' file and a '.gcode' file. You can the .gcb file in **PCBDraw** to view and edit it, and you can open the .gcode file in **Easel** (See above), to test it with your Carvey (Or other CNC Router).
+Each example has both '.gcb' file and a '.gcode' file. You can open the .gcb file in **PCBDraw** to view and edit it, and you can open the .gcode file in **Easel** (See above), to test it with your Carvey (Or other CNC Router).
 Make sure to download each link using **Right Click->Save link as**.
 Here is the current list:
 * Mini ROV Circuit for Subs-In-Schools
