@@ -5,6 +5,7 @@
  */
 package pcbdraw.gui.workspace.eventhandlers;
 
+import java.util.ArrayList;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.input.MouseEvent;
@@ -26,6 +27,7 @@ public class WorkspaceEventHandler{
     private final UndoController undoController;
     private final GUIGrid workspace;
     private boolean justPasted = false;
+    private final ArrayList<StateChangeListener> listeners = new ArrayList<>();
     
     private TraceGroup clipboard;
     private WorkspaceAction action = WorkspaceAction.Default;
@@ -51,6 +53,7 @@ public class WorkspaceEventHandler{
             this.workspace.getWorkspace().verifySelected();
             this.workspace.getMover().startDrawing(this.workspace.getWorkspace().mmToGUI(this.workspace.getWorkspace().getSelected().getAnchor()));
         }
+        for (StateChangeListener l : listeners) l.stateChange(action);
    }
     
     public void show(Pane pane){
@@ -254,5 +257,13 @@ public class WorkspaceEventHandler{
                     break;
             }
         }
+    }
+    
+    public void addStateChangeListener(StateChangeListener listen){
+        this.listeners.add(listen);
+    }
+    
+    public interface StateChangeListener{
+        public void stateChange(WorkspaceAction state);
     }
 }

@@ -87,7 +87,7 @@ public class PCB {
     }
     
     private boolean verifyLocation(CircuitTrace t){
-        boolean ok = t.inArea(new Coordinate(0,0), this.size);
-        return ok;
+        if (t instanceof PathTrace) return ((PathTrace) t).fullyInArea(new Coordinate(0,0), this.size);
+        return t.inArea(new Coordinate(0,0), this.size);
     }
 }

@@ -102,7 +102,27 @@ public class ToolsTab extends Tab{
         });
         
         root.getChildren().add(move);
+        
+        workspaceActioner.addStateChangeListener((WorkPane.WorkspaceAction state) -> {
+            switch (state){
+                case DrawLine:
+                    path.selectedProperty().set(true);
+                    break;
+                case DrawHole:
+                    hole.selectedProperty().set(true);
+                    break;
+                case Select:
+                    select.selectedProperty().set(true);
+                    break;
+                default:
+                    path.selectedProperty().set(false);
+                    hole.selectedProperty().set(false);
+                    select.selectedProperty().set(false);
+                    break;
+            }
+        });
     }
+    
     public void deselect(){
         path.setSelected(false);
         hole.setSelected(false);

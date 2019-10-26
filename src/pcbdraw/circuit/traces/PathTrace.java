@@ -117,9 +117,17 @@ public class PathTrace extends CircuitTrace{
     public boolean inArea(Coordinate botLeft, Coordinate topRight) {
         return 
             (this.getStartPoint().x >= botLeft.x && this.getStartPoint().x <= topRight.x &&
-             this.getStartPoint().y > botLeft.y  && this.getStartPoint().y <= topRight.y) ||
+             this.getStartPoint().y > botLeft.y  && this.getStartPoint().y <= topRight.y)||
             (this.getEndPoint().x >= botLeft.x   && this.getEndPoint().x   <= topRight.x &&
              this.getEndPoint().y > botLeft.y    && this.getEndPoint().y    <= topRight.y);
+    }
+    
+    public boolean fullyInArea(Coordinate botLeft, Coordinate topRight){
+        return 
+        (this.getStartPoint().x >= botLeft.x && this.getStartPoint().x <= topRight.x &&
+         this.getStartPoint().y > botLeft.y  && this.getStartPoint().y <= topRight.y)&&
+        (this.getEndPoint().x >= botLeft.x   && this.getEndPoint().x   <= topRight.x &&
+         this.getEndPoint().y > botLeft.y    && this.getEndPoint().y    <= topRight.y);
     }
     
     private class Line{
