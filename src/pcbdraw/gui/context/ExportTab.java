@@ -16,8 +16,8 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import pcbdraw.CNC.GCodeGenerator;
-import pcbdraw.CNC.GCodeGenerator.UncarveybleException;
+import pcbdraw.CNC.generation.GCodeGenerator;
+import pcbdraw.CNC.generation.GCodeGenerator.UncarveybleException;
 import pcbdraw.CNC.representations.CarveyRepr;
 import pcbdraw.circuit.PCB;
 import pcbdraw.data.GCodeFile;
@@ -148,10 +148,19 @@ public class ExportTab extends Tab{
                                 } catch (IOException ex1) {
                                     Logger.getLogger(ExportTab.class.getName()).log(Level.SEVERE, null, ex1);
                                 }
+                            } catch (OutOfMemoryError e4){
+                                Platform.runLater(() -> {
+                                    new Alert(Alert.AlertType.INFORMATION, "Error exporting!\nYour board is too big for your computer to handle!\nPlease either make you board smaller or try again on a beefier computer!").showAndWait();
+                                    exportProgressWindow.setErrorMessage();
+                                });
+                                try {
+                                    gcodeFile.delete();
+                                } catch (IOException ex1) {
+                                    Logger.getLogger(ExportTab.class.getName()).log(Level.SEVERE, null, ex1);
+                                }
                             }
-                            Platform.runLater(() -> {
-                                exportProgressWindow.enableExit();
-                            });
+                            
+                            Platform.runLater(() -> {exportProgressWindow.enableExit();});
                         }
                     }.start();
                 }

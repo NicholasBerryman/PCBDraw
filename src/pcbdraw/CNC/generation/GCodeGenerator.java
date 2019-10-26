@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pcbdraw.CNC;
+package pcbdraw.CNC.generation;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class GCodeGenerator extends Progressible{
     private final double pathWidthMM;
     private final int GCodeSmoothFactor = 1;
     private final double holeRatio = 1.25;
-    private final double inverseResolution = 10;
+    private final double inverseResolution = 15;
     
     public GCodeGenerator(CNCRepr cnc, PCB pcb, double pathWidthMM){
         this.cnc = cnc;
@@ -49,13 +49,15 @@ public class GCodeGenerator extends Progressible{
     }
     
     private Double[][] createPathMask(){
+        this.setMaxProgress(100);
+        this.setProgress(0);
         Double[][] pathMask = new Double[(int)(pcb.getSize().x*inverseResolution)][(int)(pcb.getSize().y*inverseResolution)];
         this.setProgress(0);
         this.setMaxProgress(pathMask.length);
         
         for (int x = 0; x < pathMask.length; x++){
             for (int y = 0; y < pathMask[0].length; y++){
-                Coordinate point = new Coordinate(x/10.0,y/10.0);
+                Coordinate point = new Coordinate(x/inverseResolution,y/inverseResolution);
                 boolean hasPath = false;
                 double slope = 0;
                 
