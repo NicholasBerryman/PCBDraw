@@ -5,6 +5,10 @@
  */
 package pcbdraw.gui.workspace.guigrid;
 
+import javafx.geometry.Insets;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -55,6 +59,7 @@ public class GUIGrid {
     }
     
     public void draw(Pane p){
+        p.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         p.getChildren().clear();
         this.drawGrid(p);
         this.drawPaths(p);
@@ -63,6 +68,7 @@ public class GUIGrid {
     
     private void drawGrid(Pane p){
         double stroke = 0.5;
+        p.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         for (double x = 0; x < workspace.mmToGUI(workspace.getPCB().getSize().x); x+=workspace.mmToGUI(workspace.getSquareSizeMM())){
             Line l = new Line(x, 0, x, workspace.mmToGUI(workspace.getPCB().getSize().y));
             l.setStrokeWidth(stroke);
@@ -76,6 +82,7 @@ public class GUIGrid {
         if (this.getWorkspace().getPCB().isCarvey()) drawCarvey(p);
         drawingLine.draw(p);
         selectingRect.draw(p);
+        p.setMaxSize(workspace.mmToGUI(workspace.getPCB().getSize().x), workspace.mmToGUI(workspace.getPCB().getSize().y));
     }
     
     private void drawCarvey(Pane p){
