@@ -18,4 +18,6 @@ public abstract class CircuitTrace {
     public abstract void simplifyUsing(CircuitTrace c);
     public abstract double distanceTo(Coordinate c);
     public abstract void moveTo(Coordinate c);
+    public abstract CircuitTrace copy();
+    public abstract boolean inArea(Coordinate bottomLeft, Coordinate topRight);
 }

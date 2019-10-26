@@ -24,7 +24,6 @@ public class TraceGroup {
     
     //Given in mm
     public void moveTo(Coordinate to){
-        this.verify();
         Coordinate topLeft = this.getAnchor();
         for (CircuitTrace t : traces){
             Coordinate dist = topLeft.subtract(t.getMajorCoord());
@@ -33,7 +32,6 @@ public class TraceGroup {
     }
     
     public Coordinate getAnchor(){
-        this.verify();
         Coordinate topLeft = new Coordinate(Double.MAX_VALUE, Double.MIN_VALUE);
         for (CircuitTrace t : traces){
             if (t.getMajorCoord().x < topLeft.x) topLeft = new Coordinate(t.getMajorCoord().x, topLeft.y);
@@ -60,5 +58,13 @@ public class TraceGroup {
     
     public TraceGroup copy(){
         return new TraceGroup(traces, pcb);
+    }
+    
+    public TraceGroup duplicate(){
+        ArrayList<CircuitTrace> copyList = new ArrayList<>();
+        for (CircuitTrace t : traces){
+            copyList.add(t.copy());
+        }
+        return new TraceGroup(copyList, this.pcb);
     }
 }

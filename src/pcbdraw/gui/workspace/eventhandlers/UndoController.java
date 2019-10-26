@@ -40,4 +40,8 @@ public class UndoController {
         undoStack.clear();
         redoStack.clear();
     }
+    
+    public void clearRedos(){
+        redoStack.clear();
+    }
 }

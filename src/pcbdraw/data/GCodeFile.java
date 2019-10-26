@@ -32,5 +32,9 @@ public class GCodeFile {
     public void save(String gcode) throws IOException{
         file.save(gcode);
     }
+    
+    public void delete() throws IOException{
+        this.file.delete();
+    }
 }
 

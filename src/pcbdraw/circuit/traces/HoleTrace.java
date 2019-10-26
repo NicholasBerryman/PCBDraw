@@ -15,7 +15,7 @@ public class HoleTrace extends CircuitTrace{
     private Coordinate centrePoint;
     
     public HoleTrace(Coordinate centrePoint){
-        this.centrePoint = centrePoint;
+        this.centrePoint = new Coordinate(centrePoint.x, centrePoint.y);
     }
     
     public void setCentrePoint(Coordinate centrePoint) {
@@ -52,5 +52,17 @@ public class HoleTrace extends CircuitTrace{
     @Override
     public void moveTo(Coordinate c) {
         this.centrePoint = c;
+    }
+
+    @Override
+    public CircuitTrace copy() {
+        return new HoleTrace(this.centrePoint);
+    }
+
+    @Override
+    public boolean inArea(Coordinate botLeft, Coordinate topRight) {
+        return 
+            this.getMajorCoord().x >= botLeft.x && this.getMajorCoord().x <= topRight.x &&
+            this.getMajorCoord().y >= botLeft.y  && this.getMajorCoord().y <= topRight.y;
     }
 }

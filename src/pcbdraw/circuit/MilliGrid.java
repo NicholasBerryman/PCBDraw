@@ -81,6 +81,11 @@ public class MilliGrid {
         else this.selected = null;
     }
     
+    public void select(TraceGroup toSelect){
+        this.selected = toSelect;
+        this.verifySelected();
+    }
+    
     public void deselectAll(){
         this.selected = null;
     }

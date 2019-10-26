@@ -53,19 +53,29 @@ public class PCB {
     }
     
     public CircuitTrace addTrace(CircuitTrace trace){
-        for (CircuitTrace t : this.getHoleTraces())
-            if (trace.equals(t)) return null;
-        for (CircuitTrace t : this.getHoleTraces())
-            trace.simplifyUsing(t);
         this.traces.add(trace);
         return trace;
     }
-
+    
     public boolean isCarvey() {
         return carvey;
     }
 
     public void setCarvey(boolean carvey) {
         this.carvey = carvey;
+    }
+    
+    public boolean verify(){
+        for (CircuitTrace t : this.getTraces()){
+            if (!verify(t)) return false;
+        }
+        return true;
+    }
+    
+    private boolean verify(CircuitTrace t){
+        if (!carvey) return true;
+        boolean notOk = t.inArea(new Coordinate(0,0), new Coordinate(0.75*25.4, 3.25*25.4));
+        notOk        |= t.inArea(new Coordinate(0,0), new Coordinate(3.25*25.4, 0.75*25.4));
+        return !notOk;
     }
 }

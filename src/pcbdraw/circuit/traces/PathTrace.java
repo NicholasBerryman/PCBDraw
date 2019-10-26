@@ -15,7 +15,7 @@ public class PathTrace extends CircuitTrace{
     private final Line pathLine;
 
     public PathTrace(Coordinate startPoint, Coordinate endPoint) {
-        this.pathLine = new Line(startPoint, endPoint);
+        this.pathLine = new Line(new Coordinate(startPoint.x, startPoint.y), new Coordinate(endPoint.x, endPoint.y));
     }
     
     public void setStart(Coordinate start){
@@ -107,7 +107,20 @@ public class PathTrace extends CircuitTrace{
         this.pathLine.startPoint = c.add(distStartTopLeft);
         this.pathLine.endPoint = this.pathLine.startPoint.add(distStartEnd);
     }
-    
+
+    @Override
+    public CircuitTrace copy() {
+        return new PathTrace(this.getStartPoint(), this.getEndPoint());
+    }
+
+    @Override
+    public boolean inArea(Coordinate botLeft, Coordinate topRight) {
+        return 
+            (this.getStartPoint().x >= botLeft.x && this.getStartPoint().x <= topRight.x &&
+             this.getStartPoint().y > botLeft.y  && this.getStartPoint().y <= topRight.y) ||
+            (this.getEndPoint().x >= botLeft.x   && this.getEndPoint().x   <= topRight.x &&
+             this.getEndPoint().y > botLeft.y    && this.getEndPoint().y    <= topRight.y);
+    }
     
     private class Line{
         private Coordinate startPoint;

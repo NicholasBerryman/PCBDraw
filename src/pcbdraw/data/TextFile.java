@@ -6,6 +6,7 @@
  */
 package pcbdraw.data;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -16,6 +17,7 @@ import java.io.IOException;
 public class TextFile {
     private final TextReader in;
     private final TextWriter out;
+    private String name;
 
     /**
      * Creates a new read/write family tree file
@@ -25,7 +27,7 @@ public class TextFile {
     public TextFile(String fileName) throws IOException {
         this.in = new TextReader(fileName);
         this.out = new TextWriter(fileName);
-        
+        this.name = fileName;
         this.out.create();
     }
     
@@ -43,5 +45,9 @@ public class TextFile {
     
     public void save(String toWrite) throws IOException{
         out.save(toWrite);
+    }
+    
+    public void delete() throws IOException{
+        new File(this.name).delete();
     }
 }

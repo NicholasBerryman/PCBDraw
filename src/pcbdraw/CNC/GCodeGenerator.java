@@ -34,9 +34,10 @@ public class GCodeGenerator extends Progressible{
         this.pathWidthMM = pathWidthMM;
     }
     
-    public void compileAndSave() throws IOException{
+    public void compileAndSave() throws IOException, UncarveybleException{
         cnc.reset();
         Double[][] pathMask = this.createPathMask();
+        if (this.pcb.isCarvey()) if(!checkCarveyble(pathMask)) throw new UncarveybleException();
         this.separateHoleOverlap(pathMask);
             //this.printPathMask(pathMask);
         int[][] edgeMask = this.edgeFilter(pathMask);
@@ -78,6 +79,25 @@ public class GCodeGenerator extends Progressible{
             this.incrementProgress();
         }
         return pathMask;
+    }
+    
+    private boolean checkCarveyble(Double[][] pathMask){
+        //vertical part
+        for (int x = 0; x < 0.75*25.4*inverseResolution; x++){
+            for (int y = 0; y < 3.25*25.4*inverseResolution; y++){
+                if (pathMask[x][y] != null)
+                    return false;
+            }
+        }
+        //horizontal part
+        for (int x = 0; x < 3.25*25.4*inverseResolution; x++){
+            for (int y = 0; y < 0.75*25.4*inverseResolution; y++){
+                if (pathMask[x][y] != null){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
     
     private void separateHoleOverlap(Double[][] pathMask){
@@ -262,4 +282,6 @@ public class GCodeGenerator extends Progressible{
             System.out.println();
         }
     }
+    
+    public class UncarveybleException extends RuntimeException{}
 }

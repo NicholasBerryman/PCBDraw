@@ -74,7 +74,7 @@ public class WorkPane extends ScrollPane{
         return workspace;
     }
     
-    public WorkspaceEventHandler workspaceHandler(){
+    public WorkspaceEventHandler getWorkspaceHandler(){
         return workspaceHandler;
     }
     
@@ -85,6 +85,21 @@ public class WorkPane extends ScrollPane{
     
     public void redo(){
         this.workspaceHandler.redo();
+        this.workspaceHandler.show(pane);
+    }
+    
+    public void cut(){
+        this.workspaceHandler.cut();
+        this.workspaceHandler.show(pane);
+    }
+    
+    public void copy(){
+        this.workspaceHandler.copy();
+        this.workspaceHandler.show(pane);
+    }
+    
+    public void paste(){
+        this.workspaceHandler.paste();
         this.workspaceHandler.show(pane);
     }
 }

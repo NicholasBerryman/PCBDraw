@@ -30,6 +30,9 @@ public class TopMenu extends MenuBar{
     
     private final MenuItem undo;
     private final MenuItem redo;
+    private final MenuItem cut;
+    private final MenuItem copy;
+    private final MenuItem paste;
     
     public TopMenu(MainPane p){
         this.mainPane = p;
@@ -52,10 +55,19 @@ public class TopMenu extends MenuBar{
         
         undo = new MenuItem("Undo");
         editMenu.getItems().add(undo);
-        undo.setOnAction((e) -> {p.undo();});
+        undo.setOnAction((e) -> {p.getWorkPane().undo();});
         redo = new MenuItem("Redo");
         editMenu.getItems().add(redo);
-        redo.setOnAction((e) -> {p.redo();});
+        redo.setOnAction((e) -> {p.getWorkPane().redo();});
+        cut = new MenuItem("Cut");
+        editMenu.getItems().add(cut);
+        cut.setOnAction((e) -> {p.getWorkPane().cut();});
+        copy = new MenuItem("Copy");
+        editMenu.getItems().add(copy);
+        copy.setOnAction((e) -> {p.getWorkPane().copy();});
+        paste = new MenuItem("Paste");
+        editMenu.getItems().add(paste);
+        paste.setOnAction((e) -> {p.getWorkPane().paste();});
         
         new Shortcuts().initialise();
     }
@@ -78,9 +90,6 @@ public class TopMenu extends MenuBar{
     }
     public void newFile(){mainPane.setWorkspace(new GUIGrid(new MilliGrid()));}
     
-    //public void undo(){mainPane.getWorkPane().undo();}
-    //public void redo(){mainPane.getWorkPane().redo();}
-    
     private class Shortcuts {
         public void initialise(){
             KeyCombination undoKey = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
@@ -97,6 +106,15 @@ public class TopMenu extends MenuBar{
             
             KeyCombination newFileKey = new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN);
             newFile.acceleratorProperty().set(newFileKey);
+            
+            KeyCombination cutKey = new KeyCodeCombination(KeyCode.X, KeyCombination.CONTROL_DOWN);
+            cut.acceleratorProperty().set(cutKey);
+            
+            KeyCombination copyKey = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
+            copy.acceleratorProperty().set(copyKey);
+            
+            KeyCombination pasteKey = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN);
+            paste.acceleratorProperty().set(pasteKey);
         }
     }
 }

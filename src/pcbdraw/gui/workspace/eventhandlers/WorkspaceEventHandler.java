@@ -6,6 +6,7 @@
 package pcbdraw.gui.workspace.eventhandlers;
 
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import pcbdraw.circuit.traces.CircuitTrace;
@@ -24,6 +25,9 @@ public class WorkspaceEventHandler{
     
     private final UndoController undoController;
     private final GUIGrid workspace;
+    private boolean justPasted = false;
+    
+    private TraceGroup clipboard;
     private WorkspaceAction action = WorkspaceAction.Default;
     private DrawingState drawingState = DrawingState.NotDrawing;
     
@@ -41,17 +45,20 @@ public class WorkspaceEventHandler{
     }
     
     public void setAction(WorkspaceAction newAction){
-        cancelAction();
+        if (!justPasted || newAction != WorkspaceAction.Move)cancelAction();
         this.action = newAction;
-        if (this.action == WorkspaceAction.Move && this.workspace.getWorkspace().getSelected() != null)
+        if (this.action == WorkspaceAction.Move && this.workspace.getWorkspace().getSelected() != null){
+            this.workspace.getWorkspace().verifySelected();
             this.workspace.getMover().startDrawing(this.workspace.getWorkspace().mmToGUI(this.workspace.getWorkspace().getSelected().getAnchor()));
-    }
+        }
+   }
     
     public void show(Pane pane){
         this.workspace.draw(pane);
     }
     
     public void cancelAction(){
+        if (justPasted) this.undo();
         workspace.getDrawingLine().reset();
         workspace.getSelectingRect().reset();
         workspace.getMover().reset();
@@ -59,10 +66,15 @@ public class WorkspaceEventHandler{
     }
     
     public void undo(){
-        if (this.drawingState != DrawingState.NotDrawing)
+        if (this.drawingState != DrawingState.NotDrawing && !justPasted)
             this.cancelAction();
-        else
+        else{
             this.undoController.undo();
+            if (justPasted){
+                justPasted = false;
+                this.undoController.clearRedos();
+            }
+        }
     }
     
     public void redo(){
@@ -88,6 +100,37 @@ public class WorkspaceEventHandler{
         });
     }
     
+    public void cut(){
+        if (this.workspace.getWorkspace().getSelected() != null){
+            this.workspace.getWorkspace().verifySelected();
+            this.clipboard = this.workspace.getWorkspace().getSelected().copy();
+            this.delete();
+        }
+    }
+    
+    public void copy(){
+        if (this.workspace.getWorkspace().getSelected() != null){
+            this.workspace.getWorkspace().verifySelected();
+            this.clipboard = this.workspace.getWorkspace().getSelected().copy();
+        }
+    }
+    
+    public void paste(){
+        if (this.clipboard != null && !justPasted){
+            TraceGroup toPaste = this.clipboard.duplicate();
+            toPaste.moveTo(toPaste.getAnchor().add(new Coordinate(1,0)));
+            workspace.getWorkspace().getPCB().getTraces().addAll(toPaste.getTraces());
+            this.workspace.getWorkspace().select(toPaste);
+            undoController.add(new ReversibleAction(){
+                public void redo(){workspace.getWorkspace().getPCB().getTraces().addAll(toPaste.getTraces());}
+                public void undo(){workspace.getWorkspace().getPCB().getTraces().removeAll(toPaste.getTraces());}
+            });
+            //toPaste.moveTo(toPaste.getAnchor().subtract(new Coordinate(1,0)));
+            justPasted = true;
+            this.setAction(WorkspaceAction.Move);
+        }
+    }
+    
     private class ClickHandler implements EventHandler<MouseEvent>{
         private final Pane pane;
         public ClickHandler(Pane p){
@@ -103,12 +146,13 @@ public class WorkspaceEventHandler{
                     if (drawingState == DrawingState.DrawingPath){
                         workspace.getDrawingLine().updateDrawing(mouseCoord);
                         Coordinate[] pathPos = workspace.getDrawingLine().finishDrawing();
-                        CircuitTrace t = workspace.addTrace(pathPos[0], pathPos[1]);
+                        CircuitTrace t = workspace.addPath(pathPos[0], pathPos[1]);
                         undoController.add(new ReversibleAction(){
                             public void redo(){workspace.getWorkspace().getPCB().getTraces().add(t);}
                             public void undo(){workspace.getWorkspace().getPCB().getTraces().remove(t);}
                         });
                         drawingState = DrawingState.NotDrawing;
+                        verifyPCB();
                         workspace.draw(pane);
                     }
                     else{
@@ -124,6 +168,7 @@ public class WorkspaceEventHandler{
                         public void redo(){workspace.getWorkspace().getPCB().getTraces().add(t);}
                         public void undo(){workspace.getWorkspace().getPCB().getTraces().remove(t);}
                     });
+                    verifyPCB();
                     workspace.draw(pane);
                     break;
                 case Select:
@@ -145,15 +190,27 @@ public class WorkspaceEventHandler{
                     TraceGroup selected = workspace.getWorkspace().getSelected().copy();
                     Coordinate[] movePos = workspace.getMover().finishDrawing();
                     selected.moveTo(workspace.getWorkspace().GUIToMM(movePos[1]));
-                    undoController.add(new ReversibleAction(){
-                        public void redo(){selected.moveTo(workspace.getWorkspace().GUIToMM(movePos[1]));}
-                        public void undo(){selected.moveTo(workspace.getWorkspace().GUIToMM(movePos[0]));}
-                    });
+                    if (!justPasted)
+                        undoController.add(new ReversibleAction(){
+                            public void redo(){selected.moveTo(workspace.getWorkspace().GUIToMM(movePos[1]));}
+                            public void undo(){selected.moveTo(workspace.getWorkspace().GUIToMM(movePos[0]));}
+                        });
+                    justPasted = false;
                     workspace.getWorkspace().deselectAll();
-                    action = WorkspaceAction.None;
+                    if (!justPasted)action = WorkspaceAction.None;
+                    else action = WorkspaceAction.Select;
+                    verifyPCB();
                     workspace.draw(pane);
                     break;
             }
+        }
+    }
+    
+    private void verifyPCB(){
+        if (this.workspace.getWorkspace().getPCB().isCarvey() && !this.workspace.getWorkspace().getPCB().verify()){
+            new Alert(Alert.AlertType.INFORMATION, "Error!\nToo close to the smartclamp").showAndWait();
+            this.undo();
+            this.undoController.clearRedos();
         }
     }
     

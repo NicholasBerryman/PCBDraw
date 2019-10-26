@@ -24,7 +24,7 @@ public class MainPane extends SplitPane{
         mainPart = new SplitPane();
         mainPart.setDividerPosition(0, 0);
         workspace = new WorkPane();
-        context = new ContextPane(workspace.getWorkspaceGrid(),workspace.workspaceHandler(),workspace.getWorkPane());
+        context = new ContextPane(workspace.getWorkspaceGrid(),workspace.getWorkspaceHandler(),workspace.getWorkPane());
         context.setMinWidth(190);
         context.setMaxWidth(250);
         
@@ -44,18 +44,10 @@ public class MainPane extends SplitPane{
         mainPart.getItems().remove(this.workspace);
         
         this.workspace.setWorkspace(workspace);
-        this.context = new ContextPane(this.workspace.getWorkspaceGrid(),this.workspace.workspaceHandler(),this.workspace.getWorkPane());
+        this.context = new ContextPane(this.workspace.getWorkspaceGrid(),this.workspace.getWorkspaceHandler(),this.workspace.getWorkPane());
         this.context.setMinWidth(190);
         this.context.setMaxWidth(250);
         mainPart.getItems().add(context);
         mainPart.getItems().add(this.workspace);
-    }
-    
-    public void undo(){
-        this.workspace.undo();
-    }
-    
-    public void redo(){
-        this.workspace.redo();
     }
 }

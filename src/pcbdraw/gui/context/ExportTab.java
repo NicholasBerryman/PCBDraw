@@ -17,6 +17,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import pcbdraw.CNC.GCodeGenerator;
+import pcbdraw.CNC.GCodeGenerator.UncarveybleException;
 import pcbdraw.CNC.representations.CarveyRepr;
 import pcbdraw.circuit.PCB;
 import pcbdraw.data.GCodeFile;
@@ -117,17 +118,40 @@ public class ExportTab extends Tab{
                         public void run(){
                             try {
                                 gcoder.compileAndSave();
-                                Platform.runLater(() -> {
-                                    exportProgressWindow.enableExit();
-                                });
                             } catch (IOException ex) {
-                                Logger.getLogger(ExportTab.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (IndexOutOfBoundsException e2){
                                 Platform.runLater(() -> {
-                                    new Alert(Alert.AlertType.INFORMATION, "Cannot export!\nToo close to edge of board!").showAndWait();
+                                    new Alert(Alert.AlertType.INFORMATION, "Cannot save to this file!").showAndWait();
                                     exportProgressWindow.setErrorMessage();
                                 });
+                                try {
+                                    gcodeFile.delete();
+                                } catch (IOException ex1) {
+                                    Logger.getLogger(ExportTab.class.getName()).log(Level.SEVERE, null, ex1);
+                                }
+                            } catch (IndexOutOfBoundsException e2){
+                                Platform.runLater(() -> {
+                                    new Alert(Alert.AlertType.INFORMATION, "Cannot export!\nSomething is too close to the edge of the board!").showAndWait();
+                                    exportProgressWindow.setErrorMessage();
+                                });
+                                try {
+                                    gcodeFile.delete();
+                                } catch (IOException ex1) {
+                                    Logger.getLogger(ExportTab.class.getName()).log(Level.SEVERE, null, ex1);
+                                }
+                            } catch (UncarveybleException e3){
+                                Platform.runLater(() -> {
+                                    new Alert(Alert.AlertType.INFORMATION, "Cannot export!\nSomething is too close to Carvey's Smartclamp!").showAndWait();
+                                    exportProgressWindow.setErrorMessage();
+                                });
+                                try {
+                                    gcodeFile.delete();
+                                } catch (IOException ex1) {
+                                    Logger.getLogger(ExportTab.class.getName()).log(Level.SEVERE, null, ex1);
+                                }
                             }
+                            Platform.runLater(() -> {
+                                exportProgressWindow.enableExit();
+                            });
                         }
                     }.start();
                 }

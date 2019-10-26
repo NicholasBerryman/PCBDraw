@@ -41,7 +41,7 @@ public class GUIGrid {
     public DrawableRect getSelectingRect(){return this.selectingRect;}
     public DrawableMover getMover(){return this.mover;}
    
-    public CircuitTrace addTrace(Coordinate start, Coordinate end){
+    public CircuitTrace addPath(Coordinate start, Coordinate end){
         return this.workspace.getPCB().addTrace(new PathTrace(
                 this.workspace.GUIToMM(start),
                 this.workspace.GUIToMM(end)
