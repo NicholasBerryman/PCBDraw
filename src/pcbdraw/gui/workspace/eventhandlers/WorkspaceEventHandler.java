@@ -86,18 +86,20 @@ public class WorkspaceEventHandler{
     }
     
     public void delete(){
-        TraceGroup selected = this.workspace.getWorkspace().getSelected().copy();
-        if (selected != null){
-            for (CircuitTrace t : selected.getTraces()){
-                this.workspace.getWorkspace().getPCB().getTraces().remove(t);
+        if (this.workspace.getWorkspace().getSelected() != null){
+            TraceGroup selected = this.workspace.getWorkspace().getSelected().copy();
+            if (selected != null){
+                for (CircuitTrace t : selected.getTraces()){
+                    this.workspace.getWorkspace().getPCB().getTraces().remove(t);
+                }
             }
+            this.workspace.getWorkspace().deselectAll();
+
+            undoController.add(new ReversibleAction(){
+                public void redo(){for (CircuitTrace t : selected.getTraces()) workspace.getWorkspace().getPCB().getTraces().remove(t);}
+                public void undo(){for (CircuitTrace t : selected.getTraces()) workspace.getWorkspace().getPCB().getTraces().add(t);}
+            });
         }
-        this.workspace.getWorkspace().deselectAll();
-        
-        undoController.add(new ReversibleAction(){
-            public void redo(){for (CircuitTrace t : selected.getTraces()) workspace.getWorkspace().getPCB().getTraces().remove(t);}
-            public void undo(){for (CircuitTrace t : selected.getTraces()) workspace.getWorkspace().getPCB().getTraces().add(t);}
-        });
     }
     
     public void cut(){

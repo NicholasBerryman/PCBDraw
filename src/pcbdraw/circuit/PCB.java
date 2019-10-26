@@ -87,7 +87,6 @@ public class PCB {
     }
     
     private boolean verifyLocation(CircuitTrace t){
-        if (!carvey) return true;
         boolean ok = t.inArea(new Coordinate(0,0), this.size);
         return ok;
     }
