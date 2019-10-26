@@ -5,7 +5,7 @@
             <url>src/pcbdraw/gui/MainPane.java</url>
             <bookmark id="1">
                 <name/>
-                <line>26</line>
+                <line>69</line>
                 <key/>
             </bookmark>
         </file>
@@ -14,6 +14,7 @@
         <group>
             <file>file:/C:/Users/Nick%20Berryman/Documents/NetBeansProjects/PCBDraw/src/pcbdraw/gui/MainPane.java</file>
             <file>file:/C:/Users/Nick%20Berryman/Documents/NetBeansProjects/PCBDraw/src/pcbdraw/PCBDraw.java</file>
+            <file>file:/C:/Users/Nick%20Berryman/Documents/NetBeansProjects/PCBDraw/src/pcbdraw/CNC/generation/GCodeGenerator.java</file>
         </group>
     </open-files>
 </project-private>

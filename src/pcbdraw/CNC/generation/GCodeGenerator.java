@@ -317,16 +317,11 @@ public class GCodeGenerator extends Progressible{
     }
     
     private void holeGCode(){
-        this.pcb.getTraces().sort((CircuitTrace t1, CircuitTrace t2) ->{
-            if (t1 instanceof HoleTrace && t2 instanceof HoleTrace){
-                if (t1.getMajorCoord().x < t2.getMajorCoord().x) return -1;
-                if (t1.getMajorCoord() == t2.getMajorCoord())
-                    if (t1.getMajorCoord().y < t2.getMajorCoord().y) return -1;
-                return 1;
-            }
-            else if (t1 instanceof HoleTrace && ! (t2 instanceof HoleTrace))
-                return -1;
-            return 0;
+        this.pcb.getHoleTraces().sort((HoleTrace t1, HoleTrace t2) ->{
+            if (t1.getMajorCoord().x < t2.getMajorCoord().x) return -1;
+            if (t1.getMajorCoord() == t2.getMajorCoord())
+                if (t1.getMajorCoord().y < t2.getMajorCoord().y) return -1;
+            return 1;
         });
         for (HoleTrace h : this.pcb.getHoleTraces()) cnc.cutHole(h.getMajorCoord());
     }
