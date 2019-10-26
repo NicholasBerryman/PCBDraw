@@ -144,8 +144,8 @@ public class GUIGrid {
         Coordinate newCoord = this.traces.commitSelected();
         Coordinate oldCoord = this.oldPos;
         undoController.add(new ReversibleAction(){
-            public void redo(){traces.deselectAll();for (GUITrace t : moved)t.select();traces.moveSelected(newCoord);traces.deselectAll();}
-            public void undo(){traces.deselectAll();for (GUITrace t : moved)t.select();traces.moveSelected(oldCoord);traces.deselectAll();}
+            public void redo(){traces.deselectAll();for (GUITrace t : moved)t.select();traces.moveSelected(newCoord);traces.commitSelected();traces.deselectAll();}
+            public void undo(){traces.deselectAll();for (GUITrace t : moved)t.select();traces.moveSelected(oldCoord);traces.commitSelected();traces.deselectAll();}
         });
         this.oldPos = null;
     }

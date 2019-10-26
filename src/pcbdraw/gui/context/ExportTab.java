@@ -5,14 +5,23 @@
  */
 package pcbdraw.gui.context;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import pcbdraw.CNC.GCodeGenerator;
+import pcbdraw.CNC.representations.CarveyRepr;
+import pcbdraw.circuit.MilliGrid;
+import pcbdraw.data.GCodeFile;
+import pcbdraw.gui.progress.LoadScreen;
+import pcbdraw.gui.progress.ProgressListener;
 
 /**
  *
@@ -25,10 +34,12 @@ public class ExportTab extends Tab{
     private final Spinner<Integer> feedSpin = new Spinner<>(1, 100000, 800);
     private final Spinner<Double> pWidthSpin = new Spinner<>(0.1, 25, 2, 0.1);
     private final Button export;
+    private final MilliGrid pcb;
     
     //TODO connect to gcoder
-    public ExportTab(){
+    public ExportTab(MilliGrid pcb){
         super();
+        this.pcb = pcb;
         this.setClosable(false);
         this.setText("Export");
         VBox root = new VBox();
@@ -62,7 +73,7 @@ public class ExportTab extends Tab{
         zUp.getChildren().add(zUpSpin);
         
         HBox feed = new HBox();
-        root.getChildren().add(feed);
+        //root.getChildren().add(feed);
         Label feedLab = new Label("Feedrate (mm/min)");
         feed.getChildren().add(feedLab);
         feedSpin.setPrefWidth(80);
@@ -81,26 +92,49 @@ public class ExportTab extends Tab{
         
         export = new Button("Export");
         root.getChildren().add(export);
-    }
-    
-    public double getZDown(){
-        return zDownSpin.getValue();
-    }
-    public double getZUp(){
-        return zUpSpin.getValue();
-    }
-    public double getFeed(){
-        return feedSpin.getValue();
-    }
-    public double getPathWidth(){
-        return pWidthSpin.getValue();
-    }
-    
-    public double getDrillDown(){
-        return drillDownSpin.getValue();
-    }
-    
-    public void addExportHandler(EventHandler<ActionEvent> handle){
-        this.export.setOnAction(handle);
+        
+        export.setOnAction((e) -> {
+            try {
+                zDownSpin.increment(0);
+                drillDownSpin.increment(0);
+                zUpSpin.increment(0);
+                feedSpin.increment(0);
+                pWidthSpin.increment(0);
+                
+                GCodeFile gcodeFile = GCodeFile.askUserToSaveAs();
+                if (gcodeFile != null)
+                {
+                    LoadScreen exportProgressWindow = new LoadScreen();
+                    CarveyRepr carvey = new CarveyRepr(gcodeFile, zDownSpin.getValue(), drillDownSpin.getValue(), zUpSpin.getValue());
+                    GCodeGenerator gcoder = new GCodeGenerator(carvey, pcb, pWidthSpin.getValue());
+                    gcoder.addProgressListener((progress) -> {
+                        Platform.runLater(() -> {
+                            exportProgressWindow.setProgress(progress);
+                        });
+                    });
+                    exportProgressWindow.show();
+                    new Thread(){
+                        @Override
+                        public void run(){
+                            try {
+                                gcoder.compileAndSave();
+                                Platform.runLater(() -> {
+                                    exportProgressWindow.enableExit();
+                                });
+                            } catch (IOException ex) {
+                                Logger.getLogger(ExportTab.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (IndexOutOfBoundsException e2){
+                                Platform.runLater(() -> {
+                                    new Alert(Alert.AlertType.INFORMATION, "Cannot export!\nToo close to edge of board!").showAndWait();
+                                    exportProgressWindow.setErrorMessage();
+                                });
+                            }
+                        }
+                    }.start();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(ExportTab.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
     }
 }

@@ -51,7 +51,15 @@ public class PathTrace extends CircuitTrace{
 
     @Override
     public boolean withinRange(Coordinate toCheck, double pathWidthMM) {
-        return pathLine.distanceFrom(toCheck) <= pathWidthMM;
+        return pathLine.distanceFrom(toCheck) <= pathWidthMM/2.0;
+    }
+    
+    public boolean inRangeOfEnd(Coordinate toCheck, double pathWidthMM){
+        Coordinate startDist = pathLine.startPoint.subtract(toCheck);
+        Coordinate endDist   = pathLine.endPoint.subtract(toCheck);
+        return 
+                Math.sqrt(startDist.x*startDist.x+startDist.y*startDist.y) < pathWidthMM/2.0
+                || Math.sqrt(endDist.x*endDist.x+endDist.y*endDist.y) < pathWidthMM/2.0;
     }
     
     @Override
@@ -82,6 +90,11 @@ public class PathTrace extends CircuitTrace{
                 this.pathLine.endPoint = p.pathLine.startPoint;
             }
         }
+    }
+
+    @Override
+    public double distanceTo(Coordinate c) {
+        return this.pathLine.distanceFrom(c);
     }
     
     

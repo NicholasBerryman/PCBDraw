@@ -38,18 +38,10 @@ public class TextWriter {
         out = new PrintWriter(new FileWriter(fileName));
     }
     
-    /**
-     * Close the file writer
-     * @throws IOException When there is an error closing the file
-     */
     private void close() throws IOException{
         out.close();
     }
     
-    /**
-     * Create a new family tree file
-     * @throws IOException When there is an error creating the file
-     */
     public void create() throws IOException{
         if (!new File(fileName).exists()) {
             this.open();
@@ -57,11 +49,6 @@ public class TextWriter {
         }
     }
     
-    /**
-     * Save the specified Family Tree to the file
-     * @param toWrite Family Tree to save
-     * @throws IOException When there is an error writing to file
-     */
     public void save(String toWrite) throws IOException{
         this.open();
         out.print(toWrite);

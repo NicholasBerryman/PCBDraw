@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pcbdraw.CNC;
+package pcbdraw.gui.progress;
 
 /**
  *
  * @author Nick Berryman
  */
-public class CarveyRepr extends CNCRepr{
-    
+public interface ProgressListener {
+    public abstract void progress(double progress);
 }

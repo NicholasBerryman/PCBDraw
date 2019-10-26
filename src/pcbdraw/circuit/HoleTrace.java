@@ -40,4 +40,10 @@ public class HoleTrace extends CircuitTrace{
 
     @Override
     public void simplifyUsing(CircuitTrace c) {}
+
+    @Override
+    public double distanceTo(Coordinate c) {
+        double distToCircle = Math.sqrt(Math.pow(centrePoint.x-c.x,2)+Math.pow(centrePoint.y-c.y,2));
+        return distToCircle;
+    }
 }

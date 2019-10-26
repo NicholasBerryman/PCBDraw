@@ -50,10 +50,8 @@ public class GUIPath extends GUITrace{
 
     @Override
     public void commitMove() {
-        Coordinate traceStart = this.trace.getStartPoint();
-        Coordinate dist = traceStart.subtract(grid.GUIToMM(new Coordinate(line.getStartX(), line.getStartY())));
         Coordinate newStart = grid.GUIToMM(new Coordinate(line.getStartX(), line.getStartY()));
-        Coordinate newEnd = newStart.add(dist);
+        Coordinate newEnd = grid.GUIToMM(new Coordinate(line.getEndX(), line.getEndY()));
         
         this.trace.setStart(newStart);
         this.trace.setEnd(newEnd);

@@ -5,7 +5,9 @@
  */
 package pcbdraw.data;
 
+import java.io.File;
 import java.io.IOException;
+import javafx.stage.FileChooser;
 
 /**
  *
@@ -13,6 +15,15 @@ import java.io.IOException;
  */
 public class GCodeFile {
     private TextFile file;
+    public static GCodeFile askUserToSaveAs() throws IOException{
+        FileChooser gcbChoose = new FileChooser();
+        FileChooser.ExtensionFilter gcbFilter = new FileChooser.ExtensionFilter("GCode files (*.gcode)", "*.gcode");
+        gcbChoose.getExtensionFilters().add(gcbFilter);
+        
+        File toSave = gcbChoose.showSaveDialog(null);
+        if (toSave == null) return null;
+        return new GCodeFile(toSave.getPath());
+    }
     
     public GCodeFile(String fileName) throws IOException {
         file = new TextFile(fileName);
@@ -21,5 +32,5 @@ public class GCodeFile {
     public void save(String gcode) throws IOException{
         file.save(gcode);
     }
-   
 }
+

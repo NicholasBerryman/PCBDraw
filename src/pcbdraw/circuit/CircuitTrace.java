@@ -14,4 +14,5 @@ public abstract class CircuitTrace {
     public abstract boolean withinRange(Coordinate toCheck, double pathWidthMM);
     public abstract boolean equals(CircuitTrace c);
     public abstract void simplifyUsing(CircuitTrace c);
+    public abstract double distanceTo(Coordinate c);
 }

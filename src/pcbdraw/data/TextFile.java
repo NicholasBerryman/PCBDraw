@@ -37,21 +37,11 @@ public class TextFile {
         in.close();
     }
     
-    /**
-     * Read a family tree from the file
-     * @return The family tree encoded within the file
-     * @throws IOException When there is an error reading the file
-     * @throws ClassNotFoundException When there is an error with the class
-     */
     public String read() throws IOException{
         return in.read();
     }
     
-    /**
-     * Saves a family tree to the file, overwriting any others
-     * @throws IOException When there is an error writing to the file
-     */
     public void save(String toWrite) throws IOException{
         out.save(toWrite);
-    }    
+    }
 }

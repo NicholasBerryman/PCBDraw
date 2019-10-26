@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pcbdraw.gui;
+package pcbdraw.gui.progress;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -41,11 +41,8 @@ public class LoadScreen {
         root.getChildren().add(ok);
         ok.setDisable(true);
         
-        ok.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent event) {
-                stage.hide();
-            }
+        ok.setOnAction((ActionEvent event) -> {
+            stage.hide();
         });
         
         
@@ -53,11 +50,8 @@ public class LoadScreen {
     }
     
     public void show(){
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>(){
-            @Override
-            public void handle(WindowEvent event) {
-                event.consume();
-            }
+        stage.setOnCloseRequest((WindowEvent event) -> {
+            event.consume();
         });
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();

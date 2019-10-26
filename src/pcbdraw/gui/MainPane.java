@@ -6,7 +6,6 @@
 package pcbdraw.gui;
 
 import javafx.geometry.Orientation;
-import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
 import pcbdraw.gui.context.ContextPane;
 import pcbdraw.gui.workspace.WorkPane;
@@ -20,7 +19,6 @@ public class MainPane extends SplitPane{
     private WorkPane workspace;
     private ContextPane context;
     private SplitPane mainPart;
-    private Scene scene;
     
     public void initialise(){
         mainPart = new SplitPane();

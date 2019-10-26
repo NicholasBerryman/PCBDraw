@@ -5,281 +5,114 @@
  */
 package pcbdraw.CNC;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
+import pcbdraw.CNC.representations.CNCRepr;
+import pcbdraw.circuit.CircuitTrace;
+import pcbdraw.circuit.Coordinate;
+import pcbdraw.circuit.HoleTrace;
+import pcbdraw.circuit.MilliGrid;
+import pcbdraw.circuit.PathTrace;
+import pcbdraw.gui.progress.Progressible;
 
 /**
  *
  * @author Nick Berryman
  */
-public class GCodeGenerator {
-    private  StringBuilder gcode = new StringBuilder();
-    private double zDown;
-    private double drillDown;
-    private double zUp;
-    private double feedRate;
-    private double pathWidth;
-    
-    private final double inverseResolution = 10;
+public class GCodeGenerator extends Progressible{
+    private final CNCRepr cnc;
+    private final MilliGrid pcb;
+    private final double pathWidthMM;
+    private final int GCodeSmoothFactor = 2;
     private final double holeRatio = 1.25;
-    private int gcodeSmoothFactor; //The number of coordinates per gcode instruction
-    //TODO add smoothing as option rather than forced
-    private int maxProgress = 1;
-    private int currentProgress = 0;
-    private ProgressListener progListen;
+    private final double inverseResolution = 10;
     
-    public GCodeGenerator(double zDown, double drillDown, double zUp, double feedRate, double pathWidth) {
-        this.zDown = zDown;
-        this.drillDown = drillDown;
-        this.zUp = zUp;
-        this.feedRate = feedRate;
-        this.pathWidth = pathWidth;
-        
-        gcodeSmoothFactor = 2;//(int)(pathWidth*2);//This seems ok?
-        if (gcodeSmoothFactor < 1) gcodeSmoothFactor = 1;
+    public GCodeGenerator(CNCRepr cnc, MilliGrid pcb, double pathWidthMM){
+        this.cnc = cnc;
+        this.pcb = pcb;
+        this.pathWidthMM = pathWidthMM;
     }
     
-    public String compile(ArrayList<Line> path, ArrayList<Circle> hole, double unitMult, double boardWidthMM, double boardHeightMM, boolean forCarvey) throws Exception{
-        hole.sort((Circle o1, Circle o2) -> {
-            int xComp = Double.compare(o1.getCenterX(), o2.getCenterX());
-            if (xComp != 0) return xComp;
-            return Double.compare(o1.getCenterY(), o2.getCenterY());
-        });
-        
-        currentProgress = 0;
-        maxProgress = path.size() + hole.size();
-        gcode = new StringBuilder();
-        ArrayList<Line> paths = new ArrayList<>();
-        ArrayList<Circle> holes = new ArrayList<>();
-        for (Line l : path){
-            currentProgress++;
-            updateProgress(currentProgress);
-            Line l2 = new Line();
-            if (l.getStartX() > l.getEndX() && l.getStartY() < l.getEndY()){
-                l2.setStartX(l.getEndX());
-                l2.setEndX(l.getStartX());
-                l2.setStartY(l.getEndY());
-                l2.setEndY(l.getStartY());
-                l.setStartX(l2.getStartX());
-                l.setEndX(l2.getEndX());
-                l.setStartY(l2.getStartY());
-                l.setEndY(l2.getEndY());
-            }
-            if (l.getStartX() < l.getEndX() || (!(l.getStartX() < l.getEndX()) && l.getStartY() < l.getEndY())){
-                l2.setStartX(l.getStartX()/unitMult);
-                l2.setEndX(l.getEndX()/unitMult);
-                l2.setStartY(l.getStartY()/unitMult);
-                l2.setEndY(l.getEndY()/unitMult);
-                paths.add(l2);
-            }
-            else if (l.getStartX() > l.getEndX() || !(l.getStartX() > l.getEndX()) && l.getStartY() > l.getEndY()){
-                l2.setEndX(l.getStartX()/unitMult);
-                l2.setStartX(l.getEndX()/unitMult);
-                l2.setEndY(l.getStartY()/unitMult);
-                l2.setStartY(l.getEndY()/unitMult);
-                paths.add(l2);
-            }
-        }
-        for (Circle c : hole){
-            currentProgress++;
-            updateProgress(currentProgress);
-            Circle c2 = new Circle();
-            c2.setCenterX(c.getCenterX()/unitMult);
-            c2.setCenterY(c.getCenterY()/unitMult);
-            holes.add(c2);
-        }
-        
-        gcode.append("G90G94\n");
-        gcode.append("G17\n");
-        gcode.append("G21\n");
-        gcode.append("M9\n");
-        
-        System.out.println("Generating path mask...");
-        Double[][] pathMask = createPathMask(paths, holes, boardWidthMM, boardHeightMM);
-        if (forCarvey) if (!validateCarveyble(pathMask)) throw new Exception("Something is too close to the Carvey's SmartClamp!");
-        
-        System.out.println("Separating holes...");
-        separateHoleOverlap(pathMask, holes);
-        
-        //printPathMask(pathMask);
-        System.out.println("Generating edge mask...");
-        int[][] intMask = edgeFilter(pathMask);
-        //printIntMask(intMask);
-        System.out.println("Walking Contours...");
-        contourPathGCode(intMask, pathMask, gcode);
-        //printIntMask(intMask);
-        System.out.println("Drilling Holes...");
-        holeGCode(gcode, holes, boardHeightMM);
-        
-        gcode.append("G0Z15\n");
-        return gcode.toString();
+    public void compileAndSave() throws IOException{
+        cnc.reset();
+        Double[][] pathMask = this.createPathMask();
+        this.separateHoleOverlap(pathMask);
+            //this.printPathMask(pathMask);
+        int[][] edgeMask = this.edgeFilter(pathMask);
+            //this.printIntMask(edgeMask);
+        this.contourPathGCode(edgeMask, pathMask);
+        this.holeGCode();
+        cnc.finish();
+        cnc.save();
     }
     
-    private boolean validateCarveyble(Double[][] pathMask){
-        //vertical part
-        for (int x = 0; x < 0.75*25.4*inverseResolution; x++){
-            for (int y = 1; y < 3.25*25.4*inverseResolution; y++){
-                if (pathMask[x][pathMask[0].length-y] != null)
-                    return false;
-            }
-        }
-        //horizontal part
-        for (int x = 0; x < 3.25*25.4*inverseResolution; x++){
-            for (int y = 1; y < 0.75*25.4*inverseResolution; y++){
-                if (pathMask[x][pathMask[0].length-y] != null){
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    
-    private void separateHoleOverlap(Double[][] pathMask, ArrayList<Circle> holesAdjusted){
-        for (int i = 0; i < holesAdjusted.size(); i++){
-            ArrayList<Circle> overlaps = new ArrayList<>();
-            Circle c = holesAdjusted.get(i);
-            for (int j = i+1; j < holesAdjusted.size(); j++){
-                Circle c2 = holesAdjusted.get(j);
-                double dist = Math.sqrt(Math.pow(c.getCenterX()-c2.getCenterX(),2)+Math.pow(c.getCenterY()-c2.getCenterY(),2));
+    private Double[][] createPathMask(){
+        Double[][] pathMask = new Double[(int)(pcb.getSize().x*inverseResolution)][(int)(pcb.getSize().y*inverseResolution)];
+        this.setProgress(0);
+        this.setMaxProgress(pathMask.length);
+        
+        for (int x = 0; x < pathMask.length; x++){
+            for (int y = 0; y < pathMask[0].length; y++){
+                Coordinate point = new Coordinate(x/10.0,y/10.0);
+                boolean hasPath = false;
+                double slope = 0;
                 
-                if (dist <= 2*(holeRatio*pathWidth)){
-                    overlaps.add(c2);
+                for (PathTrace p : pcb.getPathTraces()){
+                    boolean onLine = p.withinRange(point, pathWidthMM);
+                    boolean atEnd  = p.inRangeOfEnd(point, pathWidthMM);
+                    hasPath |= onLine;
+                    if (onLine && !atEnd)     slope = p.getGradient();
+                    else if (onLine && atEnd) slope = Double.MIN_VALUE;
+                    if (hasPath) break;
                 }
+                for (HoleTrace h : pcb.getHoleTraces()){
+                    boolean inCircle = h.withinRange(point, pathWidthMM*holeRatio);
+                    hasPath |= inCircle;
+                    if (inCircle) slope = Double.MIN_VALUE;
+                    if (hasPath) break;
+                }
+                if (hasPath) pathMask[x][y] = slope;
+                else pathMask[x][y] = null;
+            }
+            this.incrementProgress();
+        }
+        return pathMask;
+    }
+    
+    private void separateHoleOverlap(Double[][] pathMask){
+        for (int i = 0; i < pcb.getHoleTraces().size(); i++){
+            ArrayList<HoleTrace> overlaps = new ArrayList<>();
+            HoleTrace h = pcb.getHoleTraces().get(i);
+            for (int j = i+1; j < pcb.getHoleTraces().size(); j++){
+                HoleTrace h2 = pcb.getHoleTraces().get(j);
+                double dist = h.distanceTo(h2.getMajorCoord());
+                if (dist <= 2*holeRatio*pathWidthMM) overlaps.add(h2);
             }
             
-            for (Circle c2 : overlaps){
-                if (c.getCenterX() != c2.getCenterX() && c.getCenterY() != c2.getCenterY())
+            for (HoleTrace h2 : overlaps){
+                if (h.getMajorCoord().x != h2.getMajorCoord().x && h.getMajorCoord().y != h2.getMajorCoord().y)
                     continue;
-                for (int x = (int)((c.getCenterX()-holeRatio*pathWidth)*inverseResolution); x <= (int)((c.getCenterX()+holeRatio*pathWidth)*inverseResolution); x++){
-                    for (int y = (int)((c.getCenterY()-holeRatio*pathWidth)*inverseResolution); y <= (int)((c.getCenterY()+holeRatio*pathWidth)*inverseResolution); y++){
-                        double pointDist1 = Math.sqrt(Math.pow(c.getCenterX()*inverseResolution-x,2)+Math.pow(c.getCenterY()*inverseResolution-y,2));
-                        double pointDist2 = Math.sqrt(Math.pow(x-c2.getCenterX()*inverseResolution,2)+Math.pow(y-c2.getCenterY()*inverseResolution,2));
+                for (int x = (int)((h.getMajorCoord().x-holeRatio*pathWidthMM)*inverseResolution); x <= (int)((h.getMajorCoord().x+holeRatio*pathWidthMM)*inverseResolution); x++){
+                    for (int y = (int)((h.getMajorCoord().y-holeRatio*pathWidthMM)*inverseResolution); y <= (int)((h.getMajorCoord().y+holeRatio*pathWidthMM)*inverseResolution); y++){
+                        double pointDist1 = Math.sqrt(Math.pow(h.getMajorCoord().x*inverseResolution-x,2)+Math.pow(h.getMajorCoord().y*inverseResolution-y,2));
+                        double pointDist2 = Math.sqrt(Math.pow(x-h2.getMajorCoord().x*inverseResolution,2)+Math.pow(y-h2.getMajorCoord().y*inverseResolution,2));
 
                         if ((int)pointDist1 == (int)pointDist2) pathMask[x][y] = null;
                     }
                 }
             }
         }
-        
-        
-    }
-    
-    private Double[][] createPathMask(ArrayList<Line> pathsAdjusted, ArrayList<Circle> holesAdjusted, double boardWidthMM, double boardHeightMM){
-        Double[][] pathMask = new Double[(int)(boardWidthMM*inverseResolution)][(int)(boardHeightMM*inverseResolution)];
-        currentProgress = 0;
-        maxProgress = pathMask.length * pathMask[0].length;
-        
-        for (int x = 0; x < boardWidthMM*inverseResolution; x++){
-            for (int y = 0; y < boardHeightMM*inverseResolution; y++){
-                boolean hasPath = false;
-                double slope = 0;
-                for (Line l : pathsAdjusted){
-                    int onLine = pointOnLine(x/inverseResolution,y/inverseResolution,l);
-                    hasPath |= onLine > 0;
-                    if (onLine == 1){
-                        if (l.getEndX() != l.getStartX())
-                            slope = (l.getEndY()-l.getStartY())/(l.getEndX()-l.getStartX());
-                        else slope = Double.POSITIVE_INFINITY;
-                    }
-                    else if (onLine == 2)slope = Double.MIN_VALUE;
-                    if (hasPath) break;
-                }
-                for (Circle c : holesAdjusted){
-                    boolean inCircle = pointInCircle(x/inverseResolution,y/inverseResolution,c);
-                    hasPath |= inCircle;
-                    if (inCircle)
-                        slope = Double.MIN_VALUE;
-                    if (hasPath) break;
-                }
-                if (hasPath) pathMask[x][y] = slope;
-                else pathMask[x][y] = null;
-                currentProgress++;
-            }
-            updateProgress(currentProgress);
-        }
-        return pathMask;
-    }
-    
-    private int pointOnLine(double xp, double yp, Line l){
-        boolean intersectsSegment = false;
-        double distToIntersect = 0;
-        double intersectX = 0;
-        double intersectY = 0;
-        double distToPoint;
-        if (l.getEndX() != l.getStartX() && l.getEndY() == l.getStartY()){
-            intersectY = l.getStartY();
-            intersectX = xp;
-            intersectsSegment = intersectX<=l.getEndX() && intersectX>=l.getStartX();
-            distToIntersect = Math.abs(intersectY-yp);
-        }
-        else if (l.getEndX() == l.getStartX() && l.getEndY() != l.getStartY()){
-            intersectX = l.getStartX();
-            intersectY = yp;
-            intersectsSegment = intersectY<=l.getEndY() && intersectY>=l.getStartY();
-            distToIntersect = Math.abs(intersectX-xp);
-        }
-        else if (l.getEndX() != l.getStartX() && l.getEndY() != l.getStartY()){
-            double slope = (l.getEndY()-l.getStartY())/(l.getEndX()-l.getStartX());
-            double offset = l.getStartY()-slope*l.getStartX(); //I'm pretty sure this is right
-
-            double perpSlope = -1.0/slope;
-            double perpOffset = yp-perpSlope*xp;
-
-            //y = perpSlope*x+perpOffset & y = slope*x+offset
-            //slope*x+offset = perpSlope*x+perpOffset
-            //(slope-perpSlope)*x+offset = perpOffset
-            //x=(perpOffset-offset)/(slope-perpSlope)
-            //y = slope*x+offset
-            intersectX = (perpOffset-offset)/(slope-perpSlope);
-            intersectY = slope*intersectX+offset;
-            intersectsSegment = intersectX<=l.getEndX() && intersectX>=l.getStartX();
-            distToIntersect = Math.sqrt(Math.pow(intersectX-xp,2)+Math.pow(intersectY-yp,2));
-        }
-        distToPoint = Math.min(Math.sqrt(Math.pow(l.getStartX()-xp,2)+Math.pow(l.getStartY()-yp,2)),Math.sqrt(Math.pow(l.getEndX()-xp,2)+Math.pow(l.getEndY()-yp,2)));
-        
-        if ((distToPoint < pathWidth/2.0))
-            return 2;
-        if (intersectsSegment && distToIntersect <= pathWidth/2.0)
-            return 1;
-        return 0;
-    }
-    
-    private boolean pointInCircle(double xp, double yp, Circle c){
-        double distToCircle = Math.sqrt(Math.pow(c.getCenterX()-xp,2)+Math.pow(c.getCenterY()-yp,2));
-        return distToCircle <= holeRatio*pathWidth; 
-    }
-    
-    private void printPathMask(Double[][] pathMask){
-        for (int y = 0; y<pathMask[0].length; y++){
-            for (int x = 0; x<pathMask.length;x++){
-                if (pathMask[x][y] != null)System.out.print("1");
-                else System.out.print(" ");
-            }
-            System.out.println();
-        }
-    }
-    private void printIntMask(int[][] pathMask){
-        for (int y = 0; y<pathMask[0].length; y++){
-            for (int x = 0; x<pathMask.length;x++){
-                String intVal = Integer.toString(pathMask[x][y]);
-                char intEnd = intVal.charAt(intVal.length()-1);
-                if (pathMask[x][y] > 0)System.out.print(intEnd);
-                else System.out.print(" ");
-            }
-            System.out.println();
-        }
     }
     
     private int[][] edgeFilter(Double[][] pathMask){
         int[][] edgeMask = new int[pathMask.length][pathMask[0].length];
-        currentProgress = 0;
-        maxProgress = pathMask.length * pathMask[0].length;
+        this.setProgress(0);
+        this.setMaxProgress(pathMask.length);
         int replaceProg = 0;
         for (int x = 0; x < pathMask.length; x++){
             for (int y = 0; y < pathMask[0].length; y++){
-                boolean isEdge = true;
+                boolean isEdge;
                 if (pathMask[x][y] != null){
                     int neighbourCount = 0;
                     for (int xi = -1; xi <= 1; xi++){
@@ -292,235 +125,141 @@ public class GCodeGenerator {
                         }
                     }
                     isEdge = (neighbourCount < 4);
-                    if (isEdge){
+                    if (isEdge) {
                         edgeMask[x][y] = 1;
-                        currentProgress++;
-                        updateProgress(currentProgress);
+                        this.incrementProgress();
                         replaceProg++;
                     }
                     else edgeMask[x][y] = 0;
                 }
             }
+            this.incrementProgress();
+            this.setMaxProgress(replaceProg);
         }
-        currentProgress = 0;
-        maxProgress = replaceProg;
         return edgeMask;
     }
     
-    private void contourPathFilter(int[][] edgeMask){
-        Integer startX;
-        Integer startY;
-        while (true){
-            startX = null;
-            startY = null;
-            for (int x = 0; x < edgeMask.length && startX == null; x++){
-                for (int y = 0; y < edgeMask[0].length && startX == null; y++){
-                    if (edgeMask[x][y] == 1){
-                        if (startX == null){
-                            startX = x;
-                            startY = y;
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            if (startX == null) break;
-            
-            int currX = startX;
-            int currY = startY;
-            int pathCount = 2;
-            /*for (int xi = -1; xi <= 1; xi++){
-                for (int yi = -1; yi <= 1; yi++){
-                    if (currX+xi >= 0 && currY+yi >= 0 && (xi!=0 || yi!=0)){
-                        if (edgeMask[currX+xi][currY+yi] > 0){
-                            if (edgeMask[currX+xi][currY+yi] == 1){
-                                edgeMask[currX+xi][currY+yi] = pathCount;
-                                pathCount++;
-                                currX += xi;
-                                currY += yi;
-                                xi = -1;
-                                yi = -2;
-                            }
-                        }
-                    }
-                }
-            }*/
-
-            while (true){
-                edgeMask[currX][currY] = pathCount;
-                pathCount++;
-
-                if (currY > 0)                 if (edgeMask[currX][currY-1] == 1){
-                    currY -= 1;
-                    continue;
-                }
-                if (currX < edgeMask.length)   if (edgeMask[currX+1][currY] == 1){
-                    currX += 1;
-                    continue;
-                }
-                if (currY < edgeMask[0].length)if (edgeMask[currX][currY+1] == 1){
-                    currY += 1;
-                    continue;
-                }
-                if (currX > 0)                 if (edgeMask[currX-1][currY] == 1){
-                    currX -= 1;
-                    continue;
-                }
-                if (currY > 0 && currX > 0)                                if (edgeMask[currX-1][currY-1] == 1){
-                    currX -= 1;
-                    currY -= 1;
-                    continue;
-                }
-                if (currY > 0 && currX < edgeMask.length)                  if (edgeMask[currX+1][currY-1] == 1){
-                    currX += 1;
-                    currY -= 1;
-                    continue;
-                }
-                if (currY < edgeMask[0].length && currX < edgeMask.length) if (edgeMask[currX+1][currY+1] == 1){
-                    currX += 1;
-                    currY += 1;
-                    continue;
-                }
-                if (currY < edgeMask[0].length && currX > 0)               if (edgeMask[currX-1][currY+1] == 1){
-                    currX -= 1;
-                    currY += 1;
-                    continue;
-                }
-                break;
-            }
-        }
-    }
-    
-    public void setProgressListener(ProgressListener newListen){
-        this.progListen = newListen;
-    }
-    
-    private void updateProgress(int newProgress){
-        progListen.update(newProgress);
-    }
-    
-    public int getMaxProgress(){
-        return maxProgress;
-    }
-    
-    /**
-     * G0 - Fast X?Y?Z?
-     * G1 - Slow X?Y?Z?F?S?
-     * 
-    **/
-    private void contourPathGCode(int[][] edgeMask, Double[][] pathMask, StringBuilder gcode){
-        Integer startX;
-        Integer startY;
-        int reversedY;
-        currentProgress = 0;
+    private void contourPathGCode(int[][] edgeMask, Double[][] pathMask){
+        Coordinate start;
         Double lastSlope = null;
-        //Double lastUsedSlope = null;
         
+        this.setProgress(0);
+        this.cnc.initMachine();
         while (true){
-            gcode.append("G0Z").append(Double.toString(zUp)).append("\n");
-            startX = null;
-            startY = null;
-            for (int x = 0; x < edgeMask.length && startX == null; x++){
-                for (int y = 0; y < edgeMask[0].length && startX == null; y++){
+            cnc.endCut();
+            start = null;
+            for (int x = 0; x < edgeMask.length && start == null; x++){
+                for (int y = 0; y < edgeMask[0].length && start == null; y++){
                     if (edgeMask[x][y] == 1){
-                        if (startX == null){
-                            startX = x;
-                            startY = y;
+                        if (start == null){
+                            start = new Coordinate(x, y);
                             break;
                         }
                     }
                 }
             }
 
-            if (startX == null) break;
-            reversedY = edgeMask[0].length - startY;
-            gcode.append("X").append(Double.toString(startX/inverseResolution)).append("Y").append(Double.toString(reversedY/inverseResolution)).append("\n");
-            gcode.append("G1").append("X").append(Double.toString(startX/inverseResolution)).append("Y").append(Double.toString(reversedY/inverseResolution)).append("Z").append(Double.toString(zDown)).append("F").append(feedRate).append("S").append("10000").append("\n");
-            int currX = startX;
-            int currY = startY;
+            if (start == null) break;
+            cnc.move(new Coordinate(start.x/inverseResolution, start.y/inverseResolution));
+            cnc.startCut();
+            Coordinate current = new Coordinate(start.x, start.y);
+            Coordinate lastCirc = null;
             int pathCount = 2;
             int smootherCount = 0;
-            int lastCircX = 0;
-            int lastCircY = 0;
-            
             while (true){
-                edgeMask[currX][currY] = pathCount;
-                reversedY = edgeMask[0].length - currY;
+                edgeMask[(int)current.x][(int)current.y] = pathCount;
                 pathCount++;
-                currentProgress++;
-                updateProgress(currentProgress);
+                this.incrementProgress();
                 
-                if (pathMask[currX][currY] == Double.MIN_VALUE){
-                    if (smootherCount % gcodeSmoothFactor == 0)
-                        gcode.append("X").append(Double.toString(currX/inverseResolution)).append("Y").append(Double.toString(reversedY/inverseResolution)).append("\n");
-                    lastCircX = currX;
-                    lastCircY = reversedY;
+                if (pathMask[(int)current.x][(int)current.y] == null) System.out.println("a");
+                if (new Double(Double.MIN_VALUE).equals(pathMask[(int)current.x][(int)current.y])){
+                    if (smootherCount % GCodeSmoothFactor == 0) cnc.move(new Coordinate(current.x/inverseResolution, current.y/inverseResolution));
+                    lastCirc = new Coordinate(current.x, current.y);
                     lastSlope = Double.MIN_VALUE;
                     smootherCount++;
                 }
-                else if (lastSlope == null || !Objects.equals(lastSlope, pathMask[currX][currY])){
+                else if (lastSlope == null || !Objects.equals(lastSlope, pathMask[(int)current.x][(int)current.y])){
                     if (lastSlope != null)
-                        if (lastSlope == Double.MIN_VALUE && lastCircX != 0 && lastCircY != 0)
-                            gcode.append("X").append(Double.toString(lastCircX/inverseResolution)).append("Y").append(Double.toString(lastCircY/inverseResolution)).append("\n");
-                    gcode.append("X").append(Double.toString(currX/inverseResolution)).append("Y").append(Double.toString(reversedY/inverseResolution)).append("\n");
-                    lastSlope = pathMask[currX][currY];
+                        if (lastSlope == Double.MIN_VALUE && lastCirc != null) cnc.move(new Coordinate(lastCirc.x/inverseResolution, lastCirc.y/inverseResolution));
+                    cnc.move(new Coordinate(current.x/inverseResolution, current.y/inverseResolution));
+                    lastSlope = pathMask[(int)current.x][(int)current.y];
                     smootherCount = 0;
                 }
                 else smootherCount = 0;
 
-                if (currY > 0)                 if (edgeMask[currX][currY-1] == 1){
-                    currY -= 1;
+                if (current.y > 0)                 if (edgeMask[(int)current.x][(int)current.y-1] == 1){
+                    current = current.subtract(new Coordinate(0,1));
                     continue;
                 }
-                if (currX < edgeMask.length)   if (edgeMask[currX+1][currY] == 1){
-                    currX += 1;
+                if (current.x < edgeMask.length)   if (edgeMask[(int)current.x+1][(int)current.y] == 1){
+                    current = current.add(new Coordinate(1,0));
                     continue;
                 }
-                if (currY < edgeMask[0].length)if (edgeMask[currX][currY+1] == 1){
-                    currY += 1;
+                if (current.y < edgeMask[0].length)if (edgeMask[(int)current.x][(int)current.y+1] == 1){
+                    current = current.add(new Coordinate(0,1));
                     continue;
                 }
-                if (currX > 0)                 if (edgeMask[currX-1][currY] == 1){
-                    currX -= 1;
+                if (current.x > 0)                 if (edgeMask[(int)current.x-1][(int)current.y] == 1){
+                    current = current.subtract(new Coordinate(1,0));
                     continue;
                 }
-                if (currY > 0 && currX > 0)                                if (edgeMask[currX-1][currY-1] == 1){
-                    currX -= 1;
-                    currY -= 1;
+                if (current.y > 0 && current.x > 0)                                if (edgeMask[(int)current.x-1][(int)current.y-1] == 1){
+                    current = current.subtract(new Coordinate(1,1));
                     continue;
                 }
-                if (currY > 0 && currX < edgeMask.length)                  if (edgeMask[currX+1][currY-1] == 1){
-                    currX += 1;
-                    currY -= 1;
+                if (current.y > 0 && current.x < edgeMask.length)                  if (edgeMask[(int)current.x+1][(int)current.y-1] == 1){
+                    current = current.add(new Coordinate(1,-1));
                     continue;
                 }
-                if (currY < edgeMask[0].length && currX < edgeMask.length) if (edgeMask[currX+1][currY+1] == 1){
-                    currX += 1;
-                    currY += 1;
+                if (current.y < edgeMask[0].length && current.x < edgeMask.length) if (edgeMask[(int)current.x+1][(int)current.y+1] == 1){
+                    current = current.add(new Coordinate(1,1));
                     continue;
                 }
-                if (currY < edgeMask[0].length && currX > 0)               if (edgeMask[currX-1][currY+1] == 1){
-                    currX -= 1;
-                    currY += 1;
+                if (current.y < edgeMask[0].length && current.x > 0)               if (edgeMask[(int)current.x-1][(int)current.y+1] == 1){
+                    current = current.add(new Coordinate(-1,1));
                     continue;
                 }
                 break;
             }
-            reversedY = edgeMask[0].length - startY;
-            gcode.append("X").append(Double.toString(startX/inverseResolution)).append("Y").append(Double.toString(reversedY/inverseResolution)).append("\n");
+            cnc.move(new Coordinate(start.x/inverseResolution, start.y/inverseResolution));
         }
     }
     
-    private void holeGCode(StringBuilder gcode, ArrayList<Circle> holes, double boardHeightMM){
-        for (Circle c : holes){
-            gcode.append("G0Z").append(Double.toString(zUp)).append("\n");
-            gcode.append("X").append(Double.toString(c.getCenterX())).append("Y").append(Double.toString(boardHeightMM - c.getCenterY())).append("\n");
-            gcode.append("G1").append("X").append(Double.toString(c.getCenterX())).append("Y").append(Double.toString(boardHeightMM - c.getCenterY())).append("Z").append(Double.toString(drillDown)).append("F").append(feedRate).append("S").append("10000").append("\n");
+    private void holeGCode(){
+        this.pcb.getTraces().sort((CircuitTrace t1, CircuitTrace t2) ->{
+            if (t1 instanceof HoleTrace && t2 instanceof HoleTrace){
+                if (t1.getMajorCoord().x < t2.getMajorCoord().x) return -1;
+                if (t1.getMajorCoord() == t2.getMajorCoord())
+                    if (t1.getMajorCoord().y < t2.getMajorCoord().y) return -1;
+                return 1;
+            }
+            else if (t1 instanceof HoleTrace && ! (t2 instanceof HoleTrace))
+                return -1;
+            return 0;
+        });
+        for (HoleTrace h : this.pcb.getHoleTraces()) cnc.cutHole(h.getMajorCoord());
+    }
+    
+    
+    private void printPathMask(Double[][] pathMask){
+        for (int y = pathMask[0].length-1; y>=0;y--){
+            for (int x = 0; x<pathMask.length; x++){
+                if (pathMask[x][y] != null)System.out.print("1");
+                else System.out.print(" ");
+            }
+            System.out.println();
         }
     }
     
-    public interface ProgressListener{
-        public void update(int newProgress);
+    private void printIntMask(int[][] pathMask){
+        for (int y = pathMask[0].length-1; y>=0; y--){
+            for (int x = 0; x<pathMask.length;x++){
+                String intVal = Integer.toString(pathMask[x][y]);
+                char intEnd = intVal.charAt(intVal.length()-1);
+                if (pathMask[x][y] > 0)System.out.print(intEnd);
+                else System.out.print(" ");
+            }
+            System.out.println();
+        }
     }
 }

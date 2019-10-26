@@ -28,8 +28,8 @@ public class DrawableRect extends Drawable{
         start = this.getGrid().GUIRoundGridSquare(start);
         anchor = start;
         rect = new Rectangle(anchor.x, anchor.y, 0, 0);
-        rect.setStroke(Color.LIME);
-        rect.setStrokeWidth(3);
+        rect.setStroke(Color.LIGHTGREEN);
+        rect.setStrokeWidth(5);
         rect.setFill(Color.TRANSPARENT);
     }
 

@@ -27,8 +27,8 @@ public class GUITraceCollection {
                 GUIPath p = (GUIPath)t;
                 if (  (p.getStart().x >= start.x && p.getStart().x <= end.x
                     && p.getStart().y >= start.y && p.getStart().y <= end.y)
-                    ||(p.getEnd().x >= start.x && p.getEnd().x <= end.x
-                    && p.getEnd().y >= start.y && p.getEnd().y <= end.y))
+                    ||(p.getEnd().x   >= start.x && p.getEnd().x   <= end.x
+                    && p.getEnd().y   >= start.y && p.getEnd().y   <= end.y))
                 {
                     t.select();
                 }
