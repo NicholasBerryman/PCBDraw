@@ -9,7 +9,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import pcbdraw.circuit.Coordinate;
-import pcbdraw.gui.workspace.guigrid.GUIGrid;
+import pcbdraw.circuit.MilliGrid;
 
 /**
  *
@@ -19,8 +19,8 @@ public class DrawableRect extends Drawable{
     Rectangle rect;
     Coordinate anchor;
     
-    public DrawableRect(Runnable onFinish, GUIGrid grid) {
-        super(onFinish, grid);
+    public DrawableRect(MilliGrid grid) {
+        super(grid);
     }
     
     @Override
@@ -72,5 +72,14 @@ public class DrawableRect extends Drawable{
     
     public Rectangle getRectangle(){
         return rect;
+    }
+
+    @Override
+    public Coordinate[] finishDrawing() {
+        Coordinate startAndEnd[] = new Coordinate[2];
+        startAndEnd[0] = new Coordinate(rect.getX(), rect.getY());
+        startAndEnd[1] = new Coordinate(rect.getX()+rect.getWidth(), rect.getY()+rect.getHeight());
+        this.reset();
+        return startAndEnd;
     }
 }

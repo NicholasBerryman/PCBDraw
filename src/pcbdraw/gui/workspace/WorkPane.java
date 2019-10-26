@@ -14,6 +14,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import pcbdraw.circuit.MilliGrid;
 import pcbdraw.gui.workspace.eventhandlers.WorkspaceEventHandler;
 
 /**
@@ -26,7 +27,7 @@ public class WorkPane extends ScrollPane{
     private WorkspaceEventHandler workspaceHandler;
 
     public WorkPane() {
-        this.workspace = new GUIGrid();
+        this.workspace = new GUIGrid(new MilliGrid());
         workspaceHandler = new WorkspaceEventHandler(workspace, pane);
         
         this.setContent(pane);
@@ -34,7 +35,7 @@ public class WorkPane extends ScrollPane{
     
         this.pane.addEventHandler(MouseEvent.MOUSE_CLICKED, workspaceHandler.clickHandler);
         this.pane.addEventHandler(MouseEvent.MOUSE_MOVED, workspaceHandler.moveHandler);
-        this.workspace.redraw(pane);
+        this.workspace.draw(pane);
     }
     
     public enum WorkspaceAction{
@@ -56,13 +57,13 @@ public class WorkPane extends ScrollPane{
         this.pane.getChildren().clear();
         this.workspace = workspace;
         this.workspaceHandler = new WorkspaceEventHandler(workspace, pane);
-        this.workspace.redraw(pane);
+        this.workspace.draw(pane);
         this.pane.addEventHandler(MouseEvent.MOUSE_CLICKED, workspaceHandler.clickHandler);
         this.pane.addEventHandler(MouseEvent.MOUSE_MOVED, workspaceHandler.moveHandler);
     }
     
     public void update(){
-        workspace.redraw(pane);
+        workspace.draw(pane);
     }
     
     public Pane getWorkPane(){
@@ -78,12 +79,12 @@ public class WorkPane extends ScrollPane{
     }
     
     public void undo(){
-        this.workspace.undo();
-        this.workspace.redraw(this.pane);
+        this.workspaceHandler.undo();
+        this.workspaceHandler.show(pane);
     }
     
     public void redo(){
-        this.workspace.redo();
-        this.workspace.redraw(this.pane);
+        this.workspaceHandler.redo();
+        this.workspaceHandler.show(pane);
     }
 }

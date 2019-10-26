@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pcbdraw.circuit;
+package pcbdraw.circuit.traces;
+
+import pcbdraw.circuit.Coordinate;
 
 /**
  *
@@ -15,4 +17,5 @@ public abstract class CircuitTrace {
     public abstract boolean equals(CircuitTrace c);
     public abstract void simplifyUsing(CircuitTrace c);
     public abstract double distanceTo(Coordinate c);
+    public abstract void moveTo(Coordinate c);
 }

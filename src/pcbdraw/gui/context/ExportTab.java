@@ -18,10 +18,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import pcbdraw.CNC.GCodeGenerator;
 import pcbdraw.CNC.representations.CarveyRepr;
-import pcbdraw.circuit.MilliGrid;
+import pcbdraw.circuit.PCB;
 import pcbdraw.data.GCodeFile;
 import pcbdraw.gui.progress.LoadScreen;
-import pcbdraw.gui.progress.ProgressListener;
 
 /**
  *
@@ -34,10 +33,10 @@ public class ExportTab extends Tab{
     private final Spinner<Integer> feedSpin = new Spinner<>(1, 100000, 800);
     private final Spinner<Double> pWidthSpin = new Spinner<>(0.1, 25, 2, 0.1);
     private final Button export;
-    private final MilliGrid pcb;
+    private final PCB pcb;
     
     //TODO connect to gcoder
-    public ExportTab(MilliGrid pcb){
+    public ExportTab(PCB pcb){
         super();
         this.pcb = pcb;
         this.setClosable(false);

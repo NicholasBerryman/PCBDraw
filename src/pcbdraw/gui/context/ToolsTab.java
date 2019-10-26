@@ -85,7 +85,7 @@ public class ToolsTab extends Tab{
         delete.pressedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue){
                 workspaceActioner.cancelAction();
-                workspaceActioner.performDelete(workpane);
+                workspaceActioner.delete();
             }
             workspaceActioner.show(workpane);
         });

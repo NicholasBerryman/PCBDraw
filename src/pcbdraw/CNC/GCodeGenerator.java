@@ -9,11 +9,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 import pcbdraw.CNC.representations.CNCRepr;
-import pcbdraw.circuit.CircuitTrace;
+import pcbdraw.circuit.traces.CircuitTrace;
 import pcbdraw.circuit.Coordinate;
-import pcbdraw.circuit.HoleTrace;
-import pcbdraw.circuit.MilliGrid;
-import pcbdraw.circuit.PathTrace;
+import pcbdraw.circuit.traces.HoleTrace;
+import pcbdraw.circuit.PCB;
+import pcbdraw.circuit.traces.PathTrace;
 import pcbdraw.gui.progress.Progressible;
 
 /**
@@ -22,13 +22,13 @@ import pcbdraw.gui.progress.Progressible;
  */
 public class GCodeGenerator extends Progressible{
     private final CNCRepr cnc;
-    private final MilliGrid pcb;
+    private final PCB pcb;
     private final double pathWidthMM;
-    private final int GCodeSmoothFactor = 2;
+    private final int GCodeSmoothFactor = 1;
     private final double holeRatio = 1.25;
     private final double inverseResolution = 10;
     
-    public GCodeGenerator(CNCRepr cnc, MilliGrid pcb, double pathWidthMM){
+    public GCodeGenerator(CNCRepr cnc, PCB pcb, double pathWidthMM){
         this.cnc = cnc;
         this.pcb = pcb;
         this.pathWidthMM = pathWidthMM;

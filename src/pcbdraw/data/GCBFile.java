@@ -9,10 +9,10 @@ import java.io.File;
 import java.io.IOException;
 import javafx.stage.FileChooser;
 import pcbdraw.circuit.Coordinate;
-import pcbdraw.circuit.HoleTrace;
+import pcbdraw.circuit.traces.HoleTrace;
 import pcbdraw.circuit.MilliGrid;
-import pcbdraw.circuit.PathTrace;
-import pcbdraw.gui.workspace.guigrid.GUIGrid;
+import pcbdraw.circuit.PCB;
+import pcbdraw.circuit.traces.PathTrace;
 
 /**
  *
@@ -46,15 +46,15 @@ public class GCBFile {
     }
     
     
-    public void save(GUIGrid pcb) throws IOException{
+    public void save(MilliGrid pcb) throws IOException{
         StringBuilder str = new StringBuilder();
-        str.append(pcb.getWorkspace().getSize().x).append('\n');
-        str.append(pcb.getWorkspace().getSize().y).append('\n');
+        str.append(pcb.getPCB().getSize().x).append('\n');
+        str.append(pcb.getPCB().getSize().y).append('\n');
         str.append(pcb.getZoom()).append('\n');
         str.append(pcb.getSquareSizeMM()).append('\n');
-        str.append(pcb.getCarvey()).append('\n');
+        str.append(pcb.getPCB().isCarvey()).append('\n');
         str.append("Paths:").append('\n');
-        for (PathTrace p : pcb.getWorkspace().getPathTraces()){
+        for (PathTrace p : pcb.getPCB().getPathTraces()){
             System.out.println(p.getStartPoint().x);
             str.append(p.getStartPoint().x);
             str.append(",");
@@ -65,7 +65,7 @@ public class GCBFile {
             str.append(p.getEndPoint().y).append('\n');
         }
         str.append("Holes:").append('\n');
-        for (HoleTrace h : pcb.getWorkspace().getHoleTraces()){
+        for (HoleTrace h : pcb.getPCB().getHoleTraces()){
             str.append(h.getMajorCoord().x);
             str.append(",");
             str.append(h.getMajorCoord().y).append('\n');
@@ -73,11 +73,15 @@ public class GCBFile {
         file.save(str.toString());
     }
     
-    public GUIGrid read() throws IOException{
+    public MilliGrid read() throws IOException{
         file.openToRead();
         boolean doingHoles = false;
-        MilliGrid pcb = new MilliGrid(new Coordinate(Double.parseDouble(file.read()), Double.parseDouble(file.read())));
-        GUIGrid gcb = new GUIGrid(Double.parseDouble(file.read()), Double.parseDouble(file.read()), Boolean.parseBoolean(file.read()), pcb);
+        Coordinate size = new Coordinate(Double.parseDouble(file.read()), Double.parseDouble(file.read()));
+        double zoom = Double.parseDouble(file.read());
+        double sqSizeMM = Double.parseDouble(file.read());
+        boolean carvey = Boolean.parseBoolean(file.read());
+        PCB pcb = new PCB(size, carvey);
+        MilliGrid gcb = new MilliGrid(zoom, sqSizeMM, pcb);
         file.read();
         
         String line;
@@ -86,19 +90,17 @@ public class GCBFile {
             if (line.equals("Holes:")) doingHoles = true;
             else{
                 if (doingHoles){
-                    gcb.addHole(new Coordinate(Double.parseDouble(line.split(",")[0]), Double.parseDouble(line.split(",")[1])), true);
+                    pcb.addTrace(new HoleTrace(new Coordinate(Double.parseDouble(line.split(",")[0]), Double.parseDouble(line.split(",")[1]))));
                 }
                 else{
-                    gcb.addPath(
+                    pcb.addTrace(new PathTrace(
                         new Coordinate(Double.parseDouble(line.split(",")[0]), Double.parseDouble(line.split(",")[1])), 
-                        new Coordinate(Double.parseDouble(line.split(",")[2]), Double.parseDouble(line.split(",")[3])),
-                        false
-                    );
+                        new Coordinate(Double.parseDouble(line.split(",")[2]), Double.parseDouble(line.split(",")[3]))
+                    ));
                 }
             }
         }
         file.closeToRead();
-        gcb.clearUndo();
         return gcb;
     }
 }

@@ -14,6 +14,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import pcbdraw.circuit.MilliGrid;
 import pcbdraw.data.GCBFile;
 import pcbdraw.gui.workspace.guigrid.GUIGrid;
 
@@ -51,10 +52,10 @@ public class TopMenu extends MenuBar{
         
         undo = new MenuItem("Undo");
         editMenu.getItems().add(undo);
-        undo.setOnAction((e) -> {undo();});
+        undo.setOnAction((e) -> {p.undo();});
         redo = new MenuItem("Redo");
         editMenu.getItems().add(redo);
-        redo.setOnAction((e) -> {redo();});
+        redo.setOnAction((e) -> {p.redo();});
         
         new Shortcuts().initialise();
     }
@@ -62,7 +63,7 @@ public class TopMenu extends MenuBar{
     public void save(){
         try {
             GCBFile saving = GCBFile.askUserToSaveAs();
-            if (saving != null) saving.save(mainPane.getWorkPane().getWorkspaceGrid());
+            if (saving != null) saving.save(mainPane.getWorkPane().getWorkspaceGrid().getWorkspace());
         } catch (IOException ex) {
             Logger.getLogger(TopMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -70,15 +71,15 @@ public class TopMenu extends MenuBar{
     public void open(){
         try {
             GCBFile loading = GCBFile.askUserToOpen();
-            if (loading != null)mainPane.setWorkspace(loading.read());
+            if (loading != null)mainPane.setWorkspace(new GUIGrid(loading.read()));
         } catch (IOException ex) {
             Logger.getLogger(TopMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public void newFile(){mainPane.setWorkspace(new GUIGrid());}
+    public void newFile(){mainPane.setWorkspace(new GUIGrid(new MilliGrid()));}
     
-    public void undo(){mainPane.getWorkPane().undo();}
-    public void redo(){mainPane.getWorkPane().redo();}
+    //public void undo(){mainPane.getWorkPane().undo();}
+    //public void redo(){mainPane.getWorkPane().redo();}
     
     private class Shortcuts {
         public void initialise(){

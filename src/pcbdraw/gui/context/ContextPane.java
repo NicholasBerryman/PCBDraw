@@ -20,6 +20,6 @@ public class ContextPane extends TabPane{
         super();
         this.getTabs().add(new BoardTab(workspace, workPane));
         this.getTabs().add(new ToolsTab(workspaceActioner, workPane));
-        this.getTabs().add(new ExportTab(workspace.getWorkspace()));
+        this.getTabs().add(new ExportTab(workspace.getWorkspace().getPCB()));
     }
 }

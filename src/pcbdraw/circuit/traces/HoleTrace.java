@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pcbdraw.circuit;
+package pcbdraw.circuit.traces;
+
+import pcbdraw.circuit.Coordinate;
 
 /**
  *
@@ -45,5 +47,10 @@ public class HoleTrace extends CircuitTrace{
     public double distanceTo(Coordinate c) {
         double distToCircle = Math.sqrt(Math.pow(centrePoint.x-c.x,2)+Math.pow(centrePoint.y-c.y,2));
         return distToCircle;
+    }
+
+    @Override
+    public void moveTo(Coordinate c) {
+        this.centrePoint = c;
     }
 }

@@ -9,7 +9,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import pcbdraw.circuit.Coordinate;
-import pcbdraw.gui.workspace.guigrid.GUIGrid;
+import pcbdraw.circuit.MilliGrid;
 
 /**
  *
@@ -18,8 +18,8 @@ import pcbdraw.gui.workspace.guigrid.GUIGrid;
 public class DrawableLine extends Drawable{
     private Line line = null;
 
-    public DrawableLine(Runnable onFinish, GUIGrid grid) {
-        super(onFinish, grid);
+    public DrawableLine(MilliGrid grid) {
+        super(grid);
     }
     
     //Provide as GUI Units
@@ -52,5 +52,14 @@ public class DrawableLine extends Drawable{
     
     public Line getLine(){
         return line;
+    }
+
+    @Override
+    public Coordinate[] finishDrawing() {
+        Coordinate startAndEnd[] = new Coordinate[2];
+        startAndEnd[0] = new Coordinate(line.getStartX(), line.getStartY());
+        startAndEnd[1] = new Coordinate(line.getEndX(), line.getEndY());
+        this.reset();
+        return startAndEnd;
     }
 }

@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pcbdraw.circuit;
+package pcbdraw.circuit.traces;
+
+import pcbdraw.circuit.Coordinate;
 
 /**
  *
@@ -46,7 +48,7 @@ public class PathTrace extends CircuitTrace{
     
     @Override
     public Coordinate getMajorCoord() {
-        return pathLine.getBottomLeftBound();
+        return new Coordinate(pathLine.getBottomLeftBound().x, pathLine.getTopRightBound().y);
     }
 
     @Override
@@ -62,6 +64,7 @@ public class PathTrace extends CircuitTrace{
                 || Math.sqrt(endDist.x*endDist.x+endDist.y*endDist.y) < pathWidthMM/2.0;
     }
     
+    //Note that it is an asymmetrical equals
     @Override
     public boolean equals(CircuitTrace c) {
         if (c instanceof PathTrace)
@@ -95,6 +98,14 @@ public class PathTrace extends CircuitTrace{
     @Override
     public double distanceTo(Coordinate c) {
         return this.pathLine.distanceFrom(c);
+    }
+
+    @Override
+    public void moveTo(Coordinate c) {
+        Coordinate distStartTopLeft = this.getStartPoint().subtract(this.getMajorCoord());
+        Coordinate distStartEnd = this.getEndPoint().subtract(this.getStartPoint());
+        this.pathLine.startPoint = c.add(distStartTopLeft);
+        this.pathLine.endPoint = this.pathLine.startPoint.add(distStartEnd);
     }
     
     

@@ -42,10 +42,10 @@ public class BoardTab extends Tab{
         widthSpin.focusedProperty().addListener((observable, oldValue, newValue) -> { widthSpin.increment(0);});
         widthSpin.getEditor().textProperty().addListener((obs, oldvalue, newValue) -> {
             if (!newValue.equals(""))
-                workspace.setSize(new Coordinate(Double.parseDouble(newValue), workspace.getWorkspace().getSize().y));
-            workspace.redraw(pane);
+                workspace.getWorkspace().getPCB().resize(new Coordinate(Double.parseDouble(newValue), workspace.getWorkspace().getPCB().getSize().y));
+            workspace.draw(pane);
         });
-        widthSpin.getValueFactory().setValue(workspace.getWorkspace().getSize().x);
+        widthSpin.getValueFactory().setValue(workspace.getWorkspace().getPCB().getSize().x);
         width.getChildren().add(widthSpin);
         
         HBox height = new HBox();
@@ -56,10 +56,10 @@ public class BoardTab extends Tab{
         heightSpin.focusedProperty().addListener((observable, oldValue, newValue) -> { heightSpin.increment(0);});
         heightSpin.getEditor().textProperty().addListener((obs, oldvalue, newValue) -> {
             if (!newValue.equals(""))
-                workspace.setSize(new Coordinate(workspace.getWorkspace().getSize().x, Double.parseDouble(newValue)));
-            workspace.redraw(pane);
+                workspace.getWorkspace().getPCB().resize(new Coordinate(workspace.getWorkspace().getPCB().getSize().x, Double.parseDouble(newValue)));
+            workspace.draw(pane);
         });
-        heightSpin.getValueFactory().setValue(workspace.getWorkspace().getSize().y);
+        heightSpin.getValueFactory().setValue(workspace.getWorkspace().getPCB().getSize().y);
         height.getChildren().add(heightSpin);
         
         
@@ -71,10 +71,10 @@ public class BoardTab extends Tab{
         zoomSpin.focusedProperty().addListener((observable, oldValue, newValue) -> { zoomSpin.increment(0);});
         zoomSpin.getEditor().textProperty().addListener((obs, oldvalue, newValue) -> {
             if (!newValue.equals(""))
-                workspace.setZoom(Double.parseDouble(newValue));
-            workspace.redraw(pane);
+                workspace.getWorkspace().setZoom(Double.parseDouble(newValue));
+            workspace.draw(pane);
         });
-        zoomSpin.getValueFactory().setValue(workspace.getZoom());
+        zoomSpin.getValueFactory().setValue(workspace.getWorkspace().getZoom());
         zoom.getChildren().add(zoomSpin);
         
         HBox squareSize = new HBox();
@@ -85,10 +85,10 @@ public class BoardTab extends Tab{
         sqSizeSpin.focusedProperty().addListener((observable, oldValue, newValue) -> { sqSizeSpin.increment(0);});
         sqSizeSpin.getEditor().textProperty().addListener((obs, oldvalue, newValue) -> {
             if (!newValue.equals(""))
-                workspace.setSquareSizeMM(Double.parseDouble(newValue));
-            workspace.redraw(pane);
+                workspace.getWorkspace().setSquareSizeMM(Double.parseDouble(newValue));
+            workspace.draw(pane);
         });
-        sqSizeSpin.getValueFactory().setValue(workspace.getSquareSizeMM());
+        sqSizeSpin.getValueFactory().setValue(workspace.getWorkspace().getSquareSizeMM());
         squareSize.getChildren().add(sqSizeSpin);
         
         HBox carvey = new HBox();
@@ -96,11 +96,11 @@ public class BoardTab extends Tab{
         carvey.getChildren().add(new Label("Using Carvey: "));
         carvey.getChildren().add(forCarvey);
         forCarvey.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            workspace.setCarvey(newValue);
+            workspace.getWorkspace().getPCB().setCarvey(newValue);
             updateMaxSizes(newValue);
-            workspace.redraw(pane);
+            workspace.draw(pane);
         });
-        forCarvey.setSelected(workspace.getCarvey());
+        forCarvey.setSelected(workspace.getWorkspace().getPCB().isCarvey());
     }
     
     private void updateMaxSizes(boolean forCarvey){

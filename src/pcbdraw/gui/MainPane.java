@@ -50,4 +50,12 @@ public class MainPane extends SplitPane{
         mainPart.getItems().add(context);
         mainPart.getItems().add(this.workspace);
     }
+    
+    public void undo(){
+        this.workspace.undo();
+    }
+    
+    public void redo(){
+        this.workspace.redo();
+    }
 }

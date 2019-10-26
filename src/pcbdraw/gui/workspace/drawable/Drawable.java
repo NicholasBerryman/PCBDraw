@@ -5,24 +5,21 @@
  */
 package pcbdraw.gui.workspace.drawable;
 
-import javafx.scene.layout.Pane;
 import pcbdraw.circuit.Coordinate;
-import pcbdraw.gui.workspace.guigrid.GUIGrid;
+import pcbdraw.circuit.MilliGrid;
 
 /**
  *
  * @author Nick Berryman
  */
 public abstract class Drawable {
-    private final Runnable finishTask;
-    private final GUIGrid grid;
+    private final MilliGrid grid;
     
-    public Drawable(Runnable onFinish, GUIGrid grid){
-        this.finishTask = onFinish;
+    public Drawable(MilliGrid grid){
         this.grid = grid;
     }
     
-    public GUIGrid getGrid(){
+    public MilliGrid getGrid(){
         return grid;
     }
     
@@ -30,8 +27,5 @@ public abstract class Drawable {
     public abstract void updateDrawing(Coordinate update);
     public abstract void reset();
     
-    public void finishDrawing(){
-        if (this.finishTask != null) this.finishTask.run();
-        this.reset();
-    }
+    public abstract Coordinate[] finishDrawing();
 }
