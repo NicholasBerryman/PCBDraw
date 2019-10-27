@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * @author Nick Berryman
  */
 public abstract class Progressible {
-    private ArrayList<ProgressListener> progressListeners = new ArrayList<>();
+    private final ArrayList<ProgressListener> progressListeners = new ArrayList<>();
     private int maxProgress = 100;
     private int progress = 0;
     public void addProgressListener(ProgressListener p){progressListeners.add(p);}

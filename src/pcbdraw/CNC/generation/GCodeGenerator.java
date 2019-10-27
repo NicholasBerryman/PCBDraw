@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 import pcbdraw.CNC.representations.CNCRepr;
-import pcbdraw.circuit.traces.CircuitTrace;
 import pcbdraw.circuit.Coordinate;
 import pcbdraw.circuit.traces.HoleTrace;
 import pcbdraw.circuit.PCB;
@@ -225,15 +224,15 @@ public class GCodeGenerator extends Progressible{
                 }
             }
             this.incrementProgress();
-            this.setMaxProgress(replaceProg);
         }
+        this.setMaxProgress(replaceProg/500);
         return edgeMask;
     }
     
     private void contourPathGCode(int[][] edgeMask, Double[][] pathMask){
         Coordinate start;
         Double lastSlope = null;
-        
+        int contProgress = 0;
         this.setProgress(0);
         this.cnc.initMachine();
         while (true){
@@ -260,9 +259,11 @@ public class GCodeGenerator extends Progressible{
             while (true){
                 edgeMask[(int)current.x][(int)current.y] = pathCount;
                 pathCount++;
-                this.incrementProgress();
+                if (pathCount % 500 == 0){
+                    contProgress++;
+                    this.incrementProgress();
+                }
                 
-                if (pathMask[(int)current.x][(int)current.y] == null) System.out.println("a");
                 if (new Double(Double.MIN_VALUE).equals(pathMask[(int)current.x][(int)current.y])){
                     if (smootherCount % GCodeSmoothFactor == 0) cnc.move(new Coordinate(current.x/inverseResolution, current.y/inverseResolution));
                     lastCirc = new Coordinate(current.x, current.y);
@@ -314,6 +315,7 @@ public class GCodeGenerator extends Progressible{
             }
             cnc.move(new Coordinate(start.x/inverseResolution, start.y/inverseResolution));
         }
+        this.setMaxProgress(contProgress);
     }
     
     private void holeGCode(){
