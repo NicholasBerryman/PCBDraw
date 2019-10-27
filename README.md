@@ -118,7 +118,7 @@ The grid here represents the circuit board.
   * Click the end point of the line trace on the grid (**Not** click-and-drag).
     * When **Exporting**, if the **Path Width** is too high and they are close enough to each other, then **Paths** that should be separate may overlap . If this is happening  to you, either reduce your **Path Width** or move the **Paths** away from each other.
  
-![](https://imgur.com/R2crk6t.gif)
+![](https://imgur.com/NjNQNCD.gif)
   
 * To draw a component hole:
   * Select the **Hole** tool from the **Tools Tab** of the **Context Menu**.
@@ -126,7 +126,7 @@ The grid here represents the circuit board.
     * When **Exporting** if the **Path Width**  is too high and they are close enough to each other then **Holes** that should be separate may overlap. If this is happening  to you, either reduce your **Path Width** or move the **Paths** away from each other.
     * **Holes** placed side-by-side or on top of each other should automatically be isolated if this occurs, though they may still overlap both other **Holes** placed diagonally from them and **Paths**.
 
-![](https://imgur.com/jcFFVsC.gif)  
+![](https://imgur.com/XDFb7jc.gif)  
 
 * To select items you have drawn on the workspace:
   * Select the **Select** tool from the **Tools Tab** of the **Context Menu**.
@@ -135,7 +135,7 @@ The grid here represents the circuit board.
     * To Select a line, ensure that either the **start point** or the **end point** of the line is within the green rectangle
   * The selected items should turn blue  
 
-![](https://imgur.com/7pLLTDk.gif)  
+![](https://imgur.com/lPCUJp9.gif)  
 
 * To move items you have drawn on the workspace:
   * Using the **Select** tool, select the items you want to move.
@@ -143,14 +143,14 @@ The grid here represents the circuit board.
   * Click a point in the workspace where you want to move it to (**Not** click-and-drag).
     * The selected items will be treated as if they are in a large rectangle when moving. The top left point of that rectangle will be the point that you click to move them to.  
 
-![](https://imgur.com/4rU56bd.gif)  
+![](https://imgur.com/g7rwIjw.gif)  
 
 * To delete items you have drawn on the workspace:
   * Using the **Select** tool, select the items you want to move.
   * Click the **Delete** button from the **Tools Tab** of the **Context Menu**.
     * If you make a mistake and delete the wrong thing, make sure to **Undo** by pressing **Crtl+Z** or selecting it from the menu with **Edit->Undo**
 
-![](https://imgur.com/0hnMySR.gif)  
+![](https://imgur.com/W3Nxo3G.gif)  
 
 **Once you are done with your circuit board remember to save the board and export it for carving**
 
