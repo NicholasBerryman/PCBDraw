@@ -8,6 +8,7 @@ Table of contents
    * [User Guide](#User-Guide)
       * [The User Interface](#The-User-Interface)
       * [The File Menu](#The-File-Menu)
+      * [The Edit Menu](#The-Edit-Menu)
       * [The Context Bar](#The-Context-Bar)
       * [The Workspace & Drawing a PCB](#The-Workspace)
    * [Carving With Easel](#Carving-With-Easel)
