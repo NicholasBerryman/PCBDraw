@@ -54,6 +54,12 @@ public class PCB {
         return trace;
     }
     
+    public void removeTrace(CircuitTrace trace){
+        this.traces.remove(trace);
+        if (trace instanceof PathTrace) this.pathTraces.remove((PathTrace) trace);
+        if (trace instanceof HoleTrace) this.holeTraces.remove((HoleTrace) trace);
+    }
+    
     public boolean isCarvey() {
         return carvey;
     }

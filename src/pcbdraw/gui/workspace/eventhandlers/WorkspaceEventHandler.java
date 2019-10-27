@@ -89,18 +89,15 @@ public class WorkspaceEventHandler{
     }
     
     public void delete(){
-        if (this.workspace.getWorkspace().getSelected() != null){
-            TraceGroup selected = this.workspace.getWorkspace().getSelected().copy();
-            if (selected != null){
-                for (CircuitTrace t : selected.getTraces()){
-                    this.workspace.getWorkspace().getPCB().getTraces().remove(t);
-                }
+        TraceGroup selected = this.workspace.getWorkspace().getSelected().copy();
+        if (selected != null){
+            for (CircuitTrace t : selected.getTraces()){
+                this.workspace.getWorkspace().getPCB().removeTrace(t);
             }
             this.workspace.getWorkspace().deselectAll();
-
             undoController.add(new ReversibleAction(){
-                public void redo(){for (CircuitTrace t : selected.getTraces()) workspace.getWorkspace().getPCB().getTraces().remove(t);}
-                public void undo(){for (CircuitTrace t : selected.getTraces()) workspace.getWorkspace().getPCB().getTraces().add(t);}
+                public void redo(){for (CircuitTrace t : selected.getTraces()) workspace.getWorkspace().getPCB().removeTrace(t);}
+                public void undo(){for (CircuitTrace t : selected.getTraces()) workspace.getWorkspace().getPCB().addTrace(t);}
             });
         }
     }
@@ -124,11 +121,11 @@ public class WorkspaceEventHandler{
         if (this.clipboard != null && !justPasted){
             TraceGroup toPaste = this.clipboard.duplicate();
             toPaste.moveTo(toPaste.getAnchor().add(new Coordinate(1,0)));
-            workspace.getWorkspace().getPCB().getTraces().addAll(toPaste.getTraces());
+            for (CircuitTrace t : toPaste.getTraces())workspace.getWorkspace().getPCB().addTrace(t);
             this.workspace.getWorkspace().select(toPaste);
             undoController.add(new ReversibleAction(){
-                public void redo(){workspace.getWorkspace().getPCB().getTraces().addAll(toPaste.getTraces());}
-                public void undo(){workspace.getWorkspace().getPCB().getTraces().removeAll(toPaste.getTraces());}
+                public void redo(){for (CircuitTrace t : toPaste.getTraces())workspace.getWorkspace().getPCB().addTrace(t);}
+                public void undo(){for (CircuitTrace t : toPaste.getTraces())workspace.getWorkspace().getPCB().removeTrace(t);}
             });
             toPaste.moveTo(toPaste.getAnchor().subtract(new Coordinate(1,0)));
             justPasted = true;
@@ -153,8 +150,8 @@ public class WorkspaceEventHandler{
                         Coordinate[] pathPos = workspace.getDrawingLine().finishDrawing();
                         CircuitTrace t = workspace.addPath(pathPos[0], pathPos[1]);
                         undoController.add(new ReversibleAction(){
-                            public void redo(){workspace.getWorkspace().getPCB().getTraces().add(t);}
-                            public void undo(){workspace.getWorkspace().getPCB().getTraces().remove(t);}
+                            public void redo(){workspace.getWorkspace().getPCB().addTrace(t);}
+                            public void undo(){workspace.getWorkspace().getPCB().removeTrace(t);}
                         });
                         drawingState = DrawingState.NotDrawing;
                         verifyPCB();
@@ -170,8 +167,8 @@ public class WorkspaceEventHandler{
                     cancelAction();
                     CircuitTrace t = workspace.addHole(workspace.getWorkspace().GUIRoundGridSquare(mouseCoord));
                     undoController.add(new ReversibleAction(){
-                        public void redo(){workspace.getWorkspace().getPCB().getTraces().add(t);}
-                        public void undo(){workspace.getWorkspace().getPCB().getTraces().remove(t);}
+                        public void redo(){workspace.getWorkspace().getPCB().addTrace(t);}
+                        public void undo(){workspace.getWorkspace().getPCB().removeTrace(t);}
                     });
                     verifyPCB();
                     workspace.draw(pane);
