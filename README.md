@@ -186,11 +186,3 @@ Here is the current list:
  * There's a cool feature that I want to use but it doesn't look like your program supports it?
    * Currently the program is fairly minimal, having been made in a single weekend. If there are any new features that you feel would be very useful/important then please contact me at: Nicholas.Berryman1@gmail.com. Please include **PCBDraw - Suggestion** in the subject line. I'll do my best, but can't make any guarantees about whether any specific feature will be added or how long it will take.
 
-
-
-
-
-
-
-
-
