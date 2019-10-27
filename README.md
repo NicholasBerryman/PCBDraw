@@ -32,23 +32,38 @@ Table of contents
 ## User Guide
 ### The User Interface
 When the program launches, after updating, the following screen should appear:  
-![](https://imgur.com/cHY2ZcA.png)
-On this screen are three important sections:
-  * The File menu (top left)
-  * The Workspace (right)
-  * The Context Bar (Left)
+![](https://imgur.com/HXjD97O.png)  
+
+On this screen are four important sections:
+  * The **File** Menu (top left)
+  * The **Edit** Menu (beside the File Menu)
+  * The **Workspace** (right)
+  * The **Context** Bar (Left)
   
-#### The File Menu  
-![](https://imgur.com/AUsrSIK.png)  
+### The File Menu  
+![](https://imgur.com/imNXxTT.png)  
+
 The File menu has three options:  
 * **New** clears the workspace and sets it up for a new circuit board
-  * **This does NOT save the existing circuit board.** Ensure the existing board is saved before creating a new circuit board.
-* **Save** allows you to save the circuit board somewhere on your computer. The circuit board **MUST** be saved manually and will **NOT** save automatically.
-* **Open** allows you to open a circuit board that you have previously saved. The circuit board must have been created in PCBDraw. No other PCB file formats are accepted.
-  * '.GCode' files cannot be opened or edited this way, only '.GCB' files created using the **Save** option above
+  * **This does NOT save the existing circuit board.** Ensure the existing board is saved before creating a new circuit board
+* **Save** allows you to save the circuit board somewhere on your computer. The circuit board **MUST** be saved manually and will **NOT** save automatically
+* **Open** allows you to open a circuit board that you have previously saved. The circuit board must have been created in PCBDraw. No other PCB file formats are accepted
+  * '.GCode' files cannot be opened or edited this way, only '.GCB' files created using the **Save** option above  
+Keyboard shortcuts are displayed beside each menu option
 
+### The Edit Menu
+![](https://imgur.com/l7WCVM6.png)  
+
+The Edit menu has three options:  
+* **Undo** undoes the previous action
+* **Redo** redoes the last undone action
+* **Cut** removes the selected traces and gets them ready to be pasted
+* **Copy** copies the selected traces and gets them ready to be pasted
+* **Paste** pastes the last traces to be copied/pasted into the workspace  
+Keyboard shortcuts are displayed beside each menu option
 ### The Context Bar  
-![](https://imgur.com/XA54tsW.png)  
+![](https://imgur.com/O3CrSlL.png)  
+
 The Context Bar has three tabs:
 * **Board** deals with the view of the workspace and size of the circuit board
 * **Tools** lets you select the tools for drawing the circuit board
@@ -64,7 +79,8 @@ The board tab is displayed in the previous image
 Any of these features can be changed at any point without disrupting any circuit board features you have already created.
 
 #### Context Bar: The Tools Tab  
-![](https://imgur.com/eQ4nNCw.png)  
+![](https://imgur.com/lbC1sb3.png)  
+
 * Select the **Path** option to draw circuit traces (lines) on the workspace
 * Select the **Hole** option to draw component holes on the workspace
 * Select the **Select** option to select anything you have already drawn in the workspace (when you want to move or delete it).
@@ -74,7 +90,7 @@ Any of these features can be changed at any point without disrupting any circuit
 These options are explored in greater detail in the **Workspace** section below
 
 #### Context Bar: The Export Tab  
-![](https://imgur.com/QP835V3.png)  
+![](https://imgur.com/nmMKoKH.png)  
 
 **This tab sets the options for carving the board and can cause problems if set up wrong. Use the default values unless something has gone wrong or you know what you are doing**  
 * The **Z-Down** option sets the cutting depth for the circuit board. Make this **more negative** if the cut is too shallow, make it **less negative** if the cut is too deep.
@@ -88,7 +104,8 @@ These options are explored in greater detail in the **Workspace** section below
 Click the **Export** button and choose a location to export the file to when you are ready to carve your board.
 
 ## The Workspace
-![](https://imgur.com/WewlDeR.png)  
+![](https://imgur.com/rxgpMvo.png)  
+
 The grid here represents the circuit board.
 * The size of the workspace may be changed using the **Height** and **Width** options in the **Board Tab** of the **Context Menu**
 * The size of the grid squares may be changed using the **Square Size** option in the **Board Tab** of the **Context Menu**
