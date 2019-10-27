@@ -12,7 +12,10 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/Nick%20Berryman/Documents/NetBeansProjects/PCBDraw/src/pcbdraw/circuit/PCB.java</file>
             <file>file:/C:/Users/Nick%20Berryman/Documents/NetBeansProjects/PCBDraw/src/pcbdraw/gui/MainPane.java</file>
+            <file>file:/C:/Users/Nick%20Berryman/Documents/NetBeansProjects/PCBDraw/src/pcbdraw/gui/workspace/guigrid/GUIGrid.java</file>
+            <file>file:/C:/Users/Nick%20Berryman/Documents/NetBeansProjects/PCBDraw/src/pcbdraw/gui/workspace/eventhandlers/WorkspaceEventHandler.java</file>
             <file>file:/C:/Users/Nick%20Berryman/Documents/NetBeansProjects/PCBDraw/src/pcbdraw/PCBDraw.java</file>
             <file>file:/C:/Users/Nick%20Berryman/Documents/NetBeansProjects/PCBDraw/src/pcbdraw/CNC/generation/GCodeGenerator.java</file>
         </group>

@@ -26,12 +26,31 @@ public class MainPane extends SplitPane{
     private WorkPane workspace;
     private ContextPane context;
     private SplitPane mainPart;
+    private TopMenu menu;
     private GCBFile gcb;
     private Stage window;
     
     public void initialise(Stage window){
         this.window = window;
-        TopMenu menu = new TopMenu(this);
+        menu = new TopMenu(this);
+        this.initExitMessage(window);
+        
+        mainPart = new SplitPane();
+        mainPart.setDividerPosition(0, 0);
+        workspace = new WorkPane();
+        context = new ContextPane(workspace.getWorkspaceGrid(),workspace.getWorkspaceHandler(),workspace.getWorkPane());
+        context.setMinWidth(190);
+        context.setMaxWidth(250);
+        
+        this.getItems().add(menu);
+        this.getItems().add(mainPart);
+        this.setOrientation(Orientation.VERTICAL);
+        mainPart.getItems().add(context);
+        mainPart.getItems().add(workspace);
+        workspace.update();
+    }
+    
+    private void initExitMessage(Stage window){
         window.setOnCloseRequest((e) -> {
             Alert saveConfirm = new Alert(AlertType.CONFIRMATION);
             saveConfirm.setTitle("Save PCB?");
@@ -63,20 +82,6 @@ public class MainPane extends SplitPane{
                 System.exit(0);
             }
         });
-        
-        mainPart = new SplitPane();
-        mainPart.setDividerPosition(0, 0);
-        workspace = new WorkPane();
-        context = new ContextPane(workspace.getWorkspaceGrid(),workspace.getWorkspaceHandler(),workspace.getWorkPane());
-        context.setMinWidth(190);
-        context.setMaxWidth(250);
-        
-        this.getItems().add(menu);
-        this.getItems().add(mainPart);
-        this.setOrientation(Orientation.VERTICAL);
-        mainPart.getItems().add(context);
-        mainPart.getItems().add(workspace);
-        workspace.update();
     }
     
     public WorkPane getWorkPane(){

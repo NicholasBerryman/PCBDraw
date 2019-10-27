@@ -6,8 +6,11 @@
 package pcbdraw.gui;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -115,6 +118,29 @@ public class TopMenu extends MenuBar{
         }
     }
     public void newFile(){
+        Alert saveConfirm = new Alert(Alert.AlertType.CONFIRMATION);
+        saveConfirm.setTitle("Save PCB?");
+        saveConfirm.setHeaderText("Would you like to Save your PCB?");
+
+        ButtonType save = new ButtonType("Save");
+        ButtonType no = new ButtonType("No");
+        ButtonType cancel = new ButtonType("Cancel");
+        saveConfirm.getButtonTypes().setAll(save, no, cancel);
+        boolean cont = false;
+        try {
+            if (mainPane.getGCBFile() == null){
+                Optional<ButtonType> result = saveConfirm.showAndWait();
+                if (result.get() == save) if (save()) cont = true;
+                if (result.get() == no) cont = true;
+                if (!cont)return;
+            }
+            else if (!mainPane.getGCBFile().predictText(mainPane.getWorkPane().getWorkspaceGrid().getWorkspace()).equals(mainPane.getGCBFile().getText())){
+                Optional<ButtonType> result = saveConfirm.showAndWait();
+                if (result.get() == save) if (save()) cont = true;
+                if (result.get() == no) cont = true;
+                if (!cont)return;
+            }
+        } catch (IOException ex) {}
         mainPane.setWorkspace(new GUIGrid(new MilliGrid()));
         mainPane.setGCBFile(null);
     }
