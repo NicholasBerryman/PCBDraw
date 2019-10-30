@@ -8,6 +8,7 @@ Table of contents
    * [User Guide](#User-Guide)
       * [The User Interface](#The-User-Interface)
       * [The File Menu](#The-File-Menu)
+      * [The Edit Menu](#The-Edit-Menu)
       * [The Context Bar](#The-Context-Bar)
       * [The Workspace & Drawing a PCB](#The-Workspace)
    * [Carving With Easel](#Carving-With-Easel)
@@ -49,6 +50,7 @@ The File menu has three options:
 * **Save** allows you to save the circuit board somewhere on your computer. The circuit board **MUST** be saved manually and will **NOT** save automatically
 * **Open** allows you to open a circuit board that you have previously saved. The circuit board must have been created in PCBDraw. No other PCB file formats are accepted
   * '.GCode' files cannot be opened or edited this way, only '.GCB' files created using the **Save** option above  
+  
 Keyboard shortcuts are displayed beside each menu option
 
 ### The Edit Menu
@@ -60,6 +62,7 @@ The Edit menu has three options:
 * **Cut** removes the selected traces and gets them ready to be pasted
 * **Copy** copies the selected traces and gets them ready to be pasted
 * **Paste** pastes the last traces to be copied/pasted into the workspace  
+
 Keyboard shortcuts are displayed beside each menu option
 ### The Context Bar  
 ![](https://imgur.com/O3CrSlL.png)  
