@@ -75,7 +75,8 @@ public class GUIGrid {
             p.getChildren().add(l);
         }
         for (double y = 0; y < workspace.mmToGUI(workspace.getPCB().getSize().y); y+=workspace.mmToGUI(workspace.getSquareSizeMM())){
-            Line l = new Line(0, y, workspace.mmToGUI(workspace.getPCB().getSize().x), y);
+            double yInv = workspace.mmToGUI(workspace.getPCB().getSize().y)-y;
+            Line l = new Line(0, yInv, workspace.mmToGUI(workspace.getPCB().getSize().x), yInv);
             l.setStrokeWidth(stroke);
             p.getChildren().add(l);
         }
@@ -134,6 +135,9 @@ public class GUIGrid {
             c.setStrokeWidth(2);
             c.setRadius(workspace.mmToGUI(workspace.getSquareSizeMM())/4.0);
             p.getChildren().add(c);
+            //System.out.println(h.getMajorCoord().y);
+            //System.out.println(h.getMajorCoord().x);
+            //System.out.println();
         }
     }
 }
