@@ -24,7 +24,7 @@ public class BoardTab extends Tab{
     private final Spinner<Double> widthSpin = new Spinner<>(10.0, 1000.0, 100.0);
     private final Spinner<Double> heightSpin = new Spinner<>(10.0, 1000.0, 100.0);
     private final Spinner<Double> zoomSpin = new Spinner<>(1.0, 100.0, 10.0, 0.5);
-    private final Spinner<Double> sqSizeSpin = new Spinner<>(1.0, 100.0, 5.0, 0.5);
+    private final Spinner<Double> sqSizeSpin = new Spinner<>(0.5, 100.0, 5.0, 0.5);
     private final CheckBox forCarvey = new CheckBox();
     
     public BoardTab(GUIGrid workspace, Pane pane){
@@ -84,8 +84,10 @@ public class BoardTab extends Tab{
         sqSizeSpin.setEditable(true);
         sqSizeSpin.focusedProperty().addListener((observable, oldValue, newValue) -> { sqSizeSpin.increment(0);});
         sqSizeSpin.getEditor().textProperty().addListener((obs, oldvalue, newValue) -> {
-            if (!newValue.equals(""))
-                workspace.getWorkspace().setSquareSizeMM(Double.parseDouble(newValue));
+            if (!newValue.equals("")){
+                if (Double.parseDouble(newValue) != 0)
+                    workspace.getWorkspace().setSquareSizeMM(Double.parseDouble(newValue));
+            }
             workspace.draw(pane);
         });
         sqSizeSpin.getValueFactory().setValue(workspace.getWorkspace().getSquareSizeMM());
