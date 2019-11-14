@@ -75,15 +75,6 @@ public class GCodeGenerator extends Progressible{
         int endX   = (int) (inverseResolution*(topRight.x+(pathWidthMM*holeRatio*1.1)));
         int endY   = (int) (inverseResolution*(topRight.y+(pathWidthMM*holeRatio*1.1)));
         
-        System.out.print(startX);
-        System.out.print(" ");
-        System.out.print(startY);
-        System.out.print(" ");
-        System.out.print(endX);
-        System.out.print(" ");
-        System.out.print(endY);
-        System.out.println(" ");
-        
         if (startX < 0) startX = 0;
         if (startY < 0) startY = 0;
         if (endX > pathMask.length) endX = pathMask.length;
@@ -185,10 +176,10 @@ public class GCodeGenerator extends Progressible{
                     continue;
                 for (int x = (int)((h.getMajorCoord().x-holeRatio*pathWidthMM)*inverseResolution); x <= (int)((h.getMajorCoord().x+holeRatio*pathWidthMM)*inverseResolution); x++){
                     for (int y = (int)((h.getMajorCoord().y-holeRatio*pathWidthMM)*inverseResolution); y <= (int)((h.getMajorCoord().y+holeRatio*pathWidthMM)*inverseResolution); y++){
-                        double pointDist1 = Math.sqrt(Math.pow(h.getMajorCoord().x*inverseResolution-x,2)+Math.pow(h.getMajorCoord().y*inverseResolution-y,2));
-                        double pointDist2 = Math.sqrt(Math.pow(x-h2.getMajorCoord().x*inverseResolution,2)+Math.pow(y-h2.getMajorCoord().y*inverseResolution,2));
-
-                        if ((int)pointDist1 == (int)pointDist2) pathMask[x][y] = null;
+                        Coordinate currPoint = new Coordinate(x/inverseResolution,y/inverseResolution);
+                        double pointDist1 = currPoint.distanceTo(h.getMajorCoord());
+                        double pointDist2 = currPoint.distanceTo(h2.getMajorCoord());
+                        if (Math.abs(pointDist1-pointDist2) < 1/inverseResolution) pathMask[x][y] = null;
                     }
                 }
             }
