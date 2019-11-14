@@ -9,7 +9,7 @@ Table of contents
       * [The User Interface](#The-User-Interface)
       * [The File Menu](#The-File-Menu)
       * [The Edit Menu](#The-Edit-Menu)
-      * [The Context Bar](#The-Context-Bar)
+      * [The Context Panel](#The-Context-Panel)
       * [The Workspace & Drawing a PCB](#The-Workspace)
    * [Carving With Easel](#Carving-With-Easel)
    * [Examples](#Examples)
@@ -44,19 +44,20 @@ On this screen are four important sections:
 ### The File Menu  
 ![](https://imgur.com/imNXxTT.png)  
 
-The File menu has three options:  
+The File menu has four options:  
 * **New** clears the workspace and sets it up for a new circuit board
-  * **This does NOT save the existing circuit board.** Ensure the existing board is saved before creating a new circuit board
-* **Save** allows you to save the circuit board somewhere on your computer. The circuit board **MUST** be saved manually and will **NOT** save automatically
+  * You will be prompted to save your current circuit board if you haven't done so yet
+* **Save** allows you to save the circuit board somewhere on your computer
+* **Save As** allows you to change where you want to save the circuit board
 * **Open** allows you to open a circuit board that you have previously saved. The circuit board must have been created in PCBDraw. No other PCB file formats are accepted
-  * '.GCode' files cannot be opened or edited this way, only '.GCB' files created using the **Save** option above  
+  * '.GCode' files cannot be opened or edited this way, only '.GCB' files created using the **Save** and **Save As** option above  
   
 Keyboard shortcuts are displayed beside each menu option
 
 ### The Edit Menu
 ![](https://imgur.com/l7WCVM6.png)  
 
-The Edit menu has three options:  
+The Edit menu has five options:  
 * **Undo** undoes the previous action
 * **Redo** redoes the last undone action
 * **Cut** removes the selected traces and gets them ready to be pasted
@@ -64,24 +65,25 @@ The Edit menu has three options:
 * **Paste** pastes the last traces to be copied/pasted into the workspace  
 
 Keyboard shortcuts are displayed beside each menu option
-### The Context Bar  
+### The Context Panel   
 ![](https://imgur.com/O3CrSlL.png)  
 
-The Context Bar has three tabs:
+The Context Panel has three tabs:
 * **Board** deals with the view of the workspace and size of the circuit board
 * **Tools** lets you select the tools for drawing the circuit board
 * **Export** lets you create a '.GCODE' file for use by a CNC router (e.g Carvey) for cutting you circuit board
 
-#### Context Bar: The Board Tab
+#### Context Panel: The Board Tab
 The board tab is displayed in the previous image
-* The board dimensions can be adjusted with the **Board Width** and **Board Height** text boxes. Remember to press the **enter** key on your keyboard in order to update the size once you have entered it.
-* You can zoom in on the board using the **up** arrow next to the **Zoom** text box, and can zoom out using the **down** arrow
-* The size of the grid squares can be adjusted using the **Square Size** text box. Remember to press the **enter** key on your keyboard in order to update the size once you have entered it.  
-  * Circuit board features can only be placed on grid points, so if your circuit board has lots of very fine features, try a smaller grid size
-* If you are using the Carvey, tick the **Using Carvey** checkbox. This enables the smartclamp in the workspace, preventing you from making a circuit board that the Carvey cannot carve.
+* **Board Width** and **Board Height** allow you to change the dimensions of your circuit board (mm)
+* **Zoom** allows you to zoom in and out of the circuit board
+* **Square Size** lets you choose the the size of your grid (mm)
+  * Circuit board features can only be placed on grid points, so if your circuit board needs lots of very fine features, try a smaller grid size
+* **Using Carvey** enables the smartclamp in the workspace, preventing you from making a circuit board that the Carvey cannot carve
+  * If you are not using a Carvey, feel free to un-tick this box
 Any of these features can be changed at any point without disrupting any circuit board features you have already created.
 
-#### Context Bar: The Tools Tab  
+#### Context Panel: The Tools Tab  
 ![](https://imgur.com/lbC1sb3.png)  
 
 * Select the **Path** option to draw circuit traces (lines) on the workspace
@@ -92,7 +94,7 @@ Any of these features can be changed at any point without disrupting any circuit
   
 These options are explored in greater detail in the **Workspace** section below
 
-#### Context Bar: The Export Tab  
+#### Context Panel: The Export Tab  
 ![](https://imgur.com/nmMKoKH.png)  
 
 **This tab sets the options for carving the board and can cause problems if set up wrong. Use the default values unless something has gone wrong or you know what you are doing**  
@@ -187,5 +189,5 @@ Here is the current list:
  * Something went wrong! What do I do?
    * If you are unsure about anything and need help, please contact me at: Nicholas.Berryman1@gmail.com. Please include **PCBDraw - Help** in the subject line.
  * There's a cool feature that I want to use but it doesn't look like your program supports it?
-   * Currently the program is fairly minimal, having been made in a single weekend. If there are any new features that you feel would be very useful/important then please contact me at: Nicholas.Berryman1@gmail.com. Please include **PCBDraw - Suggestion** in the subject line. I'll do my best, but can't make any guarantees about whether any specific feature will be added or how long it will take.
+   * Currently the program is fairly minimal, having mostly been made in a single weekend. If there are any new features that you feel would be very useful/important then please contact me at: Nicholas.Berryman1@gmail.com. Please include **PCBDraw - Suggestion** in the subject line. I'll do my best, but can't make any guarantees about whether any specific feature will be added or how long it will take.
 
