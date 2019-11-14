@@ -9,7 +9,7 @@ Table of contents
       * [The User Interface](#The-User-Interface)
       * [The File Menu](#The-File-Menu)
       * [The Edit Menu](#The-Edit-Menu)
-      * [The Context Bar](#The-Context-Bar)
+      * [The Context Panel](#The-Context-Panel)
       * [The Workspace & Drawing a PCB](#The-Workspace)
    * [Carving With Easel](#Carving-With-Easel)
    * [Examples](#Examples)
@@ -65,15 +65,15 @@ The Edit menu has five options:
 * **Paste** pastes the last traces to be copied/pasted into the workspace  
 
 Keyboard shortcuts are displayed beside each menu option
-### The Context Bar  
+### The Context Panel   
 ![](https://imgur.com/O3CrSlL.png)  
 
-The Context Bar has three tabs:
+The Context Panel has three tabs:
 * **Board** deals with the view of the workspace and size of the circuit board
 * **Tools** lets you select the tools for drawing the circuit board
 * **Export** lets you create a '.GCODE' file for use by a CNC router (e.g Carvey) for cutting you circuit board
 
-#### Context Bar: The Board Tab
+#### Context Panel: The Board Tab
 The board tab is displayed in the previous image
 * **Board Width** and **Board Height** allow you to change the dimensions of your circuit board (mm)
 * **Zoom** allows you to zoom in and out of the circuit board
@@ -83,7 +83,7 @@ The board tab is displayed in the previous image
   * If you are not using a Carvey, feel free to un-tick this box
 Any of these features can be changed at any point without disrupting any circuit board features you have already created.
 
-#### Context Bar: The Tools Tab  
+#### Context Panel: The Tools Tab  
 ![](https://imgur.com/lbC1sb3.png)  
 
 * Select the **Path** option to draw circuit traces (lines) on the workspace
@@ -94,7 +94,7 @@ Any of these features can be changed at any point without disrupting any circuit
   
 These options are explored in greater detail in the **Workspace** section below
 
-#### Context Bar: The Export Tab  
+#### Context Panel: The Export Tab  
 ![](https://imgur.com/nmMKoKH.png)  
 
 **This tab sets the options for carving the board and can cause problems if set up wrong. Use the default values unless something has gone wrong or you know what you are doing**  
