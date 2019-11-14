@@ -44,19 +44,20 @@ On this screen are four important sections:
 ### The File Menu  
 ![](https://imgur.com/imNXxTT.png)  
 
-The File menu has three options:  
+The File menu has four options:  
 * **New** clears the workspace and sets it up for a new circuit board
-  * **This does NOT save the existing circuit board.** Ensure the existing board is saved before creating a new circuit board
-* **Save** allows you to save the circuit board somewhere on your computer. The circuit board **MUST** be saved manually and will **NOT** save automatically
+  * You will be prompted to save your current circuit board if you haven't done so yet
+* **Save** allows you to save the circuit board somewhere on your computer
+* **Save As** allows you to change where you want to save the circuit board
 * **Open** allows you to open a circuit board that you have previously saved. The circuit board must have been created in PCBDraw. No other PCB file formats are accepted
-  * '.GCode' files cannot be opened or edited this way, only '.GCB' files created using the **Save** option above  
+  * '.GCode' files cannot be opened or edited this way, only '.GCB' files created using the **Save** and **Save As** option above  
   
 Keyboard shortcuts are displayed beside each menu option
 
 ### The Edit Menu
 ![](https://imgur.com/l7WCVM6.png)  
 
-The Edit menu has three options:  
+The Edit menu has five options:  
 * **Undo** undoes the previous action
 * **Redo** redoes the last undone action
 * **Cut** removes the selected traces and gets them ready to be pasted
