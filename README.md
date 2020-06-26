@@ -102,7 +102,6 @@ These options are explored in greater detail in the **Workspace** section below
 * The **Drill Down** option sets the drilling depth. If you want to only drill pilot holes, set it to some value less then the thickness of your board (as a negative number). If you want to drill the whole way through the board, set it the the thickness of your board (as a negative number).
   * If drilling through the whole board, please ensure you have placed something below it so the Router does not drill into itself
 * The **Z-Up** option sets the height of the drill as it moves between cuts. Ensure this is high enough that it won't hit anything. The default value is almost always best.
-* The **Feedrate** option sets the speed of cutting. This option should **NOT** be changed unless you are using a CNC Router other than the Carvey, or are very familiar with CNC Machining. Leave at the default value otherwise.
 * The **Path Width** determines how wide the traces on the board should be. **Reduce** this value if traces join up where they shouldn't, **increase** this value if the circuit should carry large currents.
   * If the **Path Width** is set **too high**, then **Paths** and **Holes** that are **too close** to each-other may **overlap and cause shorts**. If this is happening then either **reduce** this value, or move the overlapping features further apart.
   
