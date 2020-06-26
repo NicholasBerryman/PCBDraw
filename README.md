@@ -19,7 +19,7 @@ Table of contents
 
 ## Installation
 
-## Windows
+### Windows
 * Download the windows installer from https://github.com/NicholasBerryman/PCBDraw/raw/master/Launcher/bundles/PCBDrawLauncher-1.0.exe  
 * Once it has downloaded, run the installer and follow the instructions it gives.  
 * After the installer has finished, the program should open automatically. You may run it in the future by opening **Nick Berryman->PCBDrawLauncher** from the start menu.
