@@ -97,7 +97,7 @@ These options are explored in greater detail in the **Workspace** section below
 #### Context Panel: The Export Tab  
 ![](https://imgur.com/nmMKoKH.png)  
 
-**This tab sets the options for carving the board and can cause problems if set up wrong. Use the default values unless something has gone wrong or you know what you are doing**  
+**This tab sets the options for carving the board and can cause problems if set up wrong. Use the default values unless something has gone wrong or you really know what you are doing**  
 * The **Z-Down** option sets the cutting depth for the circuit board. Make this **more negative** if the cut is too shallow, make it **less negative** if the cut is too deep.
 * The **Drill Down** option sets the drilling depth. If you want to only drill pilot holes, set it to some value less then the thickness of your board (as a negative number). If you want to drill the whole way through the board, set it the the thickness of your board (as a negative number).
   * If drilling through the whole board, please ensure you have placed something below it so the Router does not drill into itself
