@@ -129,7 +129,7 @@ The grid here represents the circuit board.
   * Select the **Hole** tool from the **Tools Tab** of the **Context Menu**.
   * Click the point on the grid where you want the hole.  
     * When **Exporting** if the **Path Width**  is too high and they are close enough to each other then **Holes** that should be separate may overlap. If this is happening  to you, either reduce your **Path Width** or move the **Paths** away from each other.
-    * **Holes** placed side-by-side or on top of each other should automatically be isolated if this occurs, though they may still overlap both other **Holes** placed diagonally from them and **Paths**.
+    * **Holes** placed side-by-side or on top of each other should automatically be isolated, though they may still overlap both **Paths** and other **Holes** placed diagonally from them.
 
 ![](https://imgur.com/XDFb7jc.gif)  
 
