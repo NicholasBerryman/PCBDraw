@@ -81,6 +81,7 @@ The board tab is displayed in the previous image
   * Circuit board features can only be placed on grid points, so if your circuit board needs lots of very fine features, try a smaller grid size
 * **Using Carvey** enables the smartclamp in the workspace, preventing you from making a circuit board that the Carvey cannot carve
   * If you are not using a Carvey, feel free to un-tick this box  
+
 Any of these features can be changed at any point without disrupting any circuit board features you have already created.
 
 #### Context Panel: The Tools Tab  
