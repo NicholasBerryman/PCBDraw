@@ -103,7 +103,7 @@ These options are explored in greater detail in the **Workspace** section below
   * If drilling through the whole board, please ensure you have placed something below it so the Router does not drill into itself
 * The **Z-Up** option sets the height of the drill as it moves between cuts. Ensure this is high enough that it won't hit anything. The default value is almost always best.
 * The **Path Width** determines how wide the traces on the board should be. **Reduce** this value if traces join up where they shouldn't, **increase** this value if the circuit should carry large currents.
-  * If the **Path Width** is set **too high**, then **Paths** and **Holes** that are **too close** to each-other may **overlap and cause shorts**. If this is happening then either **reduce** this value, or move the overlapping features further apart.
+  * If the **Path Width** is set too high, then **Paths** and **Holes** that are too close to each-other may overlap and cause shorts. If this is happening then either **reduce** this value, or move the overlapping features further apart.
   
 Click the **Export** button and choose a location to export the file to when you are ready to carve your board.
 
